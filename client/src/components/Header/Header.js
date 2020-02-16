@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Route, Link } from "react-router-dom";
 import ButtonLogin from "../../pages/Login";
+import { connect } from "react-redux";
+// import Cookie from "../../helper/cookie";
 
 const menus = [
   {
@@ -33,10 +35,9 @@ const MenuLink = ({ label, to, activeOnlyWhenExact }) => {
 };
 
 class Menu extends Component {
-  handleClick() {
-    console.log("hello");
-  }
   render() {
+    // let checkAuth = Cookie.getCookie("accessToken");
+    console.log(this.props.checkAuth);
     return (
       <header className="header">
         <div className="site-navbar-wrap v1">
@@ -57,7 +58,17 @@ class Menu extends Component {
                     <div className="container">
                       <ul className="site-menu js-clone-nav d-none d-lg-block">
                         {this.showMenus(menus)}
-                        <ButtonLogin />
+                        {/* <li>{this.state.checkAuth}</li> */}
+                        {!this.props.checkAuth ? (
+                          <ButtonLogin />
+                        ) : (
+                          <li className="">
+                            <button className="btn v3">
+                              <i className="lnr lnr-home"></i>
+                              Đăng tin{" "}
+                            </button>
+                          </li>
+                        )}
                       </ul>
                     </div>
                   </nav>
@@ -102,4 +113,8 @@ class Menu extends Component {
   };
 }
 
-export default Menu;
+const mapStateToProps = state => ({
+  checkAuth: state.login.accessToken
+});
+
+export default connect(mapStateToProps)(Menu);

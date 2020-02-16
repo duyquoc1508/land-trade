@@ -1,6 +1,7 @@
 import { takeEvery, call, put } from "redux-saga/effects";
 import { LOGIN_REQUESTING, LOGIN_SUCCESS, LOGIN_ERROR } from "./constants";
 import axios from "axios";
+import Cookie from "../../helper/cookie";
 
 const handleSignMessage = async (publicAddress, nonce) => {
   try {
@@ -30,7 +31,7 @@ const handleAuthenticate = async (publicAddress, signature) => {
     publicAddress,
     signature
   });
-  return res.data.access_token;
+  return res.data.accessToken;
 };
 
 const getNonce = async publicAddress => {
@@ -59,7 +60,8 @@ const handleClick = async () => {
   let { signature } = await handleSignMessage(publicAddress, nonce);
   // console.log(signature);
   let accessToken = await handleAuthenticate(publicAddress, signature);
-  console.log(accessToken);
+  // console.log(accessToken);
+  Cookie.setCookie("accessToken", accessToken, 1 / 48);
   return accessToken;
 };
 

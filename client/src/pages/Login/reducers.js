@@ -1,8 +1,9 @@
 import { LOGIN_SUCCESS, LOGIN_ERROR } from "./constants";
+import Cookie from "../../helper/cookie";
 
 const initialState = {
   // id: null,
-  accessToken: null
+  accessToken: Cookie.getCookie("accessToken")
 };
 
 function loginReducer(state = initialState, action) {
