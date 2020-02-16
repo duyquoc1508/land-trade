@@ -5,12 +5,12 @@ import apiRoutes from "./api";
 import { handleError } from "./helper/error";
 import middlewaresConfig from "./config/middlewares";
 import constants from "./config/constants";
-
 middlewaresConfig(app);
 
 apiRoutes(app);
 
 app.get("/api", (_req, res) => {
+  res.cookie("accessToken", "djhkfkl", { httpOnly: true });
   res.send("Wellcome to Landtrade APIs");
 });
 

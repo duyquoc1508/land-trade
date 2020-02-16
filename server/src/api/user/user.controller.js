@@ -22,6 +22,7 @@ export async function checkAddressRegistered(req, res, next) {
     if (!user) {
       throw new ErrorHandler(404, "Public address not found!");
     }
+    res.cookie("token", "djfkjkdfsd", { httpOnly: true });
     return res.status(200).json({
       statusCode: 200,
       data: user

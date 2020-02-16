@@ -13,7 +13,7 @@ export default app => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(passport.initialize());
-  app.use(cors());
+  app.use(cors({ origin: "http://localhost:8001" }));
 
   if (isProd) {
     // app.use(compression());

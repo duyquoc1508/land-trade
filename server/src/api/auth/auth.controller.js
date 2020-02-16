@@ -68,9 +68,14 @@ export async function handleAuthentication(req, res, next) {
     const refreshToken = jwt.sign(payload, refreshTokenSecret, {
       expiresIn: refreshTokenLife
     });
+    res.cookie("access_token", accessToken, {
+      httpOnly: true,
+      domain: "127.0.0.1"
+      // origin
+    });
     return res.status(200).json({
       statusCode: 200,
-      access_token: accessToken,
+      accessToken,
       refreshToken
     });
   } catch (error) {
