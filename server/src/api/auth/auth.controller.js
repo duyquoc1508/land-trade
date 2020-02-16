@@ -55,21 +55,33 @@ export async function handleAuthentication(req, res, next) {
     const payload = {
       publicAddress,
       _id: user._id
-      // expires: Date.now() + parseInt(process.env.JWT_EXPIRATION_MS)
     };
-    // set token life = 1 weeks = 604800000 ms
-    let access_token = jwt.sign(payload, process.env.SECRET_KEY, {
-      expiresIn: process.env.JWT_EXPIRATION_MS
+    const accessTokenLife = process.env.ACCESS_TOKEN_LIFE || "7d";
+    const accessTokenSecret =
+      process.env.ACCESS_TOKEN_SECRET || "access-token-landtrade";
+    const refreshTokenLife = process.env.REFRESH_TOKEN_LIFE || "3650d";
+    const refreshTokenSecret =
+      process.env.REFRESH_TOKEN_SECRET || "refresh-token-landtrade";
+    const accessToken = jwt.sign(payload, accessTokenSecret, {
+      expiresIn: accessTokenLife
     });
-    console.log("1");
-    res.cookie("access_token", access_token, {
+    const refreshToken = jwt.sign(payload, refreshTokenSecret, {
+      expiresIn: refreshTokenLife
+    });
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      domain: "127.0.0.1"
+      // origin
+    });
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       domain: "127.0.0.1"
       // origin
     });
     return res.status(200).json({
       statusCode: 200,
-      access_token
+      accessToken,
+      refreshToken
     });
   } catch (error) {
     next(error);

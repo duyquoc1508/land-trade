@@ -10,7 +10,6 @@ middlewaresConfig(app);
 apiRoutes(app);
 
 app.get("/api", (_req, res) => {
-  res.cookie("accessToken", "djhkfkl", { httpOnly: true });
   res.send("Wellcome to Landtrade APIs");
 });
 

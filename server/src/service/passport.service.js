@@ -10,7 +10,7 @@ import User from "./../api/user/user.model";
 
 const jwtOpts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.SECRET_KEY
+  secretOrKey: process.env.ACCESS_TOKEN_SECRET || "access-token-landtrade"
 };
 
 const jwtStrategy = new JwtStrategy(jwtOpts, async (payload, done) => {
@@ -52,6 +52,6 @@ export const authJwt = (req, res, next) => {
     next(); // continue to next middleware if no error.
   })(req, res, next);
   /* passport.authentication returns a function,
-  we invoke it with normal req..res arguments 
+  we invoke it with normal req..res arguments
   to override default functionality */
 };
