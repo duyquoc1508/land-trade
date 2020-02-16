@@ -1,6 +1,7 @@
 import "dotenv/config";
 
-const JWT_SECRET = process.env.SECRET_KEY;
+const JWT_SECRET =
+  process.env.SECRET_KEY || "qwertyuiopasdfghjklzxcvbnm123456ss";
 
 const devConfig = {
   MONGO_URL: "mongodb://localhost:27017/landtrade_dev",

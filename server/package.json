@@ -15,7 +15,8 @@
     "@babel/cli": "^7.8.3",
     "@babel/core": "^7.8.3",
     "@babel/node": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "nodemon": "^2.0.2"
   },
   "dependencies": {

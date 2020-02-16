@@ -30,7 +30,19 @@ const handleAuthenticate = async (publicAddress, signature) => {
     publicAddress,
     signature
   });
-  return res.data.token;
+  return res.data.access_token;
+};
+
+const getNonce = async publicAddress => {
+  try {
+    let res = await axios.get(
+      `http://localhost:8001/api/v1/users?publicAddress=${publicAddress}`
+    );
+    return res.data.data.nonce;
+  } catch (error) {
+    handleSignup(publicAddress);
+    return getNonce(publicAddress);
+  }
 };
 
 const handleClick = async () => {
@@ -41,27 +53,20 @@ const handleClick = async () => {
   }
   const publicAddress = coinbase.toLowerCase();
 
-  try {
-    let res = await axios.get(
-      `http://localhost:8001/api/v1/users?publicAddress=${publicAddress}`
-    );
-    if (!res.data.user) {
-      handleSignup(publicAddress);
-    }
-    let { signature } = await handleSignMessage(
-      publicAddress,
-      res.data.user.nonce
-    );
-    let acessToken = await handleAuthenticate(publicAddress, signature);
-    return acessToken;
-  } catch (err) {
-    return err.message;
-  }
+  let nonce = await getNonce(publicAddress);
+
+  // console.log(nonce);
+  let { signature } = await handleSignMessage(publicAddress, nonce);
+  // console.log(signature);
+  let accessToken = await handleAuthenticate(publicAddress, signature);
+  console.log(accessToken);
+  return accessToken;
 };
 
 function* loginFlow() {
   try {
     const response = yield call(handleClick);
+    // console.log(response);
     yield put({ type: LOGIN_SUCCESS, accessToken: response });
   } catch (error) {
     yield put({ type: LOGIN_ERROR, error: error.message });

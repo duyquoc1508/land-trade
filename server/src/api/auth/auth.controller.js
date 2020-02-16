@@ -58,11 +58,18 @@ export async function handleAuthentication(req, res, next) {
       // expires: Date.now() + parseInt(process.env.JWT_EXPIRATION_MS)
     };
     // set token life = 1 weeks = 604800000 ms
+    let access_token = jwt.sign(payload, process.env.SECRET_KEY, {
+      expiresIn: process.env.JWT_EXPIRATION_MS
+    });
+    console.log("1");
+    res.cookie("access_token", access_token, {
+      httpOnly: true,
+      domain: "127.0.0.1"
+      // origin
+    });
     return res.status(200).json({
       statusCode: 200,
-      access_token: jwt.sign(payload, process.env.SECRET_KEY, {
-        expiresIn: process.env.JWT_EXPIRATION_MS
-      })
+      access_token
     });
   } catch (error) {
     next(error);
