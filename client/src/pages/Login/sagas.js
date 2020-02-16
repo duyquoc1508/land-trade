@@ -16,7 +16,7 @@ const handleSignMessage = async (publicAddress, nonce) => {
 };
 
 const handleSignup = publicAddress => {
-  return fetch(`http://localhost:8001/api/v1/users`, {
+  return fetch(`http://localhost:3000/api/v1/users`, {
     body: JSON.stringify({ publicAddress }),
     headers: {
       "Content-Type": "application/json"
@@ -26,7 +26,7 @@ const handleSignup = publicAddress => {
 };
 
 const handleAuthenticate = async (publicAddress, signature) => {
-  let res = await axios.post("http://localhost:8001/api/v1/auth/login", {
+  let res = await axios.post("http://localhost:3000/api/v1/auth/login", {
     publicAddress,
     signature
   });
@@ -36,7 +36,7 @@ const handleAuthenticate = async (publicAddress, signature) => {
 const getNonce = async publicAddress => {
   try {
     let res = await axios.get(
-      `http://localhost:8001/api/v1/users?publicAddress=${publicAddress}`
+      `http://localhost:3000/api/v1/users?publicAddress=${publicAddress}`
     );
     return res.data.data.nonce;
   } catch (error) {
