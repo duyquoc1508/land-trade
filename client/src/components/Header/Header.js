@@ -35,6 +35,30 @@ const MenuLink = ({ label, to, activeOnlyWhenExact }) => {
 };
 
 class Menu extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block",
+      toggleStatus: false
+    };
+  }
+
+  changeToggle = () => {
+    console.log("click");
+    if (!this.state.toggleStatus) {
+      this.setState({ toggleStatus: true });
+      this.setState({
+        toggleAuth:
+          "setting-menu js-right-sidebar d-none d-lg-block show-sidebar"
+      });
+    } else {
+      this.setState({ toggleStatus: false });
+      this.setState({
+        toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block"
+      });
+    }
+  };
+
   render() {
     // let checkAuth = Cookie.getCookie("accessToken");
     console.log(this.props.checkAuth);
@@ -62,12 +86,53 @@ class Menu extends Component {
                         {!this.props.checkAuth ? (
                           <ButtonLogin />
                         ) : (
-                          <li className="">
-                            <button className="btn v3">
-                              <i className="lnr lnr-home"></i>
-                              Đăng tin{" "}
-                            </button>
-                          </li>
+                          <div className="header-button">
+                            <div className="header-button-item has-noti js-item-menu">
+                              <i className="ion-ios-bell-outline"></i>
+                              <div className="notifi-dropdown js-dropdown">
+                                <div className="notifi__item">
+                                  <div className="content">
+                                    <p>
+                                      Your Property <b>Villa On Hartford</b> has
+                                      been approved!
+                                    </p>
+                                    <span className="date">5 min ago</span>
+                                  </div>
+                                </div>
+                                <div className="notifi__item">
+                                  <div className="content">
+                                    <p>You have 3 unread Messages</p>
+                                    <span className="date">5 min ago</span>
+                                  </div>
+                                </div>
+                                <div className="notify-bottom text-center py-20">
+                                  <a href="#">View All Notification</a>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="header-button-item js-sidebar-btn"
+                              onClick={this.changeToggle}
+                            >
+                              <img
+                                src="images/dashboard/agent_db_1.jpg"
+                                alt="..."
+                              />
+                              <span>
+                                Tony <i className="ion-arrow-down-b"></i>
+                              </span>
+                            </div>
+                            <div className={this.state.toggleAuth}>
+                              <div className="account-dropdown__body">
+                                <div className="account-dropdown__item">
+                                  <a href="db-my-profile.html">Profile</a>
+                                </div>
+                                <div className="account-dropdown__item">
+                                  <a href="db-my-profile.html">Logout</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         )}
                       </ul>
                     </div>

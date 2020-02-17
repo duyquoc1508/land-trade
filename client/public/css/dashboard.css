@@ -81,6 +81,7 @@
     vertical-align: middle;
     font-size: 28px;
     margin-top: 10px;
+    color: #ffffff;
 }
 
 .header-button .header-button-item .search-dropdown {
@@ -111,7 +112,7 @@
 
 .header-button-item span {
     font-weight: 400;
-    color: #999;
+    color: #ffffff;
     position: relative;
     display: flex;
     align-items: center;
@@ -171,7 +172,7 @@
     position: fixed;
     min-width: 200px;
     right: -300px;
-    top: 70px;
+    top: 52px;
     background: #fff;
     text-align: left;
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
@@ -1794,7 +1795,7 @@ ul.buttons li {
 }
 
 /*======================================
-            Statistic 
+            Statistic
 =======================================*/
 .statistic-wrap {
     position: relative;
