@@ -5,15 +5,19 @@ import "dotenv/config";
 import User from "./../user/user.model";
 import { ErrorHandler } from "./../../helper/error";
 
+let tokenList = [];
+
 export async function sign(req, res, _next) {
   try {
     const { nonce, publicAddress } = req.body;
     const msgBufferHex = publicAddress.toString("hex");
-    // const msg = `I am signing my one-time nonce: ${user.nonce}`;
-    let signature = personalSign(msgBufferHex, nonce);
+    console.log(msgBufferHex);
+    const msg = `I am signing my one-time nonce: ${nonce}`;
+    let signature = personalSign(msg, { data: msgBufferHex });
+    console.log(signature);
     return res.status(200).json({ signature, publicAddress });
   } catch (error) {
-    return res.status(500).json({ error });
+    return res.status(500).json({ status: 500, message: error });
   }
 }
 
@@ -43,7 +47,7 @@ export async function handleAuthentication(req, res, next) {
       data: msgBufferHex,
       sig: signature
     });
-    // The signature verification is successful if the address found with sigUtil.recoverPersonalSignature
+    // The signature verification is successful if the address found with recoverPersonalSignature
     // matches the initial publicAddress
     if (!(address.toLowerCase() === publicAddress.toLowerCase())) {
       throw new ErrorHandler(401, "Signature verification failed");
@@ -78,10 +82,39 @@ export async function handleAuthentication(req, res, next) {
       domain: "127.0.0.1"
       // origin
     });
+    tokenList.push(refreshToken);
     return res.status(200).json({
       statusCode: 200,
       accessToken,
       refreshToken
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function refreshToken(req, res, next) {
+  try {
+    const { refreshToken } = req.body;
+    if (refreshToken == null)
+      throw new ErrorHandler(401, "Token must be provided");
+    if (!tokenList.includes(refreshToken))
+      throw new ErrorHandler(403, "Invalid refresh token");
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+      if (err) {
+        next(err);
+      }
+      const payload = {
+        _id: user._id,
+        publicAddress: user.publicAddress
+      };
+      const accessTokenLife = process.env.ACCESS_TOKEN_LIFE || "7d";
+      const accessTokenSecret =
+        process.env.ACCESS_TOKEN_SECRET || "access-token-landtrade";
+      const accessToken = jwt.sign(payload, accessTokenSecret, {
+        expiresIn: accessTokenLife
+      });
+      return res.status(200).json({ statusCode: 200, accessToken });
     });
   } catch (error) {
     next(error);
