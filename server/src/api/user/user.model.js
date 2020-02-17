@@ -67,6 +67,12 @@ const userSchema = new Schema(
     username: {
       type: String
     }
+    //      email,
+    //      cmnd
+    //      gender
+    //      phone
+    //      signature: image
+    //
   },
   { timestamps: true }
 );

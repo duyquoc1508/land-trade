@@ -3,10 +3,12 @@ const Schema = mongoose.Schema;
 
 const cetificationSchema = new Schema(
   {
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
-    },
+    owner: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+      }
+    ],
     title: {
       type: String
     },
