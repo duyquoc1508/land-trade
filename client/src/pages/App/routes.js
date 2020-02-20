@@ -2,6 +2,7 @@ import React from "react";
 import HomePage from "../HomePage";
 import Listings from "../Listings";
 import Property from "../Property";
+import AddProperty from "../AddProperty";
 
 const routes = [
   {
@@ -18,12 +19,12 @@ const routes = [
     path: "/property",
     exact: false,
     main: () => <Property />
+  },
+  {
+    path: "/add-property",
+    exact: false,
+    main: ({ history }) => <AddProperty history={history} />
   }
-  // {
-  //   path: "/product/add",
-  //   exact: false,
-  //   main: ({ history }) => <ProductActionPage history={history} />
-  // },
   // {
   //   path: "/product/:id/edit",
   //   exact: false,

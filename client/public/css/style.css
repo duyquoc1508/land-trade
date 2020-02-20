@@ -11,11 +11,11 @@
 /*-----------------------------------------------------------
     1  General Styles
     2  Typography
-    3  Buttons & Links 
+    3  Buttons & Links
     4  Fixed Header
     5  Menu
     6  Hero Area
-    7  Breadcrumb 
+    7  Breadcrumb
     8  Catagory Box
     9  Work Proces
     10 Popular category
@@ -49,7 +49,7 @@
 
 
 /*-----------------------------------------------------------
-            General Styles 
+            General Styles
 -------------------------------------------------------------*/
 
 dl,
@@ -868,7 +868,7 @@ h6 {
 
 
 /*-----------------------------------------------------------
-                    Typography 
+                    Typography
 -------------------------------------------------------------*/
 
 body {
@@ -946,7 +946,7 @@ p {
 
 
 li {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 400;
     line-height: 30px;
     list-style: none !important;
@@ -3210,7 +3210,7 @@ input[type="text"]:focus {
 }
 
 /*--------------------------------------------
-            Popular category 
+            Popular category
 ----------------------------------------------*/
 .popular-catagory-content {
     position: relative;
@@ -3389,7 +3389,7 @@ input[type="text"]:focus {
 }
 
 /*------------------------------------------
-       Discount Coupon 
+       Discount Coupon
 --------------------------------------------*/
 
 .price {
@@ -4668,7 +4668,7 @@ input[type="text"]:focus {
 }
 
 /*----------------------------------------
-            Call to Action 
+            Call to Action
 ----------------------------------------*/
 .call-to-action {
     position: relative;
@@ -5614,7 +5614,7 @@ input[type="text"]:focus {
 }
 
 /*------------------------------------------------
-                     Blog 
+                     Blog
 --------------------------------------------------*/
 
 .single-blog-item.v1 {
@@ -6116,7 +6116,7 @@ ul.icon li::before {
 }
 
 /*-------------------------------------------
-             Filter Listing 
+             Filter Listing
 --------------------------------------------*/
 .filter-wrapper .hero__form.v2 {
     padding: 0;
@@ -6947,7 +6947,7 @@ ul.icon li::before {
 }
 
 /*===========================================
-        Featured Property 
+        Featured Property
 =============================================*/
 
 .featured-property-info .property-title-box {
@@ -10909,7 +10909,7 @@ input[type="radio"] {
 
 }
 
-/* ----------------------------------------------------------------- 
+/* -----------------------------------------------------------------
                          9. COLOR SWITCHER
 ------------------------------------------------------------------*/
 
@@ -11642,7 +11642,7 @@ span.infobox_rate {
         margin-bottom: 80px !important;
     }
 
-    
+
     .promo-section.v1.mt-110.py-50 {
         margin-top: 80px !important;
         padding-top: 0 !important;
@@ -11710,7 +11710,7 @@ span.infobox_rate {
     .trending-places.pt-130 {
         padding-top: 0px;
     }
-    
+
     .trending-places.mt-140,
     .value-calculator-section.py-80.mt-140.v1 {
         margin-top: 30px !important;

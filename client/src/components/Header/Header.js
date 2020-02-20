@@ -39,101 +39,66 @@ class Menu extends Component {
     super(props);
     this.state = {
       toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block",
-      toggleStatus: false
+      toggleAuthStatus: false,
+      toggleNotifications: "header-button-item has-noti js-item-menu",
+      toggleNotificationsStatus: false
     };
   }
 
-  changeToggle = () => {
-    console.log("click");
-    if (!this.state.toggleStatus) {
-      this.setState({ toggleStatus: true });
+  changeToggleAuth = () => {
+    if (!this.state.toggleAuthStatus) {
+      // console.log("show");
+      this.setState({ toggleAuthStatus: true });
       this.setState({
         toggleAuth:
           "setting-menu js-right-sidebar d-none d-lg-block show-sidebar"
       });
     } else {
-      this.setState({ toggleStatus: false });
+      // console.log("close");
+      this.setState({ toggleAuthStatus: false });
       this.setState({
         toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block"
+      });
+    }
+  };
+  changeToggleNotifications = () => {
+    if (!this.state.toggleNotificationsStatus) {
+      this.setState({ toggleNotificationsStatus: true });
+      this.setState({
+        toggleNotifications:
+          "header-button-item has-noti js-item-menu show-dropdown"
+      });
+    } else {
+      this.setState({ toggleNotificationsStatus: false });
+      this.setState({
+        toggleNotifications: "header-button-item has-noti js-item-menu"
       });
     }
   };
 
   render() {
     // let checkAuth = Cookie.getCookie("accessToken");
-    console.log(this.props.checkAuth);
+    // console.log(this.props.checkAuth);
     return (
-      <header className="header">
-        <div className="site-navbar-wrap v1">
-          <div className="container">
-            <div className="site-navbar">
-              <div className="row align-items-center">
-                <div className="col-lg-2 col-md-6 col-9 order-2 order-xl-1 order-lg-1 order-md-1">
-                  <a className="navbar-brand" href="index.html">
-                    <img
-                      src="images/logo-white.png"
-                      alt="logo"
-                      className="img-fluid"
-                    />
-                  </a>
-                </div>
-                <div className="col-lg-10 col-md-6 col-3  order-3 order-xl-2 order-lg-2 order-md-3 pl-xs-0">
-                  <nav className="site-navigation text-right">
+      <header className="db-top-header">
+        <div className="container-fluid">
+          <div className="row align-items-center">
+            <div className="col-md-3 col-sm-3 col-4">
+              <a className="navbar-brand" href="#">
+                <img
+                  src="images/logo-blue.png"
+                  alt="logo"
+                  className="img-fluid"
+                />
+              </a>
+            </div>
+            <div className="col-md-7 col-sm-3 col-2">
+              <div className="site-navbar-wrap v2 style2">
+                <div className="site-navbar">
+                  <nav className="site-navigation">
                     <div className="container">
                       <ul className="site-menu js-clone-nav d-none d-lg-block">
                         {this.showMenus(menus)}
-                        {/* <li>{this.state.checkAuth}</li> */}
-                        {!this.props.checkAuth ? (
-                          <ButtonLogin />
-                        ) : (
-                          <div className="header-button">
-                            <div className="header-button-item has-noti js-item-menu">
-                              <i className="ion-ios-bell-outline"></i>
-                              <div className="notifi-dropdown js-dropdown">
-                                <div className="notifi__item">
-                                  <div className="content">
-                                    <p>
-                                      Your Property <b>Villa On Hartford</b> has
-                                      been approved!
-                                    </p>
-                                    <span className="date">5 min ago</span>
-                                  </div>
-                                </div>
-                                <div className="notifi__item">
-                                  <div className="content">
-                                    <p>You have 3 unread Messages</p>
-                                    <span className="date">5 min ago</span>
-                                  </div>
-                                </div>
-                                <div className="notify-bottom text-center py-20">
-                                  <a href="#">View All Notification</a>
-                                </div>
-                              </div>
-                            </div>
-                            <div
-                              className="header-button-item js-sidebar-btn"
-                              onClick={this.changeToggle}
-                            >
-                              <img
-                                src="images/dashboard/agent_db_1.jpg"
-                                alt="..."
-                              />
-                              <span>
-                                Tony <i className="ion-arrow-down-b"></i>
-                              </span>
-                            </div>
-                            <div className={this.state.toggleAuth}>
-                              <div className="account-dropdown__body">
-                                <div className="account-dropdown__item">
-                                  <a href="db-my-profile.html">Profile</a>
-                                </div>
-                                <div className="account-dropdown__item">
-                                  <a href="db-my-profile.html">Logout</a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
                       </ul>
                     </div>
                   </nav>
@@ -142,6 +107,7 @@ class Menu extends Component {
                       <span className="lnr lnr-menu"></span>
                     </a>
                   </div>
+
                   <div className="site-mobile-menu">
                     <div className="site-mobile-menu-header">
                       <div className="site-mobile-menu-close  js-menu-toggle">
@@ -150,9 +116,64 @@ class Menu extends Component {
                     </div>
                     <div className="site-mobile-menu-body"></div>
                   </div>
-                  <div className=""></div>
                 </div>
               </div>
+            </div>
+            <div className="col-md-2 col-sm-6 col-6">
+              {!this.props.checkAuth ? (
+                <ButtonLogin />
+              ) : (
+                <div className="header-button">
+                  <div
+                    className={this.state.toggleNotifications}
+                    onClick={this.changeToggleNotifications}
+                  >
+                    <i className="ion-ios-bell-outline"></i>
+                    <div className="notifi-dropdown js-dropdown">
+                      <div className="notifi__item">
+                        <div className="content">
+                          <p>
+                            Your Property <b>Villa On Hartford</b> has been
+                            approved!
+                          </p>
+                          <span className="date">5 min ago</span>
+                        </div>
+                      </div>
+                      <div className="notifi__item">
+                        <div className="content">
+                          <p>You have 3 unread Messages</p>
+                          <span className="date">5 min ago</span>
+                        </div>
+                      </div>
+                      <div className="notify-bottom text-center py-20">
+                        <a href="#">View All Notification</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="header-button-item js-sidebar-btn"
+                    onClick={this.changeToggleAuth}
+                  >
+                    <img src="images/dashboard/agent_db_1.jpg" alt="..." />
+                    <span>
+                      Tony <i className="ion-arrow-down-b"></i>
+                    </span>
+                  </div>
+                  <div className={this.state.toggleAuth}>
+                    <div className="account-dropdown__body">
+                      <div className="account-dropdown__item">
+                        <Link to="/add-property">Số Hóa Tài Sản</Link>
+                      </div>
+                      <div className="account-dropdown__item">
+                        <a href="db-my-profile.html">Profile</a>
+                      </div>
+                      <div className="account-dropdown__item">
+                        <a href="db-my-profile.html">Logout</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
