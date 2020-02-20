@@ -23,9 +23,9 @@
 
 .db-top-header {
     position: fixed;
-    z-index: 99;
+    z-index: 101;
     top: 0;
-    left: 275px;
+    left: 0;
     background: #fff;
     box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.3);
     right: 0;
@@ -34,6 +34,7 @@
 .db-top-header .site-navbar-wrap.v2 {
     margin-left: -28px;
     border-bottom: none;
+    float:right;
 }
 
 .db-top-header .site-mobile-menu {
@@ -81,7 +82,7 @@
     vertical-align: middle;
     font-size: 28px;
     margin-top: 10px;
-    color: #ffffff;
+    color: #888;
 }
 
 .header-button .header-button-item .search-dropdown {
@@ -112,7 +113,7 @@
 
 .header-button-item span {
     font-weight: 400;
-    color: #ffffff;
+    color: #888;
     position: relative;
     display: flex;
     align-items: center;
@@ -176,7 +177,7 @@
     background: #fff;
     text-align: left;
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
-    height: 100px;
+    /* height: 100px; */
     transition: all .5s ease;
     border-top: 1px solid #f5f6f7;
 }
@@ -191,6 +192,8 @@
 
 .show-sidebar {
     right: 0;
+    top:63px;
+    display: block !important;
 }
 
 .header-button-item {
@@ -1886,7 +1889,7 @@ ul.buttons li {
     .db-top-header .d-lg-none.sm-right {
         float: left !important;
         margin-left: 28px;
-        padding-bottom: 10px;
+        /* padding-bottom: 0; */
     }
 
     .menu-sidebar {
