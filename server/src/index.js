@@ -5,7 +5,10 @@ import apiRoutes from "./api";
 import { handleError } from "./helper/error";
 import middlewaresConfig from "./config/middlewares";
 import constants from "./config/constants";
+
+// Middlewares
 middlewaresConfig(app);
+app.use(express.static("uploads"));
 
 apiRoutes(app);
 
