@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "camelcase-keys": "^6.1.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "eth-sig-util": "^2.5.2",
