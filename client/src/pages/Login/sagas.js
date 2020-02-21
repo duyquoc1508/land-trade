@@ -2,6 +2,7 @@ import { takeEvery, call, put } from "redux-saga/effects";
 import { LOGIN_REQUESTING, LOGIN_SUCCESS, LOGIN_ERROR } from "./constants";
 import axios from "axios";
 import Cookie from "../../helper/cookie";
+import Web3 from "web3";
 
 const handleSignMessage = async (publicAddress, nonce) => {
   try {
@@ -45,8 +46,20 @@ const getNonce = async publicAddress => {
     return getNonce(publicAddress);
   }
 };
-
+const loadWeb3 = async () => {
+  if (window.ethereum) {
+    window.web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+  } else if (window.web3) {
+    window.web3 = new Web3(window.web3.currentProvider);
+  } else {
+    window.alert(
+      "Non-Ethereum browser detected. You should consider trying MetaMask!"
+    );
+  }
+};
 const handleClick = async () => {
+  await loadWeb3();
   const coinbase = await window.web3.eth.getCoinbase();
   if (!coinbase) {
     window.alert("Please activate MetaMask first.");
