@@ -12,6 +12,10 @@ const cetificationSchema = new Schema(
     title: {
       type: String
     },
+    attestor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    },
     // II. Land lot, house and other properties attaching with land
     properties: {
       landLot: {
@@ -45,7 +49,7 @@ const cetificationSchema = new Schema(
     },
     status: {
       type: Number,
-      default: 0
+      default: 0 //0: Not activated, 1: Activated, 2: Selling
     }
   },
   { timestamps: true }

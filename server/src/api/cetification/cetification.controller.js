@@ -3,7 +3,10 @@ import { ErrorHandler } from "./../../helper/error";
 
 const checkResourceOwner = (idResourceOwner, idCurrentUser) => {
   if (idResourceOwner.toString() != idCurrentUser)
-    throw new ErrorHandler(403, "You are not permission access to this resource");
+    throw new ErrorHandler(
+      403,
+      "You are not permission access to this resource"
+    );
 };
 
 // Get cetification
@@ -42,10 +45,14 @@ export async function createCetification(req, res, next) {
     //   houseClass: req.body.houseClass,
     //   houseTimeOfUse: req.body.houseTimeOfUse
     // };
+    const { owner, title, properties } = req.body;
+    // người chứng nhận
+    const attestor = req.user._id;
     const newCetification = {
-      owner: req.user._id, // extract from token
-      title: req.body.title,
-      properties: req.body.properties
+      owner,
+      attestor,
+      title,
+      properties
       // {
       //   landLot,
       //   house,
@@ -71,9 +78,14 @@ export async function updateCetification(req, res, next) {
       throw new ErrorHandler(404, "Cetification not found");
     }
     //check resource owner
-    checkResourceOwner(cetification.owner, req.user._id);
-    await Cetification.findByIdAndUpdate(req.params.idCetification, newCetification);
-    return res.status(200).json({ statusCode: 200, message: "Update cetification successfully" });
+    checkResourceOwner(cetification.attestor, req.user._id);
+    await Cetification.findByIdAndUpdate(
+      req.params.idCetification,
+      newCetification
+    );
+    return res
+      .status(200)
+      .json({ statusCode: 200, message: "Update cetification successfully" });
   } catch (error) {
     next(error);
   }
@@ -87,10 +99,12 @@ export async function deleteCetification(req, res, next) {
       throw new ErrorHandler(404, "Cetification not found");
     }
     //check resource owner
-    checkResourceOwner(cetification.owner, req.user._id);
+    checkResourceOwner(cetification.attestor, req.user._id);
     await Cetification.findOneAndDelete(req.params.idCetification);
     // or status code 204 without data in the response
-    return res.status(200).json({ statusCode: 200, message: "Delete cetification successfully" });
+    return res
+      .status(200)
+      .json({ statusCode: 200, message: "Delete cetification successfully" });
   } catch (error) {
     next(error);
   }

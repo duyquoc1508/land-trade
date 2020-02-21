@@ -7,11 +7,24 @@ const routes = Router();
 
 routes.get("/:idCetification", cetificationController.getCetification);
 
-// permit('admin', 'owner')
-routes.post("/", authJwt, cetificationController.createCetification);
+// Only governments can create certificates
+routes.post(
+  "/",
+  authJwt,
+  // permit("government"),
+  cetificationController.createCetification
+);
 
-routes.put("/:idCetification", authJwt, cetificationController.updateCetification);
+routes.put(
+  "/:idCetification",
+  authJwt,
+  cetificationController.updateCetification
+);
 
-routes.delete("/:idCetification", authJwt, cetificationController.deleteCetification);
+routes.delete(
+  "/:idCetification",
+  authJwt,
+  cetificationController.deleteCetification
+);
 
 export default routes;

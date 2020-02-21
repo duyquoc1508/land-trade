@@ -1,3 +1,4 @@
+// middlewares for doing role-base permissions
 export default function permit(...allowed) {
   const isAllowed = role => allowed.includes(role);
 

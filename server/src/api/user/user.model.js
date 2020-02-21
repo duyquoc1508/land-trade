@@ -66,11 +66,26 @@ const userSchema = new Schema(
     },
     username: {
       type: String
+    },
+    role: {
+      type: String,
+      enum: ["government", "natory", "owner"],
+      default: "owner"
+    },
+    email: {
+      type: String
+    },
+    idNumber: {
+      type: String
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female"]
+    },
+    phoneNumber: {
+      type: Number
     }
-    //      email,
-    //      cmnd
-    //      gender
-    //      phone
+
     //      signature: image
     //
   },

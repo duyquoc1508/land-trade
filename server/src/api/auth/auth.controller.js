@@ -58,7 +58,8 @@ export async function handleAuthentication(req, res, next) {
     //4. Create JWT
     const payload = {
       publicAddress,
-      _id: user._id
+      _id: user._id,
+      role: user.role
     };
     const accessTokenLife = process.env.ACCESS_TOKEN_LIFE || "7d";
     const accessTokenSecret =
