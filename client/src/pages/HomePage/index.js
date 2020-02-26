@@ -1,6 +1,11 @@
 import React, { Component } from "react";
+import { loadScript } from "../../helper/utils";
 
 class HomePage extends Component {
+  componentDidMount() {
+    console.log("load main");
+    loadScript("js/main.js");
+  }
   render() {
     return (
       <div>
