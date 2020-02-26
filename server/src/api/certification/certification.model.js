@@ -65,6 +65,11 @@ const certificationSchema = new Schema(
       {
         type: String
       }
+    ],
+    imagesBase64: [
+      {
+        type: String
+      }
     ]
   },
   { timestamps: true }

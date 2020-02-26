@@ -28,14 +28,15 @@ export async function getCertification(req, res, next) {
 // Create Certification
 export async function createCertification(req, res, next) {
   try {
-    const { owners, title, properties } = req.body;
+    const { owners, title, properties, imagesBase64 } = req.body;
     // người chứng nhận
     const attestor = req.user._id;
     const newCertification = {
       owners,
       attestor,
       title,
-      properties
+      properties,
+      imagesBase64
     };
     const certification = await Certification.create(newCertification);
     // add idCertification for owners
@@ -195,3 +196,4 @@ export async function getAllPropertiesOnSale(_req, res, next) {
     next(error);
   }
 }
+
