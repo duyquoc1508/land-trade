@@ -167,3 +167,31 @@ export async function activateSales(req, res, next) {
     next(error);
   }
 }
+
+//Get all properties activated (include selling)
+export async function getAllActivatedCertificates(_req, res, next) {
+  try {
+    const listActivatedCertificates = await Certification.find({
+      state: { $gt: 0 }
+    }).lean();
+    if (listActivatedCertificates === 0)
+      throw new ErrorHandler(404, "There are not properties activated");
+    return res
+      .status(200)
+      .json({ status: 200, data: listActivatedCertificates });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Get all properties currently on sale
+export async function getAllPropertiesOnSale(_req, res, next) {
+  try {
+    const listPropertiesSelling = await Certification.find({ state: 2 }).lean();
+    if (listPropertiesSelling.length === 0)
+      throw new ErrorHandler(404, "There are no properties on sale");
+    return res.status(200).json({ status: 200, data: listPropertiesSelling });
+  } catch (error) {
+    next(error);
+  }
+}

@@ -61,4 +61,16 @@ routes.put(
   authJwt,
   certificationController.activateSales
 );
+
+/**
+ * Get all properties activated (include selling)
+ * GET api/v1/certification
+ */
+routes.get("/", certificationController.getAllActivatedCertificates);
+
+/**
+ * Get all properties currently on sale
+ * GET api/v1/certification/selling
+ */
+routes.get("/selling", certificationController.getAllPropertiesOnSale);
 export default routes;
