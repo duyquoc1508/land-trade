@@ -6404,7 +6404,7 @@ ul.icon li::before {
 .filter-input {
 
     border: 1px solid #ddd;
-    margin-top: 25px;
+    /* margin-top: 25px; */
     border-radius: 3px;
     width: 100%;
     padding: 10px 20px;

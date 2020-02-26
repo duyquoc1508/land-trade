@@ -18,7 +18,7 @@ const handleSignMessage = async (publicAddress, nonce) => {
 };
 
 const handleSignup = publicAddress => {
-  return fetch(`http://localhost:3000/api/v1/users`, {
+  return fetch(`${process.env.BASE_URL_API}/users`, {
     body: JSON.stringify({ publicAddress }),
     headers: {
       "Content-Type": "application/json"
@@ -28,7 +28,7 @@ const handleSignup = publicAddress => {
 };
 
 const handleAuthenticate = async (publicAddress, signature) => {
-  let res = await axios.post("http://localhost:3000/api/v1/auth/login", {
+  let res = await axios.post(`${process.env.BASE_URL_API}/auth/login`, {
     publicAddress,
     signature
   });
@@ -38,7 +38,7 @@ const handleAuthenticate = async (publicAddress, signature) => {
 const getNonce = async publicAddress => {
   try {
     let res = await axios.get(
-      `http://localhost:3000/api/v1/users?publicAddress=${publicAddress}`
+      `${process.env.BASE_URL_API}/users?publicAddress=${publicAddress}`
     );
     return res.data.data.nonce;
   } catch (error) {
@@ -89,7 +89,7 @@ function* loginFlow() {
 }
 
 function* loginWatcher() {
-  yield takeEvery(LOGIN_REQUESTING, loginFlow);
+  return yield takeEvery(LOGIN_REQUESTING, loginFlow);
 }
 
 export default loginWatcher;
