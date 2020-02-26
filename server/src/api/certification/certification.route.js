@@ -42,4 +42,23 @@ routes.delete(
   certificationController.deleteCertification
 );
 
+/**
+ * Activate certification (Only owners)
+ * PUT api/v1/certification/activate/{{idCertification}}
+ */
+routes.put(
+  "/activate/:idCertification",
+  authJwt,
+  certificationController.activateCertification
+);
+
+/**
+ * Activate sale property (Only owners)
+ * PUT api/v1/certification/sale/{{idCertification}}
+ */
+routes.put(
+  "/sale/:idCertification",
+  authJwt,
+  certificationController.activateSales
+);
 export default routes;

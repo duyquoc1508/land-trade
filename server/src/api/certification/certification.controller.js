@@ -99,3 +99,74 @@ export async function deleteCertification(req, res, next) {
     next(error);
   }
 }
+
+// Activate Certification (Only owners)
+export async function activateCertification(req, res, next) {
+  try {
+    var certification = await Certification.findById(req.params.idCertification)
+      .select({ owners: 1, ownersActivated: 1, state: 1 })
+      .lean();
+    const { publicAddress } = req.user;
+    const { owners, ownersActivated } = certification;
+    // Check resource owner
+    if (!owners.includes(publicAddress)) {
+      throw new ErrorHandler(
+        403,
+        "You are not permission access to this resource"
+      );
+    }
+    // Check if not yet activated
+    if (!ownersActivated.includes(publicAddress)) {
+      let query = { $push: { ownersActivated: publicAddress } };
+      // Check if lastest owner => change state to 1 (Activated)
+      if (owners.length - 1 === ownersActivated.length) query["state"] = 1;
+      var certification = await Certification.findByIdAndUpdate(
+        req.params.idCertification,
+        query,
+        { new: true }
+      )
+        .select({ owners: 1, ownersActivated: 1, state: 1 })
+        .lean();
+    }
+    return res.status(200).json({ statusCode: 200, data: certification });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Activate sales (Only owners)
+export async function activateSales(req, res, next) {
+  try {
+    var certification = await Certification.findById(req.params.idCertification)
+      .select({ owners: 1, ownersAllowedSale: 1, state: 1 })
+      .lean();
+    // Only allow selling when the cetificate is activated
+    if (certification.state === 0) {
+      throw new ErrorHandler(405, "Certification not activated");
+    }
+    const { publicAddress } = req.user;
+    const { owners, ownersAllowedSale } = certification;
+    // Check resource owner
+    if (!owners.includes(publicAddress)) {
+      throw new ErrorHandler(
+        403,
+        "You are not permission access to this resource"
+      );
+    }
+    // Check if not yet allow selling
+    if (!ownersAllowedSale.includes(publicAddress)) {
+      const query = { $push: { ownersAllowedSale: publicAddress } };
+      if (owners.length - 1 === ownersAllowedSale.length) query["state"] = 2;
+      var certification = await Certification.findByIdAndUpdate(
+        req.params.idCertification,
+        query,
+        { new: true }
+      )
+        .select({ owners: 1, ownersAllowedSale: 1, state: 1 })
+        .lean();
+    }
+    return res.status(200).json({ statusCode: 200, data: certification });
+  } catch (error) {
+    next(error);
+  }
+}
