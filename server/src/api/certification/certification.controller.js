@@ -38,14 +38,11 @@ export async function createCertification(req, res, next) {
       properties
     };
     const certification = await Certification.create(newCertification);
-    // console.log("TCL: createCertification -> Certification", Certification);
-    // const user = await User.update(
-    //   { publicAddress:{ $in: owners }},
-    //   { $push: { properties: Certification._id } }
-    // );
-    // console.log("TCL: createCertification -> user", user);
-    // const [Certification, user] = Promise.all([Certification.create(newCertification), User.fi])
-    // Update properties for user
+    // add idCertification for owners
+    await User.updateMany(
+      { publicAddress: { $in: owners } },
+      { $push: { properties: certification._id } }
+    ).lean();
     return res.status(201).json({ statusCode: 201, data: certification });
   } catch (error) {
     next(error);
