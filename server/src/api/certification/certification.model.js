@@ -1,12 +1,17 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const cetificationSchema = new Schema(
+const certificationSchema = new Schema(
   {
-    owner: [
+    // owner: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "User"
+    //   }
+    // ],
+    owners: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        type: String // multiple publicAddress of user
       }
     ],
     title: {
@@ -47,12 +52,22 @@ const cetificationSchema = new Schema(
       perennialTree: String,
       notice: String
     },
-    status: {
+    state: {
       type: Number,
       default: 0 //0: Not activated, 1: Activated, 2: Selling
-    }
+    },
+    ownersActivated: [
+      {
+        type: String
+      }
+    ],
+    ownersAllowedSale: [
+      {
+        type: String
+      }
+    ]
   },
   { timestamps: true }
 );
 
-export default mongoose.model("Cetification", cetificationSchema);
+export default mongoose.model("Certification", certificationSchema);
