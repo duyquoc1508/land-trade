@@ -4,19 +4,42 @@ import { authJwt } from "../../service/passport.service";
 
 const routes = new Router();
 
-/**GET api/v1/users
- * req.query.publicAddress
+/**
+ * Check user registered
+ * GET api/v1/users
  */
 routes.get("/", userController.checkAddressRegistered);
 
-/**GET api/v1/users/{{publicAddress}}
- * req.params.publicAddress
+/**
+ * Send email
+ * GET api/v1/api/users/send
+ */
+routes.get("/send", authJwt, userController.send);
+
+/**
+ * Verify email
+ * GET api/vi/users/verify?token={{accessToken}}
+ */
+routes.get("/verify", userController.verifyEmail);
+
+/**
+ * Get user profile
+ * GET api/v1/users/{{publicAddress}}
  */
 routes.get("/:publicAddress", authJwt, userController.getUserProfile);
 
-/**POST api/v1/users
- * req.body.publicAddress
+/**
+ * Create new user
+ * POST api/v1/users
  */
 routes.post("/", userController.createUser);
+
+/**
+ * Update user profile
+ * PUT api/v1/users
+ */
+routes.put("/", authJwt, userController.updateUserProfile);
+
+// routes.get("/verify", authJwt, userController.verifyEmail);
 
 export default routes;

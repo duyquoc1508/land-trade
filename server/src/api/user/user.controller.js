@@ -1,5 +1,7 @@
 import User from "./user.model";
 import { ErrorHandler } from "../../helper/error";
+import { sendMail } from "../../service/mailer.service";
+import jwt from "jsonwebtoken";
 
 async function checkExistsAddress(publicAddress) {
   const user = await User.findOne({ publicAddress });
@@ -18,11 +20,12 @@ export async function checkAddressRegistered(req, res, next) {
   try {
     // If a query string publicAddress=... is given, then filter results
     const publicAddress = req.query.publicAddress;
-    let user = await User.findOne({ publicAddress }).select("nonce");
+    const user = await User.findOne({ publicAddress })
+      .select({ nonce: 1 })
+      .lean();
     if (!user) {
       throw new ErrorHandler(404, "Public address not found!");
     }
-    res.cookie("token", "djfkjkdfsd", { httpOnly: true });
     return res.status(200).json({
       statusCode: 200,
       data: user
@@ -65,6 +68,83 @@ export async function getUserProfile(req, res, next) {
       statusCode: 200,
       data: user
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Update user profile
+ */
+export async function updateUserProfile(req, res, next) {
+  try {
+    const newUser = req.body;
+    // send emal verify if user update new email
+    if (req.body.email) {
+      newUser["isVerifired"] = false;
+    }
+    const user = await User.findByIdAndUpdate(req.user._id, newUser, {
+      new: true
+    }).lean();
+    return res.status(200).json({ data: user });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Send mail
+ */
+export async function send(req, res, next) {
+  try {
+    const user = await User.findOne({
+      _id: req.user._id,
+      isVerifired: false
+    }).lean();
+    if (!user) {
+      throw new ErrorHandler(404, "User not found");
+    }
+    if (user.email) {
+      const link =
+        "http://" +
+        req.get("host") +
+        "/api/v1/users/verify?token=" +
+        req.headers.authorization.split(" ")[1];
+      const mailOptions = {
+        from: "landtrade.cskh@gmail.com",
+        to: user.email,
+        subject: "Sending Email using Node.js",
+        html:
+          "Hello,<br> Please Click on the link to verify your email.<br><a href=" +
+          link +
+          ">Click here to verify</a>"
+      };
+      sendMail(req, res, next, mailOptions);
+    } else {
+      return res
+        .status(404)
+        .json({ statusCode: 404, message: "Email address not found" });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Verify email
+export function verifyEmail(req, res, next) {
+  try {
+    const token = req.query.token;
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, user) => {
+      if (err) {
+        next(err);
+      }
+      await User.findByIdAndUpdate(user._id, {
+        isVerifired: true
+      }).lean();
+    });
+    return res
+      .status(200)
+      .json({ statusCode: "200", message: "Verify email successfully" });
   } catch (error) {
     next(error);
   }

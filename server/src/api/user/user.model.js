@@ -64,7 +64,7 @@ const userSchema = new Schema(
       required: [true, "Public address is required"]
       // validate: [isAddress, "Invalid public address"]
     },
-    username: {
+    fullName: {
       type: String
     },
     role: {
@@ -73,23 +73,33 @@ const userSchema = new Schema(
       default: "owner"
     },
     email: {
-      type: String
+      type: String,
+      unique: [true, "Email is unique"]
+    },
+    isVerifired: {
+      type: Boolean,
+      default: false
     },
     idNumber: {
-      type: String
-    },
-    gender: {
       type: String,
-      enum: ["male", "female"]
+      unique: [true, "ID number is unique"]
     },
     phoneNumber: {
       type: Number
-    }
+    },
+    properties: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Cetification"
+      }
+    ]
 
     //      signature: image
     //
   },
   { timestamps: true }
 );
+
+userSchema.index({ publicAddress: 1 });
 
 export default mongoose.model("User", userSchema);
