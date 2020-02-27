@@ -36,7 +36,7 @@ export async function createCertification(req, res, next) {
       attestor,
       title,
       properties,
-      imagesBase64
+      images
     };
     const certification = await Certification.create(newCertification);
     // add idCertification for owners
@@ -196,4 +196,3 @@ export async function getAllPropertiesOnSale(_req, res, next) {
     next(error);
   }
 }
-
