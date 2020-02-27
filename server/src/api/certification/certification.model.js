@@ -66,7 +66,7 @@ const certificationSchema = new Schema(
         type: String
       }
     ],
-    imagesBase64: [
+    images: [
       {
         type: String
       }
