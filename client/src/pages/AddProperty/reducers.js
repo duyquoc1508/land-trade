@@ -11,7 +11,7 @@ const initialState = {
   errors: [],
   messages: [],
   data: {
-    owners: null,
+    owners: [],
     title: "",
     // attestor: "",
     // II. Land lot, house and other properties attaching with land
@@ -22,7 +22,8 @@ const initialState = {
       prodForestIsArtificial: "",
       perennialTree: "",
       notice: ""
-    }
+    },
+    images: []
   }
 };
 
@@ -68,11 +69,12 @@ function createReducer(state = initialState, action) {
         action.data.note.hasOwnProperty("values")
       )
         state.data.properties.notice = action.data.note.values.notice;
+      if (
+        action.data.hasOwnProperty("upload") &&
+        action.data.upload.hasOwnProperty("values")
+      )
+        state.data.images = action.data.upload.values.images;
       return state;
-    // case CREATE_REQUESTING:
-    //   return {
-    //     hello: "dhkj"
-    //   };
     case CREATE_SUCCESS:
       return {
         Hello: action.payload

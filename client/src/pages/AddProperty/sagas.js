@@ -7,7 +7,7 @@ const handleClick = async property => {
   // console.log(typeof property);
   let response = await axios({
     method: "post",
-    url: `${process.env.BASE_URL_API}/certification`,
+    url: `${process.env.REACT_APP_BASE_URL_API}/certification`,
     data: property,
     headers: {
       Authorization: `Bearer ${Cookie.getCookie("accessToken")}`

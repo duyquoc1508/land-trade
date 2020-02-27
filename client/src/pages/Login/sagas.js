@@ -18,7 +18,7 @@ const handleSignMessage = async (publicAddress, nonce) => {
 };
 
 const handleSignup = publicAddress => {
-  return fetch(`${process.env.BASE_URL_API}/users`, {
+  return fetch(`${process.env.REACT_APP_BASE_URL_API}/users`, {
     body: JSON.stringify({ publicAddress }),
     headers: {
       "Content-Type": "application/json"
@@ -28,17 +28,20 @@ const handleSignup = publicAddress => {
 };
 
 const handleAuthenticate = async (publicAddress, signature) => {
-  let res = await axios.post(`${process.env.BASE_URL_API}/auth/login`, {
-    publicAddress,
-    signature
-  });
+  let res = await axios.post(
+    `${process.env.REACT_APP_BASE_URL_API}/auth/login`,
+    {
+      publicAddress,
+      signature
+    }
+  );
   return res.data.accessToken;
 };
 
 const getNonce = async publicAddress => {
   try {
     let res = await axios.get(
-      `${process.env.BASE_URL_API}/users?publicAddress=${publicAddress}`
+      `${process.env.REACT_APP_BASE_URL_API}/users?publicAddress=${publicAddress}`
     );
     return res.data.data.nonce;
   } catch (error) {

@@ -57,11 +57,7 @@ class Menu extends Component {
           <div className="row align-items-center">
             <div className="col-md-3 col-sm-3 col-4">
               <a className="navbar-brand" href="#">
-                <img
-                  src="images/logo-blue.png"
-                  alt="logo"
-                  className="img-fluid"
-                />
+                <img src="images/logo.jpg" alt="logo" className="img-fluid" />
               </a>
             </div>
             <div className="col-md-7 col-sm-3 col-2">

@@ -16,6 +16,7 @@ import ConstructionForm from "./construction";
 import ForestFrom from "./forest";
 import TreeForm from "./tree";
 import NoteForm from "./note.js";
+import UploadForm from "./upload";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,8 +42,8 @@ function getSteps() {
     "Công trình xây dựng khác",
     "Rừng sản xuất là rừng trồng",
     "Cây lâu năm",
-    "Ghi chú"
-    // "Thêm hình ảnh"
+    "Ghi chú",
+    "Thêm hình ảnh"
   ];
 }
 
@@ -62,6 +63,8 @@ function getStepContent(step) {
       return <TreeForm />;
     case 6:
       return <NoteForm />;
+    case 7:
+      return <UploadForm />;
     default:
       return "Unknown step";
   }
