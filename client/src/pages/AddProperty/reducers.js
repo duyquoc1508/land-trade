@@ -6,10 +6,8 @@ import {
 } from "./constants";
 
 const initialState = {
-  requesting: false,
   success: false,
-  errors: [],
-  messages: [],
+  messages: "",
   data: {
     owners: [],
     title: "",
@@ -30,12 +28,14 @@ const initialState = {
 function createReducer(state = initialState, action) {
   switch (action.type) {
     case FILLING_FORM:
-      // console.log(action.data.owner.hasOwnProperty("values"));
+      state.messages = "Yêu cầu nhập thông tin";
       if (
         action.data.hasOwnProperty("owners") &&
         action.data.owners.hasOwnProperty("values")
       )
-        state.data.owners = action.data.owners.values.publicAddress;
+        state.data.owners = action.data.owners.values.owners.map(
+          item => item.publicAddress
+        );
       if (
         action.data.hasOwnProperty("land") &&
         action.data.land.hasOwnProperty("values")
@@ -77,10 +77,16 @@ function createReducer(state = initialState, action) {
       return state;
     case CREATE_SUCCESS:
       return {
-        Hello: action.payload
+        success: true,
+        messages: "Đăng ký thành công!",
+        data: action.payload.data
       };
     case CREATE_ERROR:
-      return {};
+      return {
+        success: false,
+        messages: "Đăng ký thất bại!",
+        data: action.payload.data
+      };
     default:
       return state;
   }

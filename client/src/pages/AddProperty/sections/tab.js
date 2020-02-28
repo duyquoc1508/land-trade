@@ -5,6 +5,7 @@ import Step from "@material-ui/core/Step";
 import StepButton from "@material-ui/core/StepButton";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import Icon from "@material-ui/core/Icon";
 
 import { connect } from "react-redux";
 import * as actions from "../actions";
@@ -23,8 +24,13 @@ const useStyles = makeStyles(theme => ({
     width: "100%"
   },
   button: {
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
+    backgroundColor: "#007bff",
+    "&:hover": {
+      backgroundColor: "#0069d9"
+    }
   },
+
   completed: {
     display: "inline-block"
   },
@@ -126,7 +132,10 @@ const tab = function HorizontalNonLinearStepper(props) {
   const handleSubmit = () => {
     // console.log(props.addProperty);
     props.createSubmit(props.addProperty.data);
+    handleReset();
   };
+
+  const { handleCreate } = props;
 
   return (
     <div className={classes.root}>
@@ -151,9 +160,17 @@ const tab = function HorizontalNonLinearStepper(props) {
               All steps completed - you&apos;re finished
             </Typography>
             <Button onClick={handleReset}>Reset</Button>
-            <Button variant="contained" color="primary" onClick={handleSubmit}>
-              {"Đăng Ký"}
-            </Button>
+            {!handleCreate ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+              >
+                {"Đăng Ký"}
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
         ) : (
           <div>
@@ -163,20 +180,16 @@ const tab = function HorizontalNonLinearStepper(props) {
             </div>
             {/* </Typography> */}
             <div>
-              <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                className={classes.button}
-              >
-                Back
+              <Button disabled={activeStep === 0} onClick={handleBack}>
+                Quay lại
               </Button>
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleNext}
                 className={classes.button}
+                onClick={handleNext}
               >
-                Next
+                Tiếp theo
               </Button>
               {activeStep !== steps.length &&
                 (completed[activeStep] ? (
@@ -188,8 +201,9 @@ const tab = function HorizontalNonLinearStepper(props) {
                     variant="contained"
                     color="primary"
                     onClick={handleComplete}
+                    className={classes.button}
                   >
-                    {"Complete Step"}
+                    {"Hoàn thành"}
                   </Button>
                 ))}
             </div>

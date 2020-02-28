@@ -14,9 +14,8 @@ const handleClick = async property => {
     }
   });
   return {
-    requesting: true,
     success: true,
-    errors: [],
+    errors: false,
     messages: [],
     data: response.data
   };
@@ -24,10 +23,8 @@ const handleClick = async property => {
 
 function* createFlow(action) {
   try {
-    // console.log(action);
     let { property } = action;
     const response = yield call(handleClick, property);
-    // console.log(response);
     yield put({ type: CREATE_SUCCESS, payload: response });
   } catch (error) {
     yield put({ type: CREATE_ERROR, payload: error.message });

@@ -7,41 +7,49 @@ class OwnersForm extends Component {
   }
 
   renderOwners = ({ fields, meta: { error, submitFailed } }) => (
-    <div className="row">
+    <div className="row form-group">
       <div className="col-md-12">
-        <button
-          type="button"
-          className="btn btn-blue btn-xs"
-          onClick={() => fields.push({})}
-        >
-          <i className="fa fa-plus" aria-hidden="true"></i>
-          {" Thêm người sở hữu"}
-        </button>
-        {/* {submitFailed && error && <span>{error}</span>} */}
-        <button
-          type="button"
-          className="btn btn-danger btn-xs"
-          onClick={() => fields.pop({})}
-        >
-          Remove
-        </button>
-        <hr />
-      </div>
-      {fields.map((owner, index) => (
-        <div className="col-md-12" key={index}>
-          <div className="form-group">
-            <label>Địa chỉ của chủ sỡ hữu {index + 1}</label>
-            <Field
-              placeholder="Địa chỉ của chủ sỡ hữu"
-              name={owner}
-              component="input"
-              type="text"
-              className="form-control filter-input"
-              value=""
-            />
+        {fields.map((owner, index) => (
+          <div>
+            <label className="col-md-12" key={index}>
+              Địa chỉ của chủ sỡ hữu {index + 1}
+            </label>
+            <div className="col-md-12">
+              <div className="input-group mb-3">
+                <Field
+                  name={`${owner}.publicAddress`}
+                  key={index}
+                  placeholder="Địa chỉ của chủ sỡ hữu"
+                  component="input"
+                  type="text"
+                  className="form-control filter-input"
+                  aria-describedby="basic-addon2"
+                />
+                <div class="input-group-append">
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-xs"
+                    onClick={() => fields.splice(index, 1)}
+                  >
+                    <i class="fas fa-times"></i>{" "}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
+        ))}
+        <div className="col-md-12">
+          <button
+            type="button"
+            className="btn btn-primary btn-xs"
+            onClick={() => fields.push({})}
+          >
+            <i className="fa fa-plus" aria-hidden="true"></i>
+            {" Thêm người sở hữu"}
+          </button>
+          {/* {submitFailed && error && <span>{error}</span>} */}
         </div>
-      ))}
+      </div>
     </div>
   );
 
@@ -49,7 +57,7 @@ class OwnersForm extends Component {
     const { handleSubmit } = this.props;
     return (
       <form onSubmit={handleSubmit(this.getValue)}>
-        <FieldArray name="publicAddress" component={this.renderOwners} />
+        <FieldArray name="owners" component={this.renderOwners} />
       </form>
     );
   }
