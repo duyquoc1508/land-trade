@@ -93,13 +93,9 @@ const userSchema = new Schema(
         ref: "Cetification"
       }
     ]
-
-    //      signature: image
-    //
   },
   { timestamps: true }
 );
-
 userSchema.index({ publicAddress: 1 });
 
 export default mongoose.model("User", userSchema);

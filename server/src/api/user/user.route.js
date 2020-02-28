@@ -23,6 +23,12 @@ routes.get("/send", authJwt, userController.send);
 routes.get("/verify", userController.verifyEmail);
 
 /**
+ * Get user with idNumber and publicAddress
+ * GET api/v1/users/search?idNumber={{idNumber}}
+ */
+routes.get("/search", authJwt, userController.search);
+
+/**
  * Get user profile
  * GET api/v1/users/{{publicAddress}}
  */
@@ -39,7 +45,5 @@ routes.post("/", userController.createUser);
  * PUT api/v1/users
  */
 routes.put("/", authJwt, userController.updateUserProfile);
-
-// routes.get("/verify", authJwt, userController.verifyEmail);
 
 export default routes;

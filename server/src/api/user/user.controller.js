@@ -143,3 +143,20 @@ export async function verifyEmail(req, res, next) {
     next(error);
   }
 }
+
+// Search user with idNumber or publicAddress
+export async function search(req, res, next) {
+  try {
+    const searchRegex = new RegExp(".*" + req.query.q + ".*", "i");
+    const listUser = await User.find({
+      $or: ["idNumber", "publicAddress"].map(key => ({
+        [key]: { $regex: searchRegex }
+      }))
+    })
+      .limit(10)
+      .lean();
+    return res.status(200).json({ statusCode: 200, data: listUser });
+  } catch (error) {
+    next(error);
+  }
+}
