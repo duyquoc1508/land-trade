@@ -5,10 +5,11 @@ import apiRoutes from "./api";
 import { handleError } from "./helper/error";
 import middlewaresConfig from "./config/middlewares";
 import constants from "./config/constants";
+import path from "path";
 
 // Middlewares
 middlewaresConfig(app);
-app.use(express.static("uploads"));
+app.use("/static", express.static(path.join(__dirname, "public")));
 
 apiRoutes(app);
 
