@@ -131,20 +131,31 @@ export async function send(req, res, next) {
 }
 
 // Verify email
-export function verifyEmail(req, res, next) {
+export async function verifyEmail(req, res, next) {
   try {
     const token = req.query.token;
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, user) => {
-      if (err) {
-        next(err);
-      }
-      await User.findByIdAndUpdate(user._id, {
-        isVerifired: true
-      }).lean();
-    });
+    const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    await User.findByIdAndUpdate(user._id, { isVerifired: true }).lean();
     return res
       .status(200)
       .json({ statusCode: "200", message: "Verify email successfully" });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Search user with idNumber or publicAddress
+export async function search(req, res, next) {
+  try {
+    const searchRegex = new RegExp(".*" + req.query.q + ".*", "i");
+    const listUser = await User.find({
+      $or: ["idNumber", "publicAddress"].map(key => ({
+        [key]: { $regex: searchRegex }
+      }))
+    })
+      .limit(10)
+      .lean();
+    return res.status(200).json({ statusCode: 200, data: listUser });
   } catch (error) {
     next(error);
   }
