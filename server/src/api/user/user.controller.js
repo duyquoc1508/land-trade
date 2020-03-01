@@ -1,4 +1,4 @@
-import User from "./user.model";
+import User5 from "./user.model";
 import { ErrorHandler } from "../../helper/error";
 import { sendMail } from "../../service/mailer.service";
 import jwt from "jsonwebtoken";
@@ -42,7 +42,7 @@ export async function checkAddressRegistered(req, res, next) {
 export async function createUser(req, res, next) {
   try {
     const { publicAddress } = req.body;
-    const user = await User.create({ publicAddress });
+    const user = await User5.create({ publicAddress });
     return res.status(201).json({
       statusCode: 201,
       data: user
@@ -147,15 +147,29 @@ export async function verifyEmail(req, res, next) {
 // Search user with idNumber or publicAddress
 export async function search(req, res, next) {
   try {
+    const size = parseInt(req.query.size, 0) || 5;
     const searchRegex = new RegExp(".*" + req.query.q + ".*", "i");
     const listUser = await User.find({
       $or: ["idNumber", "publicAddress"].map(key => ({
         [key]: { $regex: searchRegex }
       }))
     })
-      .limit(10)
+      .limit(size)
       .lean();
     return res.status(200).json({ statusCode: 200, data: listUser });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Get your personal information
+export async function getPersonalInfo(req, res, next) {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      throw new ErrorHandler(404, "User not found");
+    }
+    return res.status(200).json({ statusCode: 200, data: user });
   } catch (error) {
     next(error);
   }

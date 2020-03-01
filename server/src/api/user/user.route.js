@@ -29,6 +29,12 @@ routes.get("/verify", userController.verifyEmail);
 routes.get("/search", authJwt, userController.search);
 
 /**
+ * Get my user profile
+ * GET api/v1/users/me
+ */
+routes.get("/me", authJwt, userController.getPersonalInfo);
+
+/**
  * Get user profile
  * GET api/v1/users/{{publicAddress}}
  */
