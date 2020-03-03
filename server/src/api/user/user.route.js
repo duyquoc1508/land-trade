@@ -2,7 +2,7 @@ import * as userController from "./user.controller";
 import { Router } from "express";
 import { authJwt } from "../../service/passport.service";
 import { userSchema } from "./user.validator";
-import { validateRequest } from "../../../utils/validator";
+import { validateRequest } from "../../utils/validator";
 
 const routes = new Router();
 
