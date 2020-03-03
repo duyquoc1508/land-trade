@@ -10,15 +10,7 @@ const userSchema = new Schema(
     },
     publicAddress: {
       type: String,
-      validate: {
-        validator: function(address) {
-          return /^(0x){1}[0-9a-fA-F]{40}$/i.test(address);
-        },
-        message: props => `${props.value} is not a valid public address`
-      },
-      required: [true, "Public address is required"],
       unique: [true, "Public address is unique"],
-      required: [true, "Public address is required"],
       trim: true,
       index: true
     },
@@ -66,4 +58,4 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("User5", userSchema);
+export default mongoose.model("User", userSchema);

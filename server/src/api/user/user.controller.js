@@ -1,4 +1,4 @@
-import User5 from "./user.model";
+import User from "./user.model";
 import { ErrorHandler } from "../../helper/error";
 import { sendMail } from "../../service/mailer.service";
 import jwt from "jsonwebtoken";
@@ -42,7 +42,7 @@ export async function checkAddressRegistered(req, res, next) {
 export async function createUser(req, res, next) {
   try {
     const { publicAddress } = req.body;
-    const user = await User5.create({ publicAddress });
+    const user = await User.create({ publicAddress });
     return res.status(201).json({
       statusCode: 201,
       data: user
@@ -147,7 +147,7 @@ export async function verifyEmail(req, res, next) {
 // Search user with idNumber or publicAddress
 export async function search(req, res, next) {
   try {
-    const size = parseInt(req.query.size, 0) || 5;
+    const size = parseInt(req.query.size, 0) || 10;
     const searchRegex = new RegExp(".*" + req.query.q + ".*", "i");
     const listUser = await User.find({
       $or: ["idNumber", "publicAddress"].map(key => ({
