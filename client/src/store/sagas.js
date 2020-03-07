@@ -1,7 +1,7 @@
 import { all } from "redux-saga/effects";
 
-import loginSaga from "../pages/Login/sagas";
-import createSage from "../pages/AddProperty/sagas";
+import loginSaga from "../modules/Login/sagas";
+import createSage from "../modules/Property/AddProperty/sagas";
 
 function* rootSaga() {
   // yield loginSaga();

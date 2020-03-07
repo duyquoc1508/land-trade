@@ -26,7 +26,7 @@ routes.get("/verify", userController.verifyEmail);
  * Get user with idNumber and publicAddress
  * GET api/v1/users/search?idNumber={{idNumber}}
  */
-routes.get("/search", authJwt, userController.search);
+routes.get("/search", userController.search);
 
 /**
  * Get user profile

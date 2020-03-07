@@ -5,7 +5,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 // import { makeStyles } from "@material-ui/core/styles";
 
-import { loadScript } from "../../helper/utils";
+import { loadScript } from "../../../helper/utils";
 import * as actions from "./actions";
 
 import Tab from "./sections/tab";
@@ -25,7 +25,11 @@ class AddProperty extends Component {
     this.setState({ open: false });
   }
   render() {
-    const { handleClick, createSubmit } = this.props;
+    const { handleClick, createSubmit, login } = this.props;
+    console.log(login);
+    if (this.props.login.accessToken === "") {
+      return "";
+    }
     return (
       <div className="container mt-75">
         <div className="row">
@@ -60,7 +64,8 @@ class AddProperty extends Component {
 
 const mapStateToProps = state => ({
   addProperty: state.addProperty,
-  form: state.form
+  form: state.form,
+  login: state.login
 });
 
 const mapDispatchToProps = dispatch => {

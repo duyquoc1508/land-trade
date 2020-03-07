@@ -1,7 +1,7 @@
 import { takeEvery, call, put } from "redux-saga/effects";
 import { CREATE_REQUESTING, CREATE_SUCCESS, CREATE_ERROR } from "./constants";
 import axios from "axios";
-import Cookie from "../../helper/cookie";
+import Cookie from "../../../helper/cookie";
 
 const handleClick = async property => {
   // console.log(typeof property);

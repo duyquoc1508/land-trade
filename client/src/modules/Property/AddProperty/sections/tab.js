@@ -5,7 +5,6 @@ import Step from "@material-ui/core/Step";
 import StepButton from "@material-ui/core/StepButton";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import Icon from "@material-ui/core/Icon";
 
 import { connect } from "react-redux";
 import * as actions from "../actions";
@@ -140,7 +139,11 @@ const tab = function HorizontalNonLinearStepper(props) {
   return (
     <div className={classes.root}>
       <div>
-        <Stepper nonLinear activeStep={activeStep}>
+        <Stepper
+          nonLinear
+          style={{ backgroundColor: "#e0ffe0" }}
+          activeStep={activeStep}
+        >
           {steps.map((label, index) => (
             <Step key={label}>
               <StepButton
@@ -153,12 +156,14 @@ const tab = function HorizontalNonLinearStepper(props) {
           ))}
         </Stepper>
       </div>
-      <div className={classes.boxFrom}>
+
+      <div className={(classes.boxFrom, "mb-50")}>
         {allStepsCompleted() ? (
           <div>
             <Typography className={classes.instructions}>
               All steps completed - you&apos;re finished
             </Typography>
+            <hr />
             <Button onClick={handleReset}>Reset</Button>
             {!handleCreate ? (
               <Button
@@ -179,6 +184,7 @@ const tab = function HorizontalNonLinearStepper(props) {
               {getStepContent(activeStep)}
             </div>
             {/* </Typography> */}
+            <hr />
             <div>
               <Button disabled={activeStep === 0} onClick={handleBack}>
                 Quay lại

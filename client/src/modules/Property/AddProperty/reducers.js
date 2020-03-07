@@ -33,9 +33,7 @@ function createReducer(state = initialState, action) {
         action.data.hasOwnProperty("owners") &&
         action.data.owners.hasOwnProperty("values")
       )
-        state.data.owners = action.data.owners.values.owners.map(
-          item => item.publicAddress
-        );
+        state.data.owners = action.data.owners.values.publicAddress;
       if (
         action.data.hasOwnProperty("land") &&
         action.data.land.hasOwnProperty("values")

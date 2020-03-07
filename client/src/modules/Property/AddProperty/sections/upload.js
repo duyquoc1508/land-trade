@@ -2,7 +2,7 @@ import React, { Component } from "react";
 // import { connect } from "react-redux";
 import axios from "axios";
 import { Form, Field, reduxForm } from "redux-form";
-import DropZoneField from "../../../components/DropzoneField/dropzoneField";
+import DropZoneField from "../../../../components/DropzoneField/dropzoneField";
 
 const imageIsRequired = value => (!value ? "Required" : undefined);
 
@@ -41,6 +41,14 @@ class UploadForm extends Component {
       <h4>
         <i className="lnr lnr-picture"></i> Gallery :
       </h4>
+      <button
+        type="button"
+        className="btn btn-danger btn-xs"
+        disabled={this.props.pristine || this.props.submitting}
+        onClick={this.resetForm}
+      >
+        Clear
+      </button>
       <hr />
       <Form onSubmit={this.props.handleSubmit(this.handleFormSubmit)}>
         <Field
@@ -51,14 +59,6 @@ class UploadForm extends Component {
           handleOnDrop={this.handleOnDrop}
           validate={[imageIsRequired]}
         />
-        <button
-          type="button"
-          className="uk-button uk-button-default uk-button-large clear"
-          disabled={this.props.pristine || this.props.submitting}
-          onClick={this.resetForm}
-        >
-          Clear
-        </button>
       </Form>
       <div className="clear" />
     </div>

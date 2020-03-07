@@ -3,6 +3,7 @@ import { loadScript } from "../../helper/utils";
 
 class HomePage extends Component {
   componentDidMount() {
+    loadScript("js/plugin.js");
     console.log("load main");
     loadScript("js/main.js");
   }
