@@ -1,6 +1,8 @@
 import * as userController from "./user.controller";
 import { Router } from "express";
 import { authJwt } from "../../service/passport.service";
+import { userSchema } from "./user.validator";
+import { validateRequest } from "../../utils/validator";
 
 const routes = new Router();
 
@@ -29,6 +31,12 @@ routes.get("/verify", userController.verifyEmail);
 routes.get("/search", userController.search);
 
 /**
+ * Get my user profile
+ * GET api/v1/users/me
+ */
+routes.get("/me", authJwt, userController.getPersonalInfo);
+
+/**
  * Get user profile
  * GET api/v1/users/{{publicAddress}}
  */
@@ -38,12 +46,21 @@ routes.get("/:publicAddress", authJwt, userController.getUserProfile);
  * Create new user
  * POST api/v1/users
  */
-routes.post("/", userController.createUser);
+routes.post(
+  "/",
+  validateRequest(userSchema.create, "body"), // validate request.body
+  userController.createUser
+);
 
 /**
  * Update user profile
  * PUT api/v1/users
  */
-routes.put("/", authJwt, userController.updateUserProfile);
+routes.put(
+  "/",
+  authJwt,
+  validateRequest(userSchema.update, "body"), // validate request body
+  userController.updateUserProfile
+);
 
 export default routes;
