@@ -731,7 +731,7 @@
 
 .most-viewed-img {
     flex: 1;
-    max-width: 120px;
+    max-width: 250px;
     position: relative;
 }
 

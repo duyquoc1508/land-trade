@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+
+const mapStateToProps = state => ({ user: state.user });
 
 class Profile extends Component {
   render() {
@@ -23,27 +26,32 @@ class Profile extends Component {
                   </div>
                   <div className="col-lg-7 col-md-6 col-sm-7">
                     <div className="agent-details">
-                      <h3>Tony Stark</h3>
+                      <h3>Thông tin cá nhân người dùng</h3>
                       <ul className="address-list">
                         <li>
                           <span>Họ tên:</span>
-                          Nguyễn Văn A
+                          {this.props.user.fullName ||
+                            "Vui lòng cập nhập thông tin"}
                         </li>
                         <li>
                           <span>Public Address:</span>
-                          12345676890
+                          {this.props.user.publicAddress ||
+                            "Vui lòng cập nhập thông tin"}
                         </li>
                         <li>
                           <span>CMND/Căn cước:</span>
-                          241727326
+                          {this.props.user.idNumber ||
+                            "Vui lòng cập nhập thông tin"}
                         </li>
                         <li>
                           <span>Số điện thoại:</span>
-                          0945141858
+                          {this.props.user.phoneNumber ||
+                            "Vui lòng cập nhập thông tin"}
                         </li>
                         <li>
                           <span>Email:</span>
-                          tony_stark@landtrade.org
+                          {this.props.user.email ||
+                            "Vui lòng cập nhập thông tin"}
                         </li>
                       </ul>
                       <ul className="social-buttons style1">
@@ -88,4 +96,4 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+export default connect(mapStateToProps)(Profile);

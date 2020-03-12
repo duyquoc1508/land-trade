@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import axios from "axios";
+import "./owner.css";
 
 class OwnersForm extends Component {
   getValue(data) {
@@ -10,7 +11,6 @@ class OwnersForm extends Component {
     super(props);
     this.state = { options: ["Nhap tim kiem ket qua"], owners: [1] };
     this.handleChange = this.handleChange.bind(this);
-    this.showInput = this.showInput.bind(this);
   }
 
   async handleChange(e) {
@@ -36,10 +36,10 @@ class OwnersForm extends Component {
             type="button"
             className="btn btn-primary btn-xs"
             onClick={() => {
-              console.log(this.state.owners);
               this.setState({
-                owners: [...this.state.owners, ...[1]]
+                owners: [...this.state.owners, 1]
               });
+              console.log(this.state.owners);
             }}
           >
             <i className="fa fa-plus" aria-hidden="true"></i>
@@ -49,8 +49,10 @@ class OwnersForm extends Component {
             type="button"
             className="btn btn-danger btn-xs"
             onClick={() => {
+              const [first, ...arrOwners] = this.state.owners;
+              console.log(first);
               this.setState({
-                owners: [1]
+                owners: arrOwners
               });
             }}
           >
@@ -80,7 +82,10 @@ class OwnersForm extends Component {
                   type="text"
                   className="form-control filter-input"
                   list="browsers"
-                  aria-describedby="basic-addon2"
+                  autoComplete="on"
+                  onMouseOver={() =>
+                    this.setState({ options: ["Nhập từ khóa tìm kiếm"] })
+                  }
                   onChange={this.handleChange}
                 />
 
@@ -104,11 +109,7 @@ class OwnersForm extends Component {
     var result = null;
     if (options.length > 0) {
       result = options.map((option, index) => {
-        return (
-          <option key={option} style={{ width: "100%" }}>
-            {option}{" "}
-          </option>
-        );
+        return <option key={option} value={option} />;
       });
     }
     return result;

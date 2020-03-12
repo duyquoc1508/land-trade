@@ -61,6 +61,18 @@ const loadWeb3 = async () => {
     );
   }
 };
+
+const getInfoUser = async accessToken => {
+  console.log("get", accessToken);
+  let res = await axios({
+    method: "get",
+    url: `${process.env.REACT_APP_BASE_URL_API}/users/me`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+  return res.data.data;
+};
 const handleClick = async () => {
   await loadWeb3();
   const coinbase = await window.web3.eth.getCoinbase();
@@ -76,16 +88,17 @@ const handleClick = async () => {
   let { signature } = await handleSignMessage(publicAddress, nonce);
   // console.log(signature);
   let accessToken = await handleAuthenticate(publicAddress, signature);
-  // console.log(accessToken);
   Cookie.setCookie("accessToken", accessToken, 1 / 48);
-  return accessToken;
+  let user = await getInfoUser(accessToken);
+  // console.log(accessToken, user);
+  return { accessToken, user };
 };
 
 function* loginFlow() {
   try {
     const response = yield call(handleClick);
-    // console.log(response);
-    yield put({ type: LOGIN_SUCCESS, accessToken: response });
+    console.log(response);
+    yield put({ type: LOGIN_SUCCESS, payload: response });
   } catch (error) {
     yield put({ type: LOGIN_ERROR, error: error.message });
   }

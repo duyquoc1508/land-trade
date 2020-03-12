@@ -3,8 +3,10 @@ import HomePage from "../HomePage";
 import Listings from "../Listings";
 import Property from "../Property";
 import AddProperty from "../Property/AddProperty";
+import ListProperties from "../Property/ListProperties";
 import Profile from "../Profile";
 import EditProfile from "../Profile/EditProfile";
+import Transaction from "../Transaction";
 
 const routes = [
   {
@@ -36,14 +38,17 @@ const routes = [
     path: "/user/profile/edit",
     exact: true,
     main: () => <EditProfile />
+  },
+  {
+    path: "/user/my-properties",
+    exact: true,
+    main: () => <ListProperties />
+  },
+  {
+    path: "/transaction",
+    exact: true,
+    main: () => <Transaction />
   }
-  // {
-  //   path: "/product/:id/edit",
-  //   exact: false,
-  //   main: ({ match, history }) => (
-  //     <ProductActionPage match={match} history={history} />
-  //   )
-  // },
   // {
   //   path: "",
   //   exact: false,

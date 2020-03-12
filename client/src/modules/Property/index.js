@@ -3,7 +3,7 @@ import React, { Component } from "react";
 class Property extends Component {
   render() {
     return (
-      <div>
+      <div className="mt-100">
         <div className="property-details-wrap bg-cb">
           <div className="single-property-header v3 pt-100 property-carousel">
             <div className="container">
@@ -1491,7 +1491,9 @@ class Property extends Component {
                                 <div className="trend-open">
                                   <p>
                                     $9200
-                                    <span className="per_month">month</span>{" "}
+                                    <span className="per_month">
+                                      month
+                                    </span>{" "}
                                   </p>
                                 </div>
                               </a>
@@ -1607,7 +1609,9 @@ class Property extends Component {
                                 <div className="trend-open">
                                   <p>
                                     $4000
-                                    <span className="per_month">month</span>{" "}
+                                    <span className="per_month">
+                                      month
+                                    </span>{" "}
                                   </p>
                                 </div>
                               </a>
@@ -1856,7 +1860,9 @@ class Property extends Component {
                                 <div className="trend-open">
                                   <p>
                                     $7500
-                                    <span className="per_month">month</span>{" "}
+                                    <span className="per_month">
+                                      month
+                                    </span>{" "}
                                   </p>
                                 </div>
                               </a>
@@ -2239,7 +2245,9 @@ class Property extends Component {
                                 <div className="trend-open">
                                   <p>
                                     $7500
-                                    <span className="per_month">month</span>{" "}
+                                    <span className="per_month">
+                                      month
+                                    </span>{" "}
                                   </p>
                                 </div>
                               </a>

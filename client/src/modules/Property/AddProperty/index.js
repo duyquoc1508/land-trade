@@ -25,13 +25,12 @@ class AddProperty extends Component {
     this.setState({ open: false });
   }
   render() {
-    const { handleClick, createSubmit, login } = this.props;
-    console.log(login);
+    const { handleClick, createSubmit } = this.props;
     if (this.props.login.accessToken === "") {
       return "";
     }
     return (
-      <div className="container mt-75">
+      <div className="container mt-150">
         <div className="row">
           <Tab
             handleClick={handleClick}

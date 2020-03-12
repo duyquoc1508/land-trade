@@ -13,6 +13,11 @@ const menus = [
     name: "Mua Bán",
     to: "/listings",
     exact: false
+  },
+  {
+    name: "Giao dịch",
+    to: "/transaction",
+    exact: true
   }
 ];
 
@@ -79,7 +84,7 @@ class Menu extends Component {
       <header className="db-top-header">
         <div className="container-fluid">
           <div className="row align-items-center">
-            <div className="col-md-3 col-sm-3 col-4">
+            <div className="col-md-1 col-sm-3 col-3">
               <Link className="navbar-brand" to={"/"}>
                 <img
                   src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
@@ -88,7 +93,7 @@ class Menu extends Component {
                 />
               </Link>
             </div>
-            <div className="col-md-7 col-sm-3 col-2">
+            <div className="col-md-8 col-sm-3 col-1">
               <div className="site-navbar-wrap v2 style2">
                 <div className="site-navbar">
                   <nav className="site-navigation">
@@ -115,8 +120,8 @@ class Menu extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-md-2 col-sm-6 col-6">
-              {this.props.checkAuth === "" ? (
+            <div className="col-md-3 col-sm-6 col-7">
+              {this.props.checkAuth === false ? (
                 <ButtonLogin />
               ) : (
                 <div className="header-button">
@@ -155,7 +160,8 @@ class Menu extends Component {
                       alt="..."
                     />
                     <span>
-                      Tony <i className="ion-arrow-down-b"></i>
+                      {this.props.user.fullName || "Guest"}{" "}
+                      <i className="ion-arrow-down-b"></i>
                     </span>
                   </div>
                   <div className={this.state.toggleAuth}>
@@ -177,11 +183,19 @@ class Menu extends Component {
                         </Link>
                       </div>
                       <div className="account-dropdown__item">
+                        <Link
+                          to={"/user/my-properties"}
+                          onClick={this.changeToggleAuth}
+                        >
+                          Danh sách tài sản
+                        </Link>
+                      </div>
+                      <div className="account-dropdown__item">
                         <a
                           type="button"
                           onClick={() => {
                             console.log("click logout");
-                            Cookie.setCookie("accessToken", "");
+                            Cookie.setCookie("accessToken", "", 0);
                           }}
                           href="/"
                         >
@@ -218,7 +232,8 @@ class Menu extends Component {
 }
 
 const mapStateToProps = state => ({
-  checkAuth: state.login.accessToken
+  checkAuth: state.login.accessToken,
+  user: state.user
 });
 
 export default connect(mapStateToProps)(Menu);

@@ -2,16 +2,16 @@ import { LOGIN_SUCCESS, LOGIN_ERROR } from "./constants";
 import Cookie from "../../helper/cookie";
 
 const initialState = {
-  // id: null,
-  accessToken: Cookie.getCookie("accessToken")
+  accessToken: Cookie.getCookie("accessToken"),
+  user: {}
 };
 
-function loginReducer(state = initialState, action) {
+export default function loginReducer(state = initialState, action) {
   switch (action.type) {
     case LOGIN_SUCCESS:
       return {
         // id: "action.id",
-        accessToken: action.accessToken
+        accessToken: action.payload.accessToken
       };
     case LOGIN_ERROR:
       return {
@@ -22,5 +22,3 @@ function loginReducer(state = initialState, action) {
       return state;
   }
 }
-
-export default loginReducer;
