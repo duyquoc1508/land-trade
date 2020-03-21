@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { Route, Link } from "react-router-dom";
-import ButtonLogin from "../../pages/Login";
+import ButtonLogin from "../../modules/Login";
 import { connect } from "react-redux";
-// import Cookie from "../../helper/cookie";
-import { loadScript } from "../../helper/utils";
-
+import Cookie from "../../helper/cookie";
 const menus = [
   {
     name: "Trang Chủ",
@@ -17,9 +15,9 @@ const menus = [
     exact: false
   },
   {
-    name: "Đăng Ký Token",
-    to: "/add-property",
-    exact: false
+    name: "Giao dịch",
+    to: "/transaction",
+    exact: true
   }
 ];
 
@@ -41,30 +39,61 @@ const MenuLink = ({ label, to, activeOnlyWhenExact }) => {
 };
 
 class Menu extends Component {
-  componentDidMount() {
-    console.log("load plugin");
-    loadScript("js/plugin.js");
-    console.log("load dashboard");
-    loadScript("js/dashboard.js");
+  constructor(props) {
+    super(props);
+    this.state = {
+      toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block",
+      toggleAuthStatus: false,
+      toggleNotifications: "header-button-item has-noti js-item-menu",
+      toggleNotificationsStatus: false
+    };
   }
 
+  changeToggleAuth = () => {
+    if (!this.state.toggleAuthStatus) {
+      // console.log("show");
+      this.setState({ toggleAuthStatus: true });
+      this.setState({
+        toggleAuth:
+          "setting-menu js-right-sidebar d-none d-lg-block show-sidebar"
+      });
+    } else {
+      // console.log("close");
+      this.setState({ toggleAuthStatus: false });
+      this.setState({
+        toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block"
+      });
+    }
+  };
+  changeToggleNotifications = () => {
+    if (!this.state.toggleNotificationsStatus) {
+      this.setState({ toggleNotificationsStatus: true });
+      this.setState({
+        toggleNotifications:
+          "header-button-item has-noti js-item-menu show-dropdown"
+      });
+    } else {
+      this.setState({ toggleNotificationsStatus: false });
+      this.setState({
+        toggleNotifications: "header-button-item has-noti js-item-menu"
+      });
+    }
+  };
   render() {
-    // let checkAuth = Cookie.getCookie("accessToken");
-    // console.log(this.props.checkAuth);
     return (
       <header className="db-top-header">
         <div className="container-fluid">
           <div className="row align-items-center">
-            <div className="col-md-3 col-sm-3 col-4">
-              <a className="navbar-brand" href="#">
+            <div className="col-md-1 col-sm-3 col-3">
+              <Link className="navbar-brand" to={"/"}>
                 <img
-                  src="images/logo-blue.png"
+                  src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
                   alt="logo"
                   className="img-fluid"
                 />
-              </a>
+              </Link>
             </div>
-            <div className="col-md-7 col-sm-3 col-2">
+            <div className="col-md-8 col-sm-3 col-1">
               <div className="site-navbar-wrap v2 style2">
                 <div className="site-navbar">
                   <nav className="site-navigation">
@@ -91,12 +120,15 @@ class Menu extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-md-2 col-sm-6 col-6">
-              {!this.props.checkAuth ? (
+            <div className="col-md-3 col-sm-6 col-7">
+              {this.props.checkAuth === false ? (
                 <ButtonLogin />
               ) : (
                 <div className="header-button">
-                  <div className="header-button-item has-noti js-item-menu">
+                  <div
+                    className={this.state.toggleNotifications}
+                    onClick={this.changeToggleNotifications}
+                  >
                     <i className="ion-ios-bell-outline"></i>
                     <div className="notifi-dropdown js-dropdown">
                       <div className="notifi__item">
@@ -119,22 +151,56 @@ class Menu extends Component {
                       </div>
                     </div>
                   </div>
-                  <div className="header-button-item js-sidebar-btn">
-                    <img src="images/dashboard/agent_db_1.jpg" alt="..." />
+                  <div
+                    className="header-button-item js-sidebar-btn"
+                    onClick={this.changeToggleAuth}
+                  >
+                    <img
+                      src={`${process.env.REACT_APP_BASE_URL}/images/dashboard/agent_db_1.jpg`}
+                      alt="..."
+                    />
                     <span>
-                      Tony <i className="ion-arrow-down-b"></i>
+                      {this.props.user.fullName || "Guest"}{" "}
+                      <i className="ion-arrow-down-b"></i>
                     </span>
                   </div>
-                  <div className="setting-menu js-right-sidebar d-none d-lg-block">
+                  <div className={this.state.toggleAuth}>
                     <div className="account-dropdown__body">
                       <div className="account-dropdown__item">
-                        <Link to={"/add-property"}>Đăng Ký Token</Link>
+                        <Link
+                          to="/add-property"
+                          onClick={this.changeToggleAuth}
+                        >
+                          Số Hóa Tài Sản
+                        </Link>
                       </div>
                       <div className="account-dropdown__item">
-                        <Link to={"/add-property"}>Trang Cá Nhân</Link>
+                        <Link
+                          to={"/user/profile"}
+                          onClick={this.changeToggleAuth}
+                        >
+                          Trang cá nhân
+                        </Link>
                       </div>
                       <div className="account-dropdown__item">
-                        <a href="db-my-profile.html">Đăng Xuất</a>
+                        <Link
+                          to={"/user/my-properties"}
+                          onClick={this.changeToggleAuth}
+                        >
+                          Danh sách tài sản
+                        </Link>
+                      </div>
+                      <div className="account-dropdown__item">
+                        <a
+                          type="button"
+                          onClick={() => {
+                            console.log("click logout");
+                            Cookie.setCookie("accessToken", "", 0);
+                          }}
+                          href="/"
+                        >
+                          Đăng xuất
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -166,7 +232,8 @@ class Menu extends Component {
 }
 
 const mapStateToProps = state => ({
-  checkAuth: state.login.accessToken
+  checkAuth: state.login.accessToken,
+  user: state.user
 });
 
 export default connect(mapStateToProps)(Menu);

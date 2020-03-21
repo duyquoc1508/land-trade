@@ -9947,6 +9947,7 @@ ul.business-hours li span {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    z-index: -100;
 }
 
 .add-listing__input-file-wrap i {
@@ -11069,7 +11070,7 @@ input[type="radio"] {
 }
 
 .address-list li span {
-    width: 100px;
+    width: 175px;
     font-weight: 500;
     float: left;
 }

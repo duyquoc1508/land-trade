@@ -1,0 +1,56 @@
+img {
+  max-width: 100%;
+  max-height: 330px;
+  margin: 0 auto;
+}
+
+.clear {
+  clear: both;
+}
+
+.details,
+.title {
+  text-align: center;
+}
+
+.error {
+  margin-top: 4px;
+  color: red;
+}
+
+.has-error {
+  border: 1px dotted red;
+}
+
+.image-container {
+  align-items: center;
+  display: flex;
+  width: 85%;
+  height: 80%;
+  float: left;
+  margin: 15px 10px 10px 37px;
+  text-align: center;
+}
+
+.preview-container {
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.placeholder-preview {
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  background-color: #efebeb;
+}
+.render-preview {
+  text-align: center;
+  background-color: #efebeb;
+  width: 50%;
+  float: left;
+}
+
+.upload-container {
+  cursor: pointer;
+  height: 300px;
+}
