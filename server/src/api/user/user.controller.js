@@ -174,3 +174,20 @@ export async function getPersonalInfo(req, res, next) {
     next(error);
   }
 }
+
+// get all properties of user
+export async function getAllPropertiesOfUser(req, res, next) {
+  try {
+    const listProperties = await User.findById(req.user._id)
+      .populate({
+        path: "properties"
+      })
+      .select("properties");
+    console.log(listProperties);
+    if (listProperties.length === 0)
+      throw new ErrorHandler(404, "There are no properties found");
+    return res.status(200).json({ statusCode: 200, data: listProperties });
+  } catch (error) {
+    next(error);
+  }
+}

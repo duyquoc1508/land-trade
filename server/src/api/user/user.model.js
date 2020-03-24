@@ -47,7 +47,7 @@ const userSchema = new Schema(
     properties: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Cetification"
+        ref: "Certification"
       }
     ],
     avatar: {

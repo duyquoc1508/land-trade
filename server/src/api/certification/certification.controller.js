@@ -175,7 +175,7 @@ export async function getAllActivatedCertificates(_req, res, next) {
     const listActivatedCertificates = await Certification.find({
       state: { $gt: 0 }
     }).lean();
-    if (listActivatedCertificates === 0)
+    if (listActivatedCertificates.length === 0)
       throw new ErrorHandler(404, "There are not properties activated");
     return res
       .status(200)
@@ -192,6 +192,23 @@ export async function getAllPropertiesOnSale(_req, res, next) {
     if (listPropertiesSelling.length === 0)
       throw new ErrorHandler(404, "There are no properties on sale");
     return res.status(200).json({ status: 200, data: listPropertiesSelling });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Get all properties currently of user
+export async function getAllPropertiesOfUser(_req, res, next) {
+  try {
+    // console.log(_req.user.publicAddress);
+    const listPropertiesUser = await Certification.find({
+      // owners: "0x300a85b19541Eb9C5c31CA5d203143a742267582"
+      owners: _req.user.publicAddress.toString()
+    }).lean();
+    console.log(listPropertiesUser);
+    if (listPropertiesUser.length === 0)
+      throw new ErrorHandler(404, "There are no properties of user");
+    return res.status(200).json({ status: 200, data: listPropertiesUser });
   } catch (error) {
     next(error);
   }

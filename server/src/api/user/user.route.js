@@ -13,6 +13,12 @@ const routes = new Router();
 routes.get("/", userController.checkAddressRegistered);
 
 /**
+ * Get all properties of user
+ * GET api/v1/users/properties
+ */
+routes.get("/properties", authJwt, userController.getAllPropertiesOfUser);
+
+/**
  * Send email
  * GET api/v1/api/users/send
  */

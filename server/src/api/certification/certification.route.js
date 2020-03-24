@@ -6,12 +6,6 @@ import permit from "../../service/permission.service";
 const routes = Router();
 
 /**
- * Get certification information
- * GET api/v1/certification/{{idCertification}}
- */
-routes.get("/:idCertification", certificationController.getCertification);
-
-/**
  * Create new certification (Only government)
  * POST api/v1/certification
  */
@@ -73,4 +67,17 @@ routes.get("/", certificationController.getAllActivatedCertificates);
  * GET api/v1/certification/selling
  */
 routes.get("/selling", certificationController.getAllPropertiesOnSale);
+
+/**
+ * Get all properties currently of user
+ * GET api/v1/certification/user
+ */
+routes.get("/user", authJwt, certificationController.getAllPropertiesOfUser);
+
+/**
+ * Get certification information
+ * GET api/v1/certification/{{idCertification}}
+ */
+routes.get("/:idCertification", certificationController.getCertification);
+
 export default routes;
