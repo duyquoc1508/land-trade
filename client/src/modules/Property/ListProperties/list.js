@@ -3,7 +3,6 @@ import React, { Component } from "react";
 class ListProperties extends Component {
   render() {
     let { list } = this.props;
-    console.log(list);
     return (
       <div className="viewd-item-wrap">
         {list.map((property, index) => (
