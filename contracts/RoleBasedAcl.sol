@@ -50,6 +50,7 @@ contract RoleBasedAcl {
 		uint id = userAddressIndexes[_account];
 		for (uint i = id; i<userAddress.length-1; i++){
             userAddress[i] = userAddress[i+1];
+            userAddressIndexes[userAddress[i]] = i;
         }
         userAddress.pop();
 		emit RoleRemoved(_account, _role);
