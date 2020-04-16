@@ -8,48 +8,54 @@ import TabListProperties from "../Property/ListProperties/tab";
 import Profile from "../Profile";
 import EditProfile from "../Profile/EditProfile";
 import Transaction from "../Transaction";
+import Role from "../Role";
 
 const routes = [
   {
     path: "/",
     exact: true,
-    main: () => <HomePage />
+    main: () => <HomePage />,
   },
   {
     path: "/listings",
     exact: true,
-    main: () => <Listings />
+    main: () => <Listings />,
   },
   {
     path: "/property",
     exact: true,
-    main: () => <Property />
+    main: () => <Property />,
   },
   {
     path: "/add-property",
     exact: true,
-    main: ({ history }) => <AddProperty history={history} />
+    main: ({ history }) => <AddProperty history={history} />,
   },
   {
     path: "/user/profile",
     exact: true,
-    main: () => <Profile />
+    main: () => <Profile />,
   },
   {
     path: "/user/profile/edit",
     exact: true,
-    main: () => <EditProfile />
+    main: () => <EditProfile />,
   },
   {
     path: "/user/my-properties",
     exact: true,
-    main: () => <TabListProperties />
+    main: () => <TabListProperties />,
   },
   {
     path: "/transaction",
     exact: true,
-    main: () => <Transaction />
-  }
+    main: () => <Transaction />,
+  },
+  {
+    path: "/role",
+    exact: true,
+    main: () => <Role />,
+  },
   // {
   //   path: "",
   //   exact: false,
