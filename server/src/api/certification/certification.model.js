@@ -3,12 +3,10 @@ const Schema = mongoose.Schema;
 
 const certificationSchema = new Schema(
   {
-    // owner: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "User"
-    //   }
-    // ],
+    // for mapping idCertificate in blockchain and mongoDB
+    idCert: {
+      type: String
+    },
     owners: [
       {
         type: String // multiple publicAddress of user
@@ -17,7 +15,7 @@ const certificationSchema = new Schema(
     title: {
       type: String
     },
-    attestor: {
+    notary: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     },
@@ -26,24 +24,21 @@ const certificationSchema = new Schema(
       landLot: {
         landLotNo: Number,
         mapSheetNo: Number,
+        commonUseArea: Number,
+        privateUseArea: Number,
         address: String,
-        area: Number, //m2
-        formOfUse: {
-          private: Number, //m2
-          common: Number //m2
-        },
         purposeOfUse: String,
         timeOfUse: String,
         originOfUse: String
       },
       house: {
-        address: String,
         houseType: String,
-        apartmentName: String,
+        numberOfHouse: String, // mã số phòng sở hữu, tầng ở. địa chỉ toaf nhà là đia chỉ của khu đất
         constructionArea: Number,
-        floorArea: String,
+        floorArea: Number,
+        level: String,
+        numberOfFloor: String,
         formOfOwn: String,
-        level: Number,
         timeOfUse: String
       },
       otherConstruction: String,
@@ -70,7 +65,11 @@ const certificationSchema = new Schema(
       {
         type: String
       }
-    ]
+    ],
+    // updated when transaction is comfirmed
+    transactionId: {
+      type: String
+    }
   },
   { timestamps: true }
 );

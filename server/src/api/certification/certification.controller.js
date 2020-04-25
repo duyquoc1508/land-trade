@@ -28,12 +28,13 @@ export async function getCertification(req, res, next) {
 // Create Certification
 export async function createCertification(req, res, next) {
   try {
-    const { owners, title, properties, images } = req.body;
+    const { idCert, owners, title, properties, images } = req.body;
     // người chứng nhận
-    const attestor = req.user._id;
+    const notary = req.user._id;
     const newCertification = {
+      idCert,
       owners,
-      attestor,
+      notary,
       title,
       properties,
       images
