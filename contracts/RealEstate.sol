@@ -29,22 +29,23 @@ contract RealEstate {
 	enum State { PENDDING, ACTIVATED, SELLING } //sate of token PENDDING: 0, ACTIVATED: 1, SELLING: 2
 
 	struct LandLot {
+		uint8 landLotNo;
+		uint8 mapSheetNo;
+		uint8 commonUseArea;
+		uint8 privateUseArea;
 		string location;
 		string purposeOfUse;
 		string timeOfUse;
 		string originOfUse;
-		uint8 landLotNo;
-		uint8 mapSheetNo;
-		uint8 area;
 	}
 
 	struct House {
-		uint8 level;
-		uint8 constructionArea;
-		string location;
 		string houseType;
-		string apartmentName;
-		string floorArea;
+		string numberOfHouse;
+		uint8 constructionArea;
+		uint8 floorArea;
+		string level;
+		string numberOfFloor;
 		string formOfOwn;
 		string timeOfUse;
 	}
@@ -66,17 +67,14 @@ contract RealEstate {
 	mapping(uint256 => State) public tokenToState; // Default: 0 => 'PENDDING'
 	// mapping token to notary
 	mapping(uint256 => address) public tokenToNotary;
+  // mapping token to certificate
+  mapping(uint256 => Certificate) public tokenToCert;
 
 	// ------------------------------ Events ------------------------------
 	/// @dev Emits when a new certificate created.
 	event NewCertificate(
-		LandLot landLot,
-		House house,
-		string ortherConstruction,
-		string prodForestIsArtificial,
-		string perennialTree,
-		string notice,
-		address indexed notary
+		uint256 idCertificate,
+    string transactionId
 	);
 
 	/// @dev This emits when ownership of any NFTs changes by any mechanism
@@ -145,13 +143,9 @@ contract RealEstate {
 	 * @dev Require role notary and list owner does not contain msg.sender
 	 */
 	function createCertificate(
-		LandLot memory _landLot,
-		House memory _house,
-		string memory _ortherConstruction,
-		string memory _prodForestIsArtificial,
-		string memory _perennialTree,
-		string memory _notice,
-		address[] memory _owners
+    Certificate memory _cert,
+		address[] memory _owners,
+    string memory _transactionId
 	) public {
 		require(roleContract.hasRole(msg.sender,1), "RealEstate: Require notary");
 		// require owner not to be notary(msg.sender)
@@ -160,24 +154,12 @@ contract RealEstate {
 			"RealEstate: You are not allowed to create your own property"
 		);
 		certificateCount = certificateCount.add(1);
-		Certificate(
-			_landLot,
-			_house,
-			_ortherConstruction,
-			_prodForestIsArtificial,
-			_perennialTree,
-			_notice
-		);
+		tokenToCert[certificateCount] = _cert;
 		tokenToOwners[certificateCount] = _owners;
 		tokenToNotary[certificateCount] = msg.sender;
 		emit NewCertificate(
-			_landLot,
-			_house,
-			_ortherConstruction,
-			_prodForestIsArtificial,
-			_perennialTree,
-			_notice,
-			msg.sender
+			certificateCount,
+      _transactionId
 		);
 	}
 
