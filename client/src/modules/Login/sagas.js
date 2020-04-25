@@ -17,25 +17,36 @@ const handleSignMessage = async (publicAddress, nonce) => {
   }
 };
 
-const handleSignup = publicAddress => {
-  return fetch(`${process.env.REACT_APP_BASE_URL_API}/users`, {
-    body: JSON.stringify({ publicAddress }),
-    headers: {
-      "Content-Type": "application/json"
-    },
-    method: "POST"
-  }).then(response => response.json());
+const handleSignup = async publicAddress => {
+  try {
+    const result = await axios({
+      url: `${process.env.REACT_APP_BASE_URL_API}/users`,
+      data: { publicAddress },
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST"
+    });
+    return result.data;
+  } catch (error) {
+    alert(error);
+  }
+
 };
 
 const handleAuthenticate = async (publicAddress, signature) => {
-  let res = await axios.post(
-    `${process.env.REACT_APP_BASE_URL_API}/auth/login`,
-    {
-      publicAddress,
-      signature
-    }
-  );
-  return res.data.accessToken;
+  try {
+    let res = await axios.post(
+      `${process.env.REACT_APP_BASE_URL_API}/auth/login`,
+      {
+        publicAddress,
+        signature
+      }
+    );
+    return res.data.accessToken;
+  } catch (error) {
+    alert(error.message)
+  }
 };
 
 const getNonce = async publicAddress => {
@@ -45,10 +56,9 @@ const getNonce = async publicAddress => {
     );
     return res.data.data.nonce;
   } catch (error) {
-    handleSignup(publicAddress);
-    return getNonce(publicAddress);
   }
 };
+
 const loadWeb3 = async () => {
   if (window.ethereum) {
     window.web3 = new Web3(window.ethereum);
@@ -83,10 +93,11 @@ const handleClick = async () => {
   const publicAddress = coinbase.toLowerCase();
 
   let nonce = await getNonce(publicAddress);
-
-  // console.log(nonce);
+  if(!nonce){
+    const result = await handleSignup(publicAddress);
+    nonce = result.data.nonce;
+  }
   let { signature } = await handleSignMessage(publicAddress, nonce);
-  // console.log(signature);
   let accessToken = await handleAuthenticate(publicAddress, signature);
   Cookie.setCookie("accessToken", accessToken, 1 / 48);
   let user = await getInfoUser(accessToken);
@@ -97,7 +108,6 @@ const handleClick = async () => {
 function* loginFlow() {
   try {
     const response = yield call(handleClick);
-    console.log(response);
     yield put({ type: LOGIN_SUCCESS, payload: response });
   } catch (error) {
     yield put({ type: LOGIN_ERROR, error: error.message });
