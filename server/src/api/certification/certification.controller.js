@@ -28,16 +28,16 @@ export async function getCertification(req, res, next) {
 // Create Certification
 export async function createCertification(req, res, next) {
   try {
-    const { idCert, owners, title, properties, images } = req.body;
+    const { transactionHash, owners, title, properties, images } = req.body;
     // người chứng nhận
     const notary = req.user._id;
     const newCertification = {
-      idCert,
+      transactionHash,
       owners,
       notary,
       title,
       properties,
-      images
+      images,
     };
     const certification = await Certification.create(newCertification);
     // add idCertification for owners
@@ -67,7 +67,7 @@ export async function updateCertification(req, res, next) {
       req.params.idCertification,
       newCertification,
       {
-        new: true
+        new: true,
       }
     );
     return res
@@ -174,7 +174,7 @@ export async function activateSales(req, res, next) {
 export async function getAllActivatedCertificates(_req, res, next) {
   try {
     const listActivatedCertificates = await Certification.find({
-      state: { $gt: 0 }
+      state: { $gt: 0 },
     }).lean();
     if (listActivatedCertificates.length === 0)
       throw new ErrorHandler(404, "There are not properties activated");
@@ -204,7 +204,7 @@ export async function getAllPropertiesOfUser(_req, res, next) {
     // console.log(_req.user.publicAddress);
     const listPropertiesUser = await Certification.find({
       // owners: "0x300a85b19541Eb9C5c31CA5d203143a742267582"
-      owners: _req.user.publicAddress.toString()
+      owners: _req.user.publicAddress.toString(),
     }).lean();
     console.log(listPropertiesUser);
     if (listPropertiesUser.length === 0)

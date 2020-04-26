@@ -3,21 +3,17 @@ const Schema = mongoose.Schema;
 
 const certificationSchema = new Schema(
   {
-    // for mapping idCertificate in blockchain and mongoDB
-    idCert: {
-      type: String
-    },
     owners: [
       {
-        type: String // multiple publicAddress of user
-      }
+        type: String, // multiple publicAddress of user
+      },
     ],
     title: {
-      type: String
+      type: String,
     },
     notary: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
     },
     // II. Land lot, house and other properties attaching with land
     properties: {
@@ -29,47 +25,51 @@ const certificationSchema = new Schema(
         address: String,
         purposeOfUse: String,
         timeOfUse: String,
-        originOfUse: String
+        originOfUse: String,
       },
       house: {
         houseType: String,
-        numberOfHouse: String, // mã số phòng sở hữu, tầng ở. địa chỉ toaf nhà là đia chỉ của khu đất
+        address: String, // Address or house number, name of building for apartment
         constructionArea: Number,
         floorArea: Number,
         level: String,
         numberOfFloor: String,
         formOfOwn: String,
-        timeOfUse: String
+        timeOfOwn: String,
       },
       otherConstruction: String,
       //production forest is an artificial forest
       prodForestIsArtificial: String,
       perennialTree: String,
-      notice: String
+      notice: String,
     },
     state: {
       type: Number,
-      default: 0 //0: Not activated, 1: Activated, 2: Selling
+      default: 0, //0: Not activated, 1: Activated, 2: Selling
     },
     ownersActivated: [
       {
-        type: String
-      }
+        type: String,
+      },
     ],
     ownersAllowedSale: [
       {
-        type: String
-      }
+        type: String,
+      },
     ],
     images: [
       {
-        type: String
-      }
+        type: String,
+      },
     ],
     // updated when transaction is comfirmed
-    transactionId: {
-      type: String
-    }
+    transactionHash: {
+      type: String,
+    },
+    isComfirmed: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
