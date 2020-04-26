@@ -73,8 +73,7 @@ contract RealEstate {
 	// ------------------------------ Events ------------------------------
 	/// @dev Emits when a new certificate created.
 	event NewCertificate(
-		uint256 idCertificate,
-    string transactionId
+		uint256 idCertificate
 	);
 
 	/// @dev This emits when ownership of any NFTs changes by any mechanism
@@ -144,8 +143,7 @@ contract RealEstate {
 	 */
 	function createCertificate(
     Certificate memory _cert,
-		address[] memory _owners,
-    string memory _transactionId
+		address[] memory _owners
 	) public {
 		require(roleContract.hasRole(msg.sender,1), "RealEstate: Require notary");
 		// require owner not to be notary(msg.sender)
@@ -158,8 +156,7 @@ contract RealEstate {
 		tokenToOwners[certificateCount] = _owners;
 		tokenToNotary[certificateCount] = msg.sender;
 		emit NewCertificate(
-			certificateCount,
-      _transactionId
+			certificateCount
 		);
 	}
 
