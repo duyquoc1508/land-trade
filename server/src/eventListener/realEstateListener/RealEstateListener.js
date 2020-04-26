@@ -1,6 +1,7 @@
 import { web3 } from "../web3Provider";
 import RealEstateContract from "../../contracts/RealEstate.json";
 import RealEstateEvent from "./Event";
+import { handleNewCertEvent } from "./helper";
 import { realEstateContractAddress } from "../../config/common-path";
 
 const instanceContract = new web3.eth.Contract(
@@ -22,7 +23,7 @@ export function realEstateListener() {
 async function handleEvent(event) {
   switch (event.event) {
     case RealEstateEvent.NEW_CERTIFICATE:
-      console.log(event.returnValues);
+      await handleNewCertEvent(event);
       return;
     case RealEstateEvent.ACTIVATE:
       console.log(event.returnValues);
