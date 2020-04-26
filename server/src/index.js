@@ -6,11 +6,16 @@ import { handleError } from "./helper/error";
 import middlewaresConfig from "./config/middlewares";
 import constants from "./config/constants";
 import path from "path";
+import { initializeListeners } from "./eventListener/listener";
 
 // Middlewares
 middlewaresConfig(app);
 app.use("/static", express.static(path.join(__dirname, "public")));
 
+// Initialize event listener on blockchain
+initializeListeners();
+
+// Import routes to be served
 apiRoutes(app);
 
 app.get("/api", (_req, res) => {
@@ -27,7 +32,7 @@ app.use((req, res) => {
   res.status(404).send({ url: req.originalUrl + " not found." });
 });
 
-app.listen(constants.PORT, err => {
+app.listen(constants.PORT, (err) => {
   if (err) {
     throw err;
   } else {
