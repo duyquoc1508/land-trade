@@ -1,3 +1,4 @@
+/// proplem: Can't ignore value of field disabled before send request
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 
@@ -5,6 +6,17 @@ class HouseForm extends Component {
   getValue(data) {
     console.log(data);
   }
+  constructor(props) {
+    super(props);
+    this.state = {
+      houseType: 1,
+    };
+    this.houseType = {
+      "Nha chung cu": 0,
+      "Nha o rieng le": 1,
+    };
+  }
+
   render() {
     const { handleSubmit } = this.props;
     return (
@@ -12,44 +24,53 @@ class HouseForm extends Component {
         <div className="row">
           <div className="col-md-12">
             <div className="form-group">
-              <label>Địa chỉ </label>
+              <label>Loại nhà ở</label>
+              <Field
+                name="houseType"
+                component="select"
+                className="form-control filter-input"
+                onChange={(e) =>
+                  this.setState({ houseType: this.houseType[e.target.value] })
+                }
+              >
+                <option value="Nha o rieng le">Nhà ở riêng lẻ</option>
+                <option value="Nha chung cu">Nhà chung cư</option>
+              </Field>
+            </div>
+          </div>
+
+          <div className="col-md-12">
+            <div className="form-group">
+              <label>Địa chỉ</label>
               <Field
                 name="address"
                 component="input"
                 type="text"
                 className="form-control filter-input"
-                placeholder="Địa chỉ"
-              />
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="form-group">
-              <label>Loại nhà ở</label>
-              <Field
-                name="houseType"
-                component="input"
-                type="text"
-                className="form-control filter-input"
-                placeholder="Lọai nhà ở"
+                placeholder="Địa chỉ hoặc tên nhà chung cư / tòa nhà"
               />
             </div>
           </div>
 
-          <div className="col-md-4">
-            <div className="form-group">
-              <label>
-                Diện tích xây dựng( đơn vị: m <sup>2</sup> )
-              </label>
-              <Field
-                name="constructionArea"
-                component="input"
-                type="text"
-                className="form-control filter-input"
-                placeholder="Diện tích xây dựng"
-              />
+          {this.state.houseType ? (
+            <div className="col-md-6">
+              <div className="form-group">
+                <label>
+                  Diện tích xây dựng( đơn vị: m <sup>2</sup> )
+                </label>
+                <Field
+                  name="constructionArea"
+                  component="input"
+                  type="number"
+                  className="form-control filter-input"
+                  placeholder="Diện tích xây dựng"
+                  disabled={this.houseType[this.state.houseType]}
+                />
+              </div>
             </div>
-          </div>
-          <div className="col-md-4">
+          ) : null}
+
+          <div className="col-md-6">
             <div className="form-group">
               <label>
                 Diện tích sàn( đơn vị: m <sup>2</sup> )
@@ -57,72 +78,68 @@ class HouseForm extends Component {
               <Field
                 name="floorArea"
                 component="input"
-                type="text"
+                type="number"
                 className="form-control filter-input"
                 placeholder="Diện tích sàn"
               />
             </div>
           </div>
-          <div className="col-md-12">
+
+          {this.state.houseType ? (
+            <div className="col-md-6">
+              <div className="form-group">
+                <label>Cấp (Hạng)</label>
+                <Field
+                  name="level"
+                  component="input"
+                  type="text"
+                  className="form-control filter-input"
+                  placeholder="Cấp"
+                />
+              </div>
+            </div>
+          ) : null}
+
+          {this.state.houseType ? (
+            <div className="col-md-6">
+              <div className="form-group">
+                <label>Số tầng</label>
+                <Field
+                  name="numberOfFloor"
+                  component="input"
+                  type="text"
+                  className="form-control filter-input"
+                  placeholder="Số tầng, hầm và sân thượng"
+                />
+              </div>
+            </div>
+          ) : null}
+
+          <div className="col-md-6">
             <div className="form-group">
-              <label>Tên Chung cư</label>
+              <label>Hình thức sở hữu</label>
               <Field
-                name="apartmentName"
+                name="formOfOwn"
                 component="input"
-                type="text"
                 className="form-control filter-input"
-                placeholder="Tên chung cư/tòa nhà"
+                type="text"
+                placeholder="Hình thức sở hữu"
               />
             </div>
           </div>
 
-          <div className="col-md-4">
+          <div className="col-md-6">
             <div className="form-group">
-              <label>Hình thức sử hữu</label>
+              <label>Thời gian sở hữu</label>
               <Field
-                name="formOfOwn"
-                component="input"
-                type="text"
-                className="form-control filter-input"
-                placeholder="Hình thức sử hữu"
-              />
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="form-group">
-              <label>Thời gian sử dụng</label>
-              <Field
-                name="timeOfUse"
+                name="timeOfOwn"
                 component="input"
                 className="form-control filter-input"
                 type="text"
-                placeholder="Thời gian sử dụng"
+                placeholder="Thời gian sở hữu"
               />
             </div>
           </div>
-          <div className="col-md-4">
-            <div className="form-group">
-              <label>Hạng mục </label>
-              <Field
-                name="level"
-                component="input"
-                type="text"
-                className="form-control filter-input"
-                placeholder="Hạng mục nhà"
-              />
-            </div>
-          </div>
-          {/* <div className="col-md-12">
-            <div className="form-group">
-              <label>Nguồn gốc sử dụng</label>
-              <textarea
-                className="form-control"
-                id="list_info"
-                rows="4"
-                placeholder="Nguồn gốc sử dụng"
-              ></textarea>
-            </div>
-          </div> */}
         </div>
       </form>
     );
@@ -130,7 +147,7 @@ class HouseForm extends Component {
 }
 HouseForm = reduxForm({
   // a unique name for the form
-  form: "house"
+  form: "house",
 })(HouseForm);
 
 export default HouseForm;

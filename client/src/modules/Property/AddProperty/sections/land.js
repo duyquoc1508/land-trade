@@ -57,7 +57,7 @@ class LandForm extends Component {
                   Diện tích sử dụng chung ( đơn vị: m <sup>2</sup> )
                 </label>
                 <Field
-                  name="formOfUse.common"
+                  name="commonUseArea"
                   component="input"
                   type="number"
                   className="form-control filter-input"
@@ -71,7 +71,7 @@ class LandForm extends Component {
                   Diện tích sử dụng riêng ( đơn vị: m <sup>2</sup> )
                 </label>
                 <Field
-                  name="formOfUse.private"
+                  name="privateUseArea"
                   component="input"
                   type="number"
                   className="form-control filter-input"

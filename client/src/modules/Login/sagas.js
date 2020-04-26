@@ -17,21 +17,20 @@ const handleSignMessage = async (publicAddress, nonce) => {
   }
 };
 
-const handleSignup = async publicAddress => {
+const handleSignup = async (publicAddress) => {
   try {
     const result = await axios({
       url: `${process.env.REACT_APP_BASE_URL_API}/users`,
       data: { publicAddress },
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      method: "POST"
+      method: "POST",
     });
     return result.data;
   } catch (error) {
     alert(error);
   }
-
 };
 
 const handleAuthenticate = async (publicAddress, signature) => {
@@ -40,23 +39,22 @@ const handleAuthenticate = async (publicAddress, signature) => {
       `${process.env.REACT_APP_BASE_URL_API}/auth/login`,
       {
         publicAddress,
-        signature
+        signature,
       }
     );
     return res.data.accessToken;
   } catch (error) {
-    alert(error.message)
+    alert(error.message);
   }
 };
 
-const getNonce = async publicAddress => {
+const getNonce = async (publicAddress) => {
   try {
     let res = await axios.get(
       `${process.env.REACT_APP_BASE_URL_API}/users?publicAddress=${publicAddress}`
     );
     return res.data.data.nonce;
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
 const loadWeb3 = async () => {
@@ -72,28 +70,27 @@ const loadWeb3 = async () => {
   }
 };
 
-const getInfoUser = async accessToken => {
+const getInfoUser = async (accessToken) => {
   console.log("get", accessToken);
   let res = await axios({
     method: "get",
     url: `${process.env.REACT_APP_BASE_URL_API}/users/me`,
     headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
   return res.data.data;
 };
 const handleClick = async () => {
   await loadWeb3();
-  const coinbase = await window.web3.eth.getCoinbase();
-  if (!coinbase) {
+  const publicAddress = await window.web3.eth.getCoinbase();
+  if (!publicAddress) {
     window.alert("Please activate MetaMask first.");
     return;
   }
-  const publicAddress = coinbase.toLowerCase();
 
   let nonce = await getNonce(publicAddress);
-  if(!nonce){
+  if (!nonce) {
     const result = await handleSignup(publicAddress);
     nonce = result.data.nonce;
   }
