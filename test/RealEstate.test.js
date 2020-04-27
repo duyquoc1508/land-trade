@@ -1,12 +1,12 @@
 const RoleBasedAcl = artifacts.require("./RoleBasedAcl.sol");
 const RealEstate = artifacts.require("./RealEstate.sol");
 
-require("chai")
-  .use(require("chai-as-promised"))
-  .should();
+require("chai").use(require("chai-as-promised")).should();
 
-contract("RealEstate", accounts => {
-  const [owner, account1, account2, account3, account4, account5] = [...accounts];
+contract("RealEstate", (accounts) => {
+  const [owner, account1, account2, account3, account4, account5] = [
+    ...accounts,
+  ];
   // default owner has role 'SUPER_ADMIN'
   let realEstate, roleBasedAcl;
 
@@ -38,27 +38,40 @@ contract("RealEstate", accounts => {
   describe("Certificate", async () => {
     let result, idCertificate, tokenToOwners, tokenToState, tokenToNotary;
     const certificate = [
-      ["address", "purpose of use", "time of use", "origin of use", "20", "20", 200],
       [
-        4,
-        "200",
-        "address",
-        "house type",
-        "appartment name",
-        "floor area",
-        "form of own",
-        "time of use"
+        [
+          20,
+          2,
+          200,
+          210,
+          "address",
+          "purpose of use",
+          "time of use",
+          "origin of use",
+        ],
+        [
+          "house type",
+          "number of house",
+          200,
+          400,
+          "level 4",
+          "number of floor",
+          "form of own",
+          "time of own",
+        ],
+        "orther construction",
+        "prod forest is artificial forest",
+        "perennial tree",
+        "notice",
       ],
-      "orther construction",
-      "prod forest is artificial forest",
-      "perennial tree",
-      "notice",
-      [account3, account4]
+      [account3, account4],
     ];
     before(async () => {
       // Grant notary permissions to account1
       await roleBasedAcl.addRole(account1, 1, { from: owner });
-      result = await realEstate.createCertificate(...certificate, { from: account1 });
+      result = await realEstate.createCertificate(...certificate, {
+        from: account1,
+      });
       // current certificate id
       idCertificate = await realEstate.certificateCount();
       tokenToNotary = await realEstate.tokenToNotary(idCertificate);
@@ -69,16 +82,21 @@ contract("RealEstate", accounts => {
       assert.equal(idCertificate, 1);
       assert.equal(tokenToNotary, account1);
       // token state is 'pendding': 0
-      assert.equal(tokenToState.toNumber(), 0, "State of certificate should be pendding");
+      assert.equal(
+        tokenToState.toNumber(),
+        0,
+        "State of certificate should be pendding"
+      );
       const event = result.logs[0].args;
-      assert.equal(event.notary, account1);
-      assert.equal(tokenToOwners.length, 2);
+      assert.equal(event.idCertificate.toNumber(), idCertificate);
     });
     it("Only allow notary", async () => {
       // FAILURE: Superadmin should be rejected
-      await realEstate.createCertificate(...certificate, { from: owner }).should.be.rejected;
+      await realEstate.createCertificate(...certificate, { from: owner }).should
+        .be.rejected;
       // FAILURE: Normal user should be rejected
-      await realEstate.createCertificate(...certificate, { from: account2 }).should.be.rejected;
+      await realEstate.createCertificate(...certificate, { from: account2 })
+        .should.be.rejected;
     });
   });
 
@@ -106,9 +124,11 @@ contract("RealEstate", accounts => {
 
     it("Should be reject if not onwer", async () => {
       //FAILURE: Role superadmin
-      await realEstate.activate(idCertificate, { from: owner }).should.be.rejected;
+      await realEstate.activate(idCertificate, { from: owner }).should.be
+        .rejected;
       //FAILUREl Role notary
-      await realEstate.activate(idCertificate, { from: account1 }).should.be.rejected;
+      await realEstate.activate(idCertificate, { from: account1 }).should.be
+        .rejected;
     });
   });
 
@@ -126,8 +146,12 @@ contract("RealEstate", accounts => {
     it("Activate sell successfully", async () => {
       assert.equal(tokenToState.toNumber(), 1);
       assert.equal(tokenToApprove.length, 0);
-      const tx1 = await realEstate.activateSale(idCertificate, { from: account3 });
-      const tx2 = await realEstate.activateSale(idCertificate, { from: account4 });
+      const tx1 = await realEstate.activateSale(idCertificate, {
+        from: account3,
+      });
+      const tx2 = await realEstate.activateSale(idCertificate, {
+        from: account4,
+      });
       tokenToState = await realEstate.tokenToState(idCertificate);
       assert.equal(tokenToState.toNumber(), 2);
       assert.equal(tx1.logs[0].args.owner, account3);
@@ -136,9 +160,11 @@ contract("RealEstate", accounts => {
 
     it("Should be reject if not onwer", async () => {
       //FAILURE: Role superadmin
-      await realEstate.activate(idCertificate, { from: owner }).should.be.rejected;
+      await realEstate.activate(idCertificate, { from: owner }).should.be
+        .rejected;
       //FAILUREl Role notary
-      await realEstate.activate(idCertificate, { from: account1 }).should.be.rejected;
+      await realEstate.activate(idCertificate, { from: account1 }).should.be
+        .rejected;
     });
   });
 
@@ -146,7 +172,9 @@ contract("RealEstate", accounts => {
     let result,
       idCertificate = 1;
     before(async () => {
-      result = await realEstate.transfer([account2], idCertificate, { from: account1 });
+      result = await realEstate.transfer([account2], idCertificate, {
+        from: account1,
+      });
     });
     it("Transfer should successfully", async () => {
       const tokenToState = await realEstate.tokenToState(idCertificate);
@@ -163,11 +191,13 @@ contract("RealEstate", accounts => {
       // FAILURE: Superadmin should be rejected
       await realEstate.transfer([account5], { from: owner }).should.be.rejected;
       // FAILURE: Current owner should be rejected
-      await realEstate.transfer([account5], { from: account2 }).should.be.rejected;
+      await realEstate.transfer([account5], { from: account2 }).should.be
+        .rejected;
     });
     it("Transfer to current owner should be rejected", async () => {
       // FAILURE: Can't transfer to current owner
-      await realEstate.transfer([account3], { from: account1 }).should.be.rejected;
+      await realEstate.transfer([account3], { from: account1 }).should.be
+        .rejected;
     });
   });
 });

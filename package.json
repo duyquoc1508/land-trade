@@ -1,0 +1,27 @@
+{
+  "name": "landtrade_contract",
+  "version": "1.0.0",
+  "description": "Smart contract for landtrade project",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KroyalSanda/landtrade.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "web3": "1.2.6"
+  },
+  "bugs": {
+    "url": "https://github.com/KroyalSanda/landtrade/issues"
+  },
+  "homepage": "https://github.com/KroyalSanda/landtrade#readme"
+}
