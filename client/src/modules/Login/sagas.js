@@ -83,12 +83,14 @@ const getInfoUser = async (accessToken) => {
 };
 const handleClick = async () => {
   await loadWeb3();
-  const publicAddress = await window.web3.eth.getCoinbase();
+  const publicAddress = await window.web3.eth
+    .getAccounts()
+    .then((accounts) => accounts[0]);
   if (!publicAddress) {
     window.alert("Please activate MetaMask first.");
     return;
   }
-
+  console.log(publicAddress);
   let nonce = await getNonce(publicAddress);
   if (!nonce) {
     const result = await handleSignup(publicAddress);
