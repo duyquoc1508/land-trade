@@ -3,7 +3,7 @@ import Cookie from "../../helper/cookie";
 
 const initialState = {
   accessToken: Cookie.getCookie("accessToken"),
-  user: {}
+  user: JSON.parse(localStorage.getItem("user")) || {},
 };
 
 export default function loginReducer(state = initialState, action) {
@@ -11,12 +11,12 @@ export default function loginReducer(state = initialState, action) {
     case LOGIN_SUCCESS:
       return {
         // id: "action.id",
-        accessToken: action.payload.accessToken
+        accessToken: action.payload.accessToken,
       };
     case LOGIN_ERROR:
       return {
         // id: null,
-        accessToken: null
+        accessToken: null,
       };
     default:
       return state;

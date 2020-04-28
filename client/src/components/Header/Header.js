@@ -7,18 +7,18 @@ const menus = [
   {
     name: "Trang Chủ",
     to: "/",
-    exact: true
+    exact: true,
   },
   {
     name: "Mua Bán",
     to: "/listings",
-    exact: false
+    exact: false,
   },
   {
     name: "Giao dịch",
     to: "/transaction",
-    exact: true
-  }
+    exact: true,
+  },
 ];
 
 const MenuLink = ({ label, to, activeOnlyWhenExact }) => {
@@ -45,7 +45,7 @@ class Menu extends Component {
       toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block",
       toggleAuthStatus: false,
       toggleNotifications: "header-button-item has-noti js-item-menu",
-      toggleNotificationsStatus: false
+      toggleNotificationsStatus: false,
     };
   }
 
@@ -55,13 +55,13 @@ class Menu extends Component {
       this.setState({ toggleAuthStatus: true });
       this.setState({
         toggleAuth:
-          "setting-menu js-right-sidebar d-none d-lg-block show-sidebar"
+          "setting-menu js-right-sidebar d-none d-lg-block show-sidebar",
       });
     } else {
       // console.log("close");
       this.setState({ toggleAuthStatus: false });
       this.setState({
-        toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block"
+        toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block",
       });
     }
   };
@@ -70,12 +70,12 @@ class Menu extends Component {
       this.setState({ toggleNotificationsStatus: true });
       this.setState({
         toggleNotifications:
-          "header-button-item has-noti js-item-menu show-dropdown"
+          "header-button-item has-noti js-item-menu show-dropdown",
       });
     } else {
       this.setState({ toggleNotificationsStatus: false });
       this.setState({
-        toggleNotifications: "header-button-item has-noti js-item-menu"
+        toggleNotifications: "header-button-item has-noti js-item-menu",
       });
     }
   };
@@ -121,9 +121,7 @@ class Menu extends Component {
               </div>
             </div>
             <div className="col-md-3 col-sm-6 col-7">
-              {this.props.checkAuth === false ? (
-                <ButtonLogin />
-              ) : (
+              {!!this.props.checkAuth ? (
                 <div className="header-button">
                   <div
                     className={this.state.toggleNotifications}
@@ -196,6 +194,7 @@ class Menu extends Component {
                           onClick={() => {
                             console.log("click logout");
                             Cookie.setCookie("accessToken", "", 0);
+                            localStorage.removeItem("user");
                           }}
                           href="/"
                         >
@@ -205,6 +204,8 @@ class Menu extends Component {
                     </div>
                   </div>
                 </div>
+              ) : (
+                <ButtonLogin />
               )}
             </div>
           </div>
@@ -213,7 +214,7 @@ class Menu extends Component {
     );
   }
 
-  showMenus = menus => {
+  showMenus = (menus) => {
     var result = null;
     if (menus.length > 0) {
       result = menus.map((menu, index) => {
@@ -231,9 +232,9 @@ class Menu extends Component {
   };
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   checkAuth: state.login.accessToken,
-  user: state.user
+  user: state.user,
 });
 
 export default connect(mapStateToProps)(Menu);

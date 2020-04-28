@@ -17,6 +17,9 @@ class AddProperty extends Component {
     this.handleClose = this.handleClose.bind(this);
   }
   componentDidMount() {
+    if (window.screen.width < 1200) {
+      alert("Giao diện chưa hỗ trợ trên thiết bị di dộng!");
+    }
     loadScript("js/plugin.js");
     loadScript("js/main.js");
   }
@@ -42,7 +45,7 @@ class AddProperty extends Component {
               open={this.state.open}
               anchorOrigin={{
                 vertical: "top",
-                horizontal: "right"
+                horizontal: "right",
               }}
               onClose={this.handleClose}
               // message={this.props.addProperty.messages}
@@ -61,20 +64,20 @@ class AddProperty extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   addProperty: state.addProperty,
   form: state.form,
-  login: state.login
+  login: state.login,
 });
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    handleClick: data => {
+    handleClick: (data) => {
       dispatch(actions.fillForm(data));
     },
-    createSubmit: data => {
+    createSubmit: (data) => {
       dispatch(actions.requestCreate(data));
-    }
+    },
   };
 };
 

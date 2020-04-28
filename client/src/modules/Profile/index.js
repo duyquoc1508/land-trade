@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-const mapStateToProps = state => ({ user: state.user });
+const mapStateToProps = (state) => ({ user: state.user });
 
 class Profile extends Component {
   render() {
+    let user = this.props.user && JSON.parse(localStorage.getItem("user"));
     return (
       <div className="container">
         <div className="row">
@@ -30,28 +31,23 @@ class Profile extends Component {
                       <ul className="address-list">
                         <li>
                           <span>Họ tên:</span>
-                          {this.props.user.fullName ||
-                            "Vui lòng cập nhập thông tin"}
+                          {user.fullName || "Vui lòng cập nhập thông tin"}
                         </li>
                         <li>
                           <span>Public Address:</span>
-                          {this.props.user.publicAddress ||
-                            "Vui lòng cập nhập thông tin"}
+                          {user.publicAddress || "Vui lòng cập nhập thông tin"}
                         </li>
                         <li>
                           <span>CMND/Căn cước:</span>
-                          {this.props.user.idNumber ||
-                            "Vui lòng cập nhập thông tin"}
+                          {user.idNumber || "Vui lòng cập nhập thông tin"}
                         </li>
                         <li>
                           <span>Số điện thoại:</span>
-                          {this.props.user.phoneNumber ||
-                            "Vui lòng cập nhập thông tin"}
+                          {user.phoneNumber || "Vui lòng cập nhập thông tin"}
                         </li>
                         <li>
                           <span>Email:</span>
-                          {this.props.user.email ||
-                            "Vui lòng cập nhập thông tin"}
+                          {user.email || "Vui lòng cập nhập thông tin"}
                         </li>
                       </ul>
                       <ul className="social-buttons style1">

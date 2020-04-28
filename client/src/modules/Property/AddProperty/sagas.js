@@ -1,4 +1,4 @@
-import { takeEvery, call, put, all } from "redux-saga/effects";
+import { takeEvery, call, put } from "redux-saga/effects";
 import { CREATE_REQUESTING, CREATE_SUCCESS, CREATE_ERROR } from "./constants";
 import axios from "axios";
 import Cookie from "../../../helper/cookie";
@@ -95,8 +95,6 @@ async function createCertificate(property) {
       window.alert("Please activate MetaMask first.");
       return;
     }
-    const a = formatPropertyToSC(property);
-    console.log(a);
     appContract.methods
       .createCertificate(formatPropertyToSC(property), property.owners)
       .send({ from: coinbase }, function (error, transactionHash) {

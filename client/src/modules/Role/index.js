@@ -112,7 +112,7 @@ export default class Role extends Component {
     const { contract, accounts } = this.state;
     try {
       // add role for address
-      const result = contract.methods
+      contract.methods
         .addRole(publicAddress, role)
         .send({ from: accounts[0] }, (_err, _result) => {
           this.setState({ isLoading: true }); // Use loading effect. Waiting event 'RoleAdded' from the blockchain are emited
