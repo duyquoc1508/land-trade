@@ -73,7 +73,8 @@ contract RealEstate {
 	// ------------------------------ Events ------------------------------
 	/// @dev Emits when a new certificate created.
 	event NewCertificate(
-		uint256 idCertificate
+		uint256 idCertificate,
+    address[] owners
 	);
 
 	/// @dev This emits when ownership of any NFTs changes by any mechanism
@@ -156,7 +157,8 @@ contract RealEstate {
 		tokenToOwners[certificateCount] = _owners;
 		tokenToNotary[certificateCount] = msg.sender;
 		emit NewCertificate(
-			certificateCount
+			certificateCount,
+      _owners
 		);
 	}
 

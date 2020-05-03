@@ -4,9 +4,7 @@ import axios from "axios";
 import Cookie from "../../../helper/cookie";
 import RealEstateContract from "../../../contracts/RealEstate.json";
 import Web3 from "web3";
-const contractAddress =
-  process.env.REAL_ESTATE_CONTRACT_ADDRESS ||
-  "0x48D048682bE50991875a54FB6C177fbeffbc9492";
+import { realEstateContractAddress } from "../../../../config/common-path";
 
 const handleCreateCert = async (property, transactionHash) => {
   console.log("handleCreateCert -> property", property);
@@ -88,7 +86,7 @@ async function createCertificate(property) {
     const { web3 } = window;
     const appContract = new web3.eth.Contract(
       RealEstateContract.abi,
-      contractAddress
+      realEstateContractAddress
     );
     const coinbase = await web3.eth.getCoinbase();
     if (!coinbase) {
