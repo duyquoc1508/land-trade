@@ -29,16 +29,16 @@ function TabPanel(props) {
 function a11yProps(index) {
   return {
     id: `scrollable-auto-tab-${index}`,
-    "aria-controls": `scrollable-auto-tabpanel-${index}`
+    "aria-controls": `scrollable-auto-tabpanel-${index}`,
   };
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     width: "100%",
-    backgroundColor: theme.palette.background.paper
-  }
+    backgroundColor: theme.palette.background.paper,
+  },
 }));
 
 function ScrollableTabsButtonAuto(props) {
@@ -53,9 +53,9 @@ function ScrollableTabsButtonAuto(props) {
     props.handleClick();
   }, []);
 
-  let listPending = props.myListing.filter(property => property.state === 0);
-  let listActive = props.myListing.filter(property => property.state === 1);
-  let listSale = props.myListing.filter(property => property.state === 2);
+  let listPending = props.myListing.filter((property) => property.state === 0);
+  let listActive = props.myListing.filter((property) => property.state === 1);
+  let listSale = props.myListing.filter((property) => property.state === 2);
   return (
     <div className="container mt-75 mb-100">
       <div className="row">
@@ -77,8 +77,8 @@ function ScrollableTabsButtonAuto(props) {
                   indicatorColor="primary"
                   textColor="primary"
                 >
-                  <Tab label="Đã duyệt " {...a11yProps(0)} />
-                  <Tab label="Chờ duyệt " {...a11yProps(1)} />
+                  <Tab label="Chờ duyệt " {...a11yProps(0)} />
+                  <Tab label="Đã duyệt " {...a11yProps(1)} />
                   <Tab label="Đang bán " {...a11yProps(2)} />
                   <Tab label="Yêu thích " {...a11yProps(3)} />
                 </Tabs>
@@ -103,16 +103,16 @@ function ScrollableTabsButtonAuto(props) {
   );
 }
 
-const mapStateToProps = state => ({
-  myListing: state.myListing
+const mapStateToProps = (state) => ({
+  myListing: state.myListing,
 });
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     handleClick: () => {
       console.log("test");
       dispatch(requestFetch());
-    }
+    },
   };
 };
 

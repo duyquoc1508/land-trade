@@ -3,22 +3,24 @@ import { Route, Link } from "react-router-dom";
 import ButtonLogin from "../../modules/Login";
 import { connect } from "react-redux";
 import Cookie from "../../helper/cookie";
+import Notifications from "./Notifications";
+
 const menus = [
   {
     name: "Trang Chủ",
     to: "/",
-    exact: true
+    exact: true,
   },
   {
     name: "Mua Bán",
     to: "/listings",
-    exact: false
+    exact: false,
   },
   {
     name: "Giao dịch",
     to: "/transaction",
-    exact: true
-  }
+    exact: true,
+  },
 ];
 
 const MenuLink = ({ label, to, activeOnlyWhenExact }) => {
@@ -44,8 +46,6 @@ class Menu extends Component {
     this.state = {
       toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block",
       toggleAuthStatus: false,
-      toggleNotifications: "header-button-item has-noti js-item-menu",
-      toggleNotificationsStatus: false
     };
   }
 
@@ -55,27 +55,13 @@ class Menu extends Component {
       this.setState({ toggleAuthStatus: true });
       this.setState({
         toggleAuth:
-          "setting-menu js-right-sidebar d-none d-lg-block show-sidebar"
+          "setting-menu js-right-sidebar d-none d-lg-block show-sidebar",
       });
     } else {
       // console.log("close");
       this.setState({ toggleAuthStatus: false });
       this.setState({
-        toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block"
-      });
-    }
-  };
-  changeToggleNotifications = () => {
-    if (!this.state.toggleNotificationsStatus) {
-      this.setState({ toggleNotificationsStatus: true });
-      this.setState({
-        toggleNotifications:
-          "header-button-item has-noti js-item-menu show-dropdown"
-      });
-    } else {
-      this.setState({ toggleNotificationsStatus: false });
-      this.setState({
-        toggleNotifications: "header-button-item has-noti js-item-menu"
+        toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block",
       });
     }
   };
@@ -125,32 +111,7 @@ class Menu extends Component {
                 <ButtonLogin />
               ) : (
                 <div className="header-button">
-                  <div
-                    className={this.state.toggleNotifications}
-                    onClick={this.changeToggleNotifications}
-                  >
-                    <i className="ion-ios-bell-outline"></i>
-                    <div className="notifi-dropdown js-dropdown">
-                      <div className="notifi__item">
-                        <div className="content">
-                          <p>
-                            Your Property <b>Villa On Hartford</b> has been
-                            approved!
-                          </p>
-                          <span className="date">5 min ago</span>
-                        </div>
-                      </div>
-                      <div className="notifi__item">
-                        <div className="content">
-                          <p>You have 3 unread Messages</p>
-                          <span className="date">5 min ago</span>
-                        </div>
-                      </div>
-                      <div className="notify-bottom text-center py-20">
-                        <a href="#">View All Notification</a>
-                      </div>
-                    </div>
-                  </div>
+                  <Notifications />
                   <div
                     className="header-button-item js-sidebar-btn"
                     onClick={this.changeToggleAuth}
@@ -213,7 +174,7 @@ class Menu extends Component {
     );
   }
 
-  showMenus = menus => {
+  showMenus = (menus) => {
     var result = null;
     if (menus.length > 0) {
       result = menus.map((menu, index) => {
@@ -231,9 +192,9 @@ class Menu extends Component {
   };
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   checkAuth: state.login.accessToken,
-  user: state.user
+  user: state.user,
 });
 
 export default connect(mapStateToProps)(Menu);
