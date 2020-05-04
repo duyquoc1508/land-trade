@@ -6,7 +6,7 @@ module.exports = {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   },
 
-  getCookie: cname => {
+  getCookie: (cname) => {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
     var ca = decodedCookie.split(";");
@@ -19,6 +19,6 @@ module.exports = {
         return c.substring(name.length, c.length);
       }
     }
-    return false;
-  }
+    return null;
+  },
 };

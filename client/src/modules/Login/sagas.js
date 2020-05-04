@@ -82,26 +82,31 @@ const getInfoUser = async (accessToken) => {
   return res.data.data;
 };
 const handleClick = async () => {
-  await loadWeb3();
-  const publicAddress = await window.web3.eth
-    .getAccounts()
-    .then((accounts) => accounts[0]);
-  if (!publicAddress) {
-    window.alert("Please activate MetaMask first.");
-    return;
+  try {
+    await loadWeb3();
+    const publicAddress = await window.web3.eth
+      .getAccounts()
+      .then((accounts) => accounts[0]);
+    if (!publicAddress) {
+      window.alert("Please activate MetaMask first.");
+      return;
+    }
+    console.log(publicAddress);
+    let nonce = await getNonce(publicAddress);
+    if (!nonce) {
+      const result = await handleSignup(publicAddress);
+      nonce = result.data.nonce;
+    }
+    let { signature } = await handleSignMessage(publicAddress, nonce);
+    let accessToken = await handleAuthenticate(publicAddress, signature);
+    Cookie.setCookie("accessToken", accessToken, 1 / 48);
+    let user = await getInfoUser(accessToken);
+    localStorage.setItem("user", JSON.stringify(user));
+    // console.log(accessToken, user);
+    return { accessToken, user };
+  } catch (error) {
+    console.log(error.message);
   }
-  console.log(publicAddress);
-  let nonce = await getNonce(publicAddress);
-  if (!nonce) {
-    const result = await handleSignup(publicAddress);
-    nonce = result.data.nonce;
-  }
-  let { signature } = await handleSignMessage(publicAddress, nonce);
-  let accessToken = await handleAuthenticate(publicAddress, signature);
-  Cookie.setCookie("accessToken", accessToken, 1 / 48);
-  let user = await getInfoUser(accessToken);
-  // console.log(accessToken, user);
-  return { accessToken, user };
 };
 
 function* loginFlow() {

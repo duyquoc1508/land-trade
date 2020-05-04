@@ -107,9 +107,7 @@ class Menu extends Component {
               </div>
             </div>
             <div className="col-md-3 col-sm-6 col-7">
-              {this.props.checkAuth === false ? (
-                <ButtonLogin />
-              ) : (
+              {!!this.props.checkAuth ? (
                 <div className="header-button">
                   <Notifications />
                   <div
@@ -157,6 +155,7 @@ class Menu extends Component {
                           onClick={() => {
                             console.log("click logout");
                             Cookie.setCookie("accessToken", "", 0);
+                            localStorage.removeItem("user");
                           }}
                           href="/"
                         >
@@ -166,6 +165,8 @@ class Menu extends Component {
                     </div>
                   </div>
                 </div>
+              ) : (
+                <ButtonLogin />
               )}
             </div>
           </div>

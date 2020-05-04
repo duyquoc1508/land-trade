@@ -18,25 +18,25 @@ import TreeForm from "./tree";
 import NoteForm from "./note.js";
 import UploadForm from "./upload";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%"
+    width: "100%",
   },
   button: {
     marginRight: theme.spacing(1),
     backgroundColor: "#007bff",
     "&:hover": {
-      backgroundColor: "#0069d9"
-    }
+      backgroundColor: "#0069d9",
+    },
   },
 
   completed: {
-    display: "inline-block"
+    display: "inline-block",
   },
   instructions: {
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
-  }
+    marginBottom: theme.spacing(1),
+  },
 }));
 
 function getSteps() {
@@ -48,7 +48,7 @@ function getSteps() {
     "Rừng sản xuất là rừng trồng",
     "Cây lâu năm",
     "Ghi chú",
-    "Thêm hình ảnh"
+    "Thêm hình ảnh",
   ];
 }
 
@@ -108,10 +108,10 @@ const tab = function HorizontalNonLinearStepper(props) {
   };
 
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleStep = step => () => {
+  const handleStep = (step) => () => {
     setActiveStep(step);
   };
 
@@ -189,14 +189,14 @@ const tab = function HorizontalNonLinearStepper(props) {
               <Button disabled={activeStep === 0} onClick={handleBack}>
                 Quay lại
               </Button>
-              <Button
+              {/* <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 onClick={handleNext}
               >
                 Tiếp theo
-              </Button>
+              </Button> */}
               {activeStep !== steps.length &&
                 (completed[activeStep] ? (
                   <Typography variant="caption" className={classes.completed}>
@@ -209,7 +209,7 @@ const tab = function HorizontalNonLinearStepper(props) {
                     onClick={handleComplete}
                     className={classes.button}
                   >
-                    {"Hoàn thành"}
+                    {"Tiếp theo"}
                   </Button>
                 ))}
             </div>
@@ -220,16 +220,16 @@ const tab = function HorizontalNonLinearStepper(props) {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   addProperty: state.addProperty,
-  form: state.form
+  form: state.form,
 });
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    handleClick: data => {
+    handleClick: (data) => {
       dispatch(actions.fillForm(data));
-    }
+    },
   };
 };
 
