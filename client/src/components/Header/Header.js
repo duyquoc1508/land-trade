@@ -3,6 +3,8 @@ import { Route, Link } from "react-router-dom";
 import ButtonLogin from "../../modules/Login";
 import { connect } from "react-redux";
 import Cookie from "../../helper/cookie";
+import Notifications from "./Notifications";
+
 const menus = [
   {
     name: "Trang Chủ",
@@ -44,8 +46,6 @@ class Menu extends Component {
     this.state = {
       toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block",
       toggleAuthStatus: false,
-      toggleNotifications: "header-button-item has-noti js-item-menu",
-      toggleNotificationsStatus: false,
     };
   }
 
@@ -62,20 +62,6 @@ class Menu extends Component {
       this.setState({ toggleAuthStatus: false });
       this.setState({
         toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block",
-      });
-    }
-  };
-  changeToggleNotifications = () => {
-    if (!this.state.toggleNotificationsStatus) {
-      this.setState({ toggleNotificationsStatus: true });
-      this.setState({
-        toggleNotifications:
-          "header-button-item has-noti js-item-menu show-dropdown",
-      });
-    } else {
-      this.setState({ toggleNotificationsStatus: false });
-      this.setState({
-        toggleNotifications: "header-button-item has-noti js-item-menu",
       });
     }
   };
@@ -123,32 +109,7 @@ class Menu extends Component {
             <div className="col-md-3 col-sm-6 col-7">
               {!!this.props.checkAuth ? (
                 <div className="header-button">
-                  <div
-                    className={this.state.toggleNotifications}
-                    onClick={this.changeToggleNotifications}
-                  >
-                    <i className="ion-ios-bell-outline"></i>
-                    <div className="notifi-dropdown js-dropdown">
-                      <div className="notifi__item">
-                        <div className="content">
-                          <p>
-                            Your Property <b>Villa On Hartford</b> has been
-                            approved!
-                          </p>
-                          <span className="date">5 min ago</span>
-                        </div>
-                      </div>
-                      <div className="notifi__item">
-                        <div className="content">
-                          <p>You have 3 unread Messages</p>
-                          <span className="date">5 min ago</span>
-                        </div>
-                      </div>
-                      <div className="notify-bottom text-center py-20">
-                        <a href="#">View All Notification</a>
-                      </div>
-                    </div>
-                  </div>
+                  <Notifications />
                   <div
                     className="header-button-item js-sidebar-btn"
                     onClick={this.changeToggleAuth}
