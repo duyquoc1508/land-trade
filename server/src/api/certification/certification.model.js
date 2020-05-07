@@ -70,6 +70,9 @@ const certificationSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    idInBlockchain: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );

@@ -5,6 +5,7 @@ import Notification from "../../api/notification/notification.model";
 export async function updateCertStatus(event) {
   const update = {
     isComfirmed: true,
+    idInBlockchain: event.returnValues.idCertificate,
   };
   const query = {
     transactionHash: event.transactionHash,
@@ -24,4 +25,14 @@ export async function createNotification(event) {
     return Notification.create(data);
   });
   return promises;
+}
+
+// handle event activate certificate on blockchain and update database mongodb
+export async function handleActivateCertificate(event) {
+  const query = { idInBlockchain: event.returnValues.idCertificate };
+  const update = {
+    state: event.returnValues.state,
+    $push: { ownersActivated: event.returnValues.owner },
+  };
+  return Certificate.updateOne(query, update).then();
 }

@@ -21,20 +21,18 @@ export function realEstateListener() {
 }
 
 async function handleEvent(event) {
+  console.log(event);
   switch (event.event) {
     case RealEstateEvent.NEW_CERTIFICATE:
-      // await helper.updateCertStatus(event);
       const p1 = helper.updateCertStatus(event);
       const p2 = helper.createNotification(event);
       return Promise.all([p1, ...p2]);
     case RealEstateEvent.ACTIVATE:
-      console.log(event.returnValues);
-      return;
+      return helper.handleActivateCertificate(event);
     case RealEstateEvent.ACTIVATE_SALE:
-      console.log(event.returnValues);
       return;
     case RealEstateEvent.TRANSFER:
-      console.log(event.returnValues);
+      return;
     default:
       throw new Error("Type event does not exist");
   }
