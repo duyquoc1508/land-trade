@@ -17,6 +17,7 @@ import ForestFrom from "./forest";
 import TreeForm from "./tree";
 import NoteForm from "./note.js";
 import UploadForm from "./upload";
+import Overview from "./overview";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -160,9 +161,7 @@ const tab = function HorizontalNonLinearStepper(props) {
       <div className={(classes.boxFrom, "mb-50")}>
         {allStepsCompleted() ? (
           <div>
-            <Typography className={classes.instructions}>
-              All steps completed - you&apos;re finished
-            </Typography>
+            <Overview />
             <hr />
             <Button onClick={handleReset}>Reset</Button>
             {!handleCreate ? (
