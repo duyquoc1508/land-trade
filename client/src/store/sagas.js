@@ -5,6 +5,7 @@ import createSaga from "../modules/Property/AddProperty/sagas";
 import listingSaga from "../modules/Property/ListProperties/sagas";
 import listingSaleSaga from "../modules/Listings/sagas";
 import notificationsSaga from "../components/Header/Notifications/saga";
+import propertyPendingSaga from "../modules/Property/PropertyPending/saga";
 
 function* rootSaga() {
   // yield loginSaga();
@@ -14,6 +15,7 @@ function* rootSaga() {
     listingSaga(),
     listingSaleSaga(),
     notificationsSaga(),
+    propertyPendingSaga(),
   ]);
 }
 
