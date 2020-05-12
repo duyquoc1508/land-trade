@@ -1,7 +1,7 @@
-import { FETCH_MY_LISTING_REQUESTING } from "./constants";
+import { FETCH_MY_LISTING_REQUEST } from "./constants";
 
 export function requestFetch() {
   return {
-    type: FETCH_MY_LISTING_REQUESTING
+    type: FETCH_MY_LISTING_REQUEST,
   };
 }

@@ -8,6 +8,7 @@ import Box from "@material-ui/core/Box";
 import { connect } from "react-redux";
 import { requestFetch } from "./actions";
 import ListProperties from "./list";
+import PropertyPending from "../PropertyPending";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -52,7 +53,6 @@ function ScrollableTabsButtonAuto(props) {
   useEffect(() => {
     props.handleClick();
   }, []);
-
   let listPending = props.myListing.filter((property) => property.state === 0);
   let listActive = props.myListing.filter((property) => property.state === 1);
   let listSale = props.myListing.filter((property) => property.state === 2);
@@ -84,7 +84,7 @@ function ScrollableTabsButtonAuto(props) {
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={0}>
-                <ListProperties list={listPending} />
+                <PropertyPending />
               </TabPanel>
               <TabPanel value={value} index={1}>
                 <ListProperties list={listActive} />
@@ -104,13 +104,12 @@ function ScrollableTabsButtonAuto(props) {
 }
 
 const mapStateToProps = (state) => ({
-  myListing: state.myListing,
+  myListing: state.myListing.properties,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     handleClick: () => {
-      console.log("test");
       dispatch(requestFetch());
     },
   };
