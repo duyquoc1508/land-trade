@@ -5,6 +5,7 @@ import Property from "../Property";
 import AddProperty from "../Property/AddProperty";
 // import ListProperties from "../Property/ListProperties";
 import TabListProperties from "../Property/ListProperties/tab";
+import EditProperty from "../Property/EditProperty";
 import Profile from "../Profile";
 import EditProfile from "../Profile/EditProfile";
 import Transaction from "../Transaction";
@@ -32,6 +33,13 @@ const routes = [
     main: ({ history }) => <AddProperty history={history} />,
   },
   {
+    path: "/property/edit/:id",
+    exact: true,
+    main: ({ match, history }) => (
+      <EditProperty match={match} history={history} />
+    ),
+  },
+  {
     path: "/user/profile",
     exact: true,
     main: () => <Profile />,
@@ -42,7 +50,7 @@ const routes = [
     main: () => <EditProfile />,
   },
   {
-    path: "/user/my-properties",
+    path: "/user/my-properties/",
     exact: true,
     main: () => <TabListProperties />,
   },
