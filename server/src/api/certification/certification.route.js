@@ -74,10 +74,16 @@ routes.get("/selling", certificationController.getAllPropertiesOnSale);
  */
 routes.get("/user", authJwt, certificationController.getAllPropertiesOfUser);
 
+// /**
+//  * Get certification information
+//  * GET api/v1/certification/{{idCertification}}
+//  */
+// routes.get("/:idCertification", certificationController.getCertification);
+
 /**
- * Get certification information
- * GET api/v1/certification/{{idCertification}}
+ * GET certificate information with txHash
+ * GET api/v1/certification/{{txHash}}
  */
-routes.get("/:idCertification", certificationController.getCertification);
+routes.get("/:txHash", certificationController.getCertificationWithTxHash);
 
 export default routes;

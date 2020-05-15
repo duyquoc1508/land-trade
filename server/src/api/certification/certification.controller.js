@@ -10,6 +10,21 @@ const checkResourceOwner = (listOwner, currentUser) => {
     );
 };
 
+// Get certificate with TxHash
+export async function getCertificationWithTxHash(req, res, next) {
+  try {
+    const certification = await Certification.findOne({
+      transactionHash: req.params.txHash,
+    }).lean();
+    if (!certification) {
+      throw new ErrorHandler(404, "Certification not found");
+    }
+    return res.status(200).json({ statusCode: 200, data: certification });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // Get Certification
 export async function getCertification(req, res, next) {
   try {
