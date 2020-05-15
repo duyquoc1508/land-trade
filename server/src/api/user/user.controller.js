@@ -28,7 +28,7 @@ export async function checkAddressRegistered(req, res, next) {
     }
     return res.status(200).json({
       statusCode: 200,
-      data: user
+      data: user,
     });
   } catch (error) {
     next(error);
@@ -45,7 +45,7 @@ export async function createUser(req, res, next) {
     const user = await User.create({ publicAddress });
     return res.status(201).json({
       statusCode: 201,
-      data: user
+      data: user,
     });
   } catch (error) {
     next(error);
@@ -66,7 +66,7 @@ export async function getUserProfile(req, res, next) {
     }
     return res.status(200).json({
       statusCode: 200,
-      data: user
+      data: user,
     });
   } catch (error) {
     next(error);
@@ -84,7 +84,7 @@ export async function updateUserProfile(req, res, next) {
       newUser["isVerifired"] = false;
     }
     const user = await User.findByIdAndUpdate(req.user._id, newUser, {
-      new: true
+      new: true,
     }).lean();
     return res.status(200).json({ data: user });
   } catch (error) {
@@ -99,7 +99,7 @@ export async function send(req, res, next) {
   try {
     const user = await User.findOne({
       _id: req.user._id,
-      isVerifired: false
+      isVerifired: false,
     }).lean();
     if (!user) {
       throw new ErrorHandler(404, "User not found");
@@ -117,7 +117,7 @@ export async function send(req, res, next) {
         html:
           "Hello,<br> Please Click on the link to verify your email.<br><a href=" +
           link +
-          ">Click here to verify</a>"
+          ">Click here to verify</a>",
       };
       sendMail(req, res, next, mailOptions);
     } else {
@@ -150,9 +150,9 @@ export async function search(req, res, next) {
     const size = parseInt(req.query.size, 0) || 10;
     const searchRegex = new RegExp(".*" + req.query.q + ".*", "i");
     const listUser = await User.find({
-      $or: ["idNumber", "publicAddress"].map(key => ({
-        [key]: { $regex: searchRegex }
-      }))
+      $or: ["idNumber", "publicAddress"].map((key) => ({
+        [key]: { $regex: searchRegex },
+      })),
     })
       .limit(size)
       .lean();
@@ -180,12 +180,12 @@ export async function getAllPropertiesOfUser(req, res, next) {
   try {
     const listProperties = await User.findById(req.user._id)
       .populate({
-        path: "properties"
+        path: "properties",
+        match: { isComfirmed: true },
       })
-      .select("properties");
-    console.log(listProperties);
-    if (listProperties.length === 0)
-      throw new ErrorHandler(404, "There are no properties found");
+      .select("properties -_id");
+    // if (listProperties.properties.length === 0)
+    //   throw new ErrorHandler(404, "There are no properties found");
     return res.status(200).json({ statusCode: 200, data: listProperties });
   } catch (error) {
     next(error);
