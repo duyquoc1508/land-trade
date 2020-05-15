@@ -10,6 +10,7 @@ import Profile from "../Profile";
 import EditProfile from "../Profile/EditProfile";
 import Transaction from "../Transaction";
 import Role from "../Role";
+import PropertyDetail from "../Property/PropertyDetail";
 
 const routes = [
   {
@@ -63,6 +64,13 @@ const routes = [
     path: "/role",
     exact: true,
     main: () => <Role />,
+  },
+  {
+    path: "/user/my-properties/:id",
+    exact: true,
+    main: ({ match, history }) => (
+      <PropertyDetail match={match} history={history} />
+    ),
   },
   // {
   //   path: "",
