@@ -1,0 +1,15 @@
+.ow-li-lv1 {
+  margin: 0 50px;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.ow-li-lv2 {
+  font-weight: normal;
+  font-style: normal;
+}
+
+.ow-li-lv2 span {
+  font-weight: bold;
+  margin-left: 50px;
+}

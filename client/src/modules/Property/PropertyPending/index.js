@@ -1,8 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { activateCertificateRequest } from "./action";
+import { useHistory, Link } from "react-router-dom";
 
 function PropertyPending({ properties, activateCert }) {
+  const history = useHistory();
   return (
     <div className="viewd-item-wrap">
       {properties.map((property, index) => (
@@ -20,11 +22,11 @@ function PropertyPending({ properties, activateCert }) {
           </div>
           <div className="most-viewed-detail">
             <h3>
-              <a href="single-listing-one.html">
+              <Link to={`/user/my-properties/${property.transactionHash}`}>
                 {property.transactionHash.substr(0, 21) +
                   "..." +
                   property.transactionHash.substr(50)}
-              </a>
+              </Link>
             </h3>
             <p className="list-address">
               <i className="fas fa-map-marker-alt"></i>
@@ -47,9 +49,14 @@ function PropertyPending({ properties, activateCert }) {
               </div> */}
           </div>
           <div className="listing-button">
-            <a href="#" className="btn v3">
+            <button
+              className="btn v3"
+              onClick={() =>
+                history.push(`my-properties/${property.transactionHash}`)
+              }
+            >
               <i className="ion-edit"></i> Chi tiết
-            </a>
+            </button>
             <button
               className="btn v4"
               onClick={() => activateCert(property.idInBlockchain)}

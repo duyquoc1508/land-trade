@@ -1,10 +1,23 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import "./overview.css";
+import "./index.css";
+import { fetchSinglePropertyRequest } from "./actions";
 
-export class Overview extends Component {
-  render() {
-    let { owners, properties, images } = this.props.overview;
+function PropertyDetail({ match, history, data, fetchSingleProperty }) {
+  console.log("PropertyDetail -> history", history);
+  const idProperty = match.params.id;
+
+  useEffect(() => {
+    fetchSingleProperty(idProperty);
+  }, []);
+  if (!data) {
+    return (
+      <div>
+        <h1>Property not found</h1>
+      </div>
+    );
+  } else {
+    const { owners, properties, images } = data;
     return (
       <div className="row">
         <div className="col-sm-6">
@@ -27,7 +40,6 @@ export class Overview extends Component {
                 ))}
               </ol>
             </li>
-
             <li className="ow-li-lv1">
               2. Thửa đất:
               <ol type="a">
@@ -118,9 +130,15 @@ export class Overview extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  overview: state.addProperty.data,
+  data: state.propertyDetail.data,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchSingleProperty: (txHash) => {
+      dispatch(fetchSinglePropertyRequest(txHash));
+    },
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Overview);
+export default connect(mapStateToProps, mapDispatchToProps)(PropertyDetail);
