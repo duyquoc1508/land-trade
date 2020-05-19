@@ -2,39 +2,29 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import "./index.css";
 import { fetchSinglePropertyRequest } from "./actions";
+import NotFound from "../../NotFound";
 
 function PropertyDetail({ match, history, data, fetchSingleProperty }) {
   console.log("PropertyDetail -> history", history);
-  const idProperty = match.params.id;
+  const idProperty = match.params.hash;
 
   useEffect(() => {
     fetchSingleProperty(idProperty);
   }, []);
   if (!data) {
-    return (
-      <div>
-        <h1>Property not found</h1>
-      </div>
-    );
+    console.log("not data");
+    return <NotFound />;
   } else {
     const { owners, properties, images } = data;
     return (
       <div className="row">
         <div className="col-sm-6">
-          {images.map((img) => (
-            <img
-              src={`${process.env.REACT_APP_BASE_URL_IMAGE}/${img}`}
-              style={{ maxHeight: "100%" }}
-            />
-          ))}
-        </div>
-        <div className="col-sm-6">
           <ol>
             <li className="ow-li-lv1">
               1. Chủ sở hữu:
               <ol type="a">
-                {owners.map((user) => (
-                  <li className="ow-li-lv2">
+                {owners.map((user, index) => (
+                  <li className="ow-li-lv2" key={index}>
                     <span> {user} </span>
                   </li>
                 ))}
@@ -123,6 +113,16 @@ function PropertyDetail({ match, history, data, fetchSingleProperty }) {
               7. Ghi chú: {!properties.notice ? " -/-" : properties.notice}
             </li>
           </ol>
+        </div>
+        <div className="col-sm-6">
+          <h4>Sơ đồ tài sản</h4>
+          {images.map((img, index) => (
+            <img
+              src={`${process.env.REACT_APP_BASE_URL_IMAGE}/${img}`}
+              style={{ maxHeight: "100%" }}
+              key={index}
+            />
+          ))}
         </div>
       </div>
     );

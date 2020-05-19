@@ -1,9 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { activateCertificateRequest } from "./action";
 import { useHistory, Link } from "react-router-dom";
 
-function PropertyPending({ properties, activateCert }) {
+function PropertyPending({ properties }) {
   const history = useHistory();
   return (
     <div className="viewd-item-wrap">
@@ -52,17 +51,12 @@ function PropertyPending({ properties, activateCert }) {
             <button
               className="btn v3"
               onClick={() =>
-                history.push(`my-properties/${property.transactionHash}`)
+                history.push(
+                  `property/confirm/${property.transactionHash}/${property.idInBlockchain}`
+                )
               }
             >
               <i className="ion-edit"></i> Chi tiết
-            </button>
-            <button
-              className="btn v4"
-              onClick={() => activateCert(property.idInBlockchain)}
-            >
-              {/* <i className="ion-android-delete"></i>  */}
-              Phê duyệt
             </button>
           </div>
         </div>
@@ -78,11 +72,5 @@ const mapStateToProps = (state) => {
     ),
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  return {
-    activateCert: (idCertificate) =>
-      dispatch(activateCertificateRequest(idCertificate)),
-  };
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(PropertyPending);
+export default connect(mapStateToProps, null)(PropertyPending);
