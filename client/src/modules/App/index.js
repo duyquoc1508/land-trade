@@ -21,7 +21,7 @@ class Index extends Component {
     );
   }
 
-  showContentMenus = routes => {
+  showContentMenus = (routes) => {
     var result = null;
     if (routes.length > 0) {
       result = routes.map((route, index) => {

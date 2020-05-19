@@ -11,6 +11,8 @@ import EditProfile from "../Profile/EditProfile";
 import Transaction from "../Transaction";
 import Role from "../Role";
 import PropertyDetail from "../Property/PropertyDetail";
+import ComfirmProperty from "../Property/ConfirmProperty";
+import NotFound from "../NotFound";
 
 const routes = [
   {
@@ -41,6 +43,13 @@ const routes = [
     ),
   },
   {
+    path: "/property/confirm/:hash/:idInBlockchain",
+    exact: true,
+    main: ({ match, history }) => (
+      <ComfirmProperty match={match} history={history} />
+    ),
+  },
+  {
     path: "/user/profile",
     exact: true,
     main: () => <Profile />,
@@ -66,17 +75,10 @@ const routes = [
     main: () => <Role />,
   },
   {
-    path: "/user/my-properties/:id",
-    exact: true,
-    main: ({ match, history }) => (
-      <PropertyDetail match={match} history={history} />
-    ),
+    path: "",
+    exact: false,
+    main: () => <NotFound />,
   },
-  // {
-  //   path: "",
-  //   exact: false,
-  //   main: () => <NotFoundPage />
-  // }
 ];
 
 export default routes;

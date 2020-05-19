@@ -5,7 +5,7 @@ import user from "../modules/Profile/EditProfile/reducers";
 import listingSale from "../modules/Listings/reducers";
 import myListing from "../modules/Property/ListProperties/reducers";
 import notifications from "../components/Header/Notifications/reducers";
-import propertyPending from "../modules/Property/PropertyPending/reducers";
+import confirmProperty from "../modules/Property/ConfirmProperty/reducers";
 import propertyDetail from "../modules/Property/PropertyDetail/reducers";
 import { reducer as formReducer } from "redux-form";
 
@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   myListing,
   listingSale,
   notifications,
-  propertyPending,
+  confirmProperty,
   propertyDetail,
   form: formReducer,
 });

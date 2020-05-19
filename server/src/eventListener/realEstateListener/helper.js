@@ -17,7 +17,7 @@ export async function updateCertStatus(event) {
 export async function createNotification(event) {
   const owners = event.returnValues.owners;
   const data = {
-    url: `/user/my-properties/${event.transactionHash}`,
+    url: `/property/confirm/${event.transactionHash}/${event.returnValues.idCertificate}`,
     message: "Bạn có 1 tài sản mới đang chờ xác nhận",
   };
   const promises = owners.map((owner) => {
