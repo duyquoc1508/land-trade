@@ -23,11 +23,13 @@
     "@hapi/joi": "^17.1.0",
     "body-parser": "^1.19.0",
     "camelcase-keys": "^6.1.2",
+    "cookie": "^0.4.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "eth-sig-util": "^2.5.2",
     "ethereumjs-util": "^6.2.0",
     "express": "^4.17.1",
+    "http": "0.0.1-security",
     "mongoose": "^5.8.7",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
@@ -37,6 +39,7 @@
     "path": "^0.12.7",
     "sha3": "^2.1.1",
     "sharp": "^0.24.1",
+    "socket.io": "^2.3.0",
     "uuid": "^3.4.0",
     "web3": "1.2.6"
   }
