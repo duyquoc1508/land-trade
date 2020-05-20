@@ -1,5 +1,4 @@
 import express from "express";
-const app = express();
 import "./config/database";
 import apiRoutes from "./api";
 import { handleError } from "./helper/error";
@@ -7,6 +6,13 @@ import middlewaresConfig from "./config/middlewares";
 import constants from "./config/constants";
 import path from "path";
 import { initializeListeners } from "./eventListener/listener";
+import http from "http";
+import { SocketService } from "./socketService";
+
+const app = express();
+// Setup socket io for realtime
+const server = http.createServer(app);
+app.set("socketService", new SocketService(server));
 
 // Middlewares
 middlewaresConfig(app);
@@ -32,7 +38,7 @@ app.use((req, res) => {
   res.status(404).send({ url: req.originalUrl + " not found." });
 });
 
-app.listen(constants.PORT, (err) => {
+server.listen(constants.PORT, (err) => {
   if (err) {
     throw err;
   } else {
@@ -43,3 +49,5 @@ Running mode: ${process.env.NODE_ENV}
 --`);
   }
 });
+
+export const socketService = app.get("socketService");

@@ -1,5 +1,6 @@
 import Certificate from "../../api/certification/certification.model";
 import Notification from "../../api/notification/notification.model";
+import { socketService } from "../../index";
 
 // Listen to the newly created certificate event then update in mongodb database
 export async function updateCertStatus(event) {
@@ -24,6 +25,14 @@ export async function createNotification(event) {
     data.userAddress = owner;
     return Notification.create(data);
   });
+  // emit event new certificate for owners
+  owners.forEach((owner) =>
+    socketService.emitEventToIndividualClient(
+      "new certification",
+      owner,
+      "Bạn có 1 tài sản mới đang chờ xác nhận"
+    )
+  );
   return promises;
 }
 
