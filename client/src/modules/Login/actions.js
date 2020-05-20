@@ -1,8 +1,6 @@
 // login
 import { LOGIN_REQUESTING } from "./constants";
 
-const requestLogin = {
-  type: LOGIN_REQUESTING
-};
-
-export default requestLogin;
+export function requestLogin() {
+  return { type: LOGIN_REQUESTING };
+}

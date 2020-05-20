@@ -4,6 +4,7 @@ import ButtonLogin from "../../modules/Login";
 import { connect } from "react-redux";
 import Cookie from "../../helper/cookie";
 import Notifications from "./Notifications";
+import PopupNotification from "../PopupNotification";
 
 const menus = [
   {
@@ -46,8 +47,40 @@ class Menu extends Component {
     this.state = {
       toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block",
       toggleAuthStatus: false,
+      toggleNotification: false,
+      messageNotification: "",
     };
   }
+  componentDidUpdate(preProps, preState) {
+    const { socket } = this.props;
+    if (socket && socket != preProps.socket) {
+      console.log(
+        "Menu -> componentDidUpdate -> listening event new certification"
+      );
+      // listener event new certification
+      socket.on("new certification", (message) => {
+        this.setState({
+          toggleNotification: true,
+          messageNotification: message,
+        });
+        setTimeout(() => {
+          this.setState({ toggleNotification: false });
+        }, 3000);
+      });
+    }
+  }
+
+  // setupConnectSocket(publicAddress) {
+  //   console.log(publicAddress);
+  //   const socket = io(process.env.REACT_APP_BASE_URL_SOCKET);
+  //   socket.emit("user connected", publicAddress);
+  // socket.on("notifications", () => {
+  //   this.setState({ toggleNotification: true });
+  //   setTimeout(() => {
+  //     this.setState({ toggleNotification: false });
+  //   }, 3000);
+  // });
+  // }
 
   changeToggleAuth = () => {
     if (!this.state.toggleAuthStatus) {
@@ -171,6 +204,9 @@ class Menu extends Component {
             </div>
           </div>
         </div>
+        {this.state.toggleNotification && (
+          <PopupNotification message={this.state.messageNotification} />
+        )}
       </header>
     );
   }
@@ -193,9 +229,12 @@ class Menu extends Component {
   };
 }
 
-const mapStateToProps = (state) => ({
-  checkAuth: state.login.accessToken,
-  user: state.user,
-});
+const mapStateToProps = (state) => {
+  return {
+    checkAuth: state.login.accessToken,
+    user: state.user,
+    socket: state.login.socket,
+  };
+};
 
 export default connect(mapStateToProps)(Menu);

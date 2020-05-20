@@ -1,8 +1,14 @@
 import { takeEvery, call, put } from "redux-saga/effects";
-import { LOGIN_REQUESTING, LOGIN_SUCCESS, LOGIN_ERROR } from "./constants";
+import {
+  LOGIN_REQUESTING,
+  LOGIN_SUCCESS,
+  LOGIN_ERROR,
+  CONNECT_SOCKET,
+} from "./constants";
 import axios from "axios";
 import Cookie from "../../helper/cookie";
 import Web3 from "web3";
+import io from "socket.io-client";
 
 const handleSignMessage = async (publicAddress, nonce) => {
   try {
@@ -109,10 +115,22 @@ const handleClick = async () => {
   }
 };
 
+function setupConnectSocket(publicAddress) {
+  const socket = io(process.env.REACT_APP_BASE_URL_SOCKET);
+  socket.emit("user connected", publicAddress);
+  // socket.on("new certification", (message) => {
+  //   console.log(message);
+  // });
+  return socket;
+}
+
 function* loginFlow() {
   try {
     const response = yield call(handleClick);
+    const { publicAddress } = response.user;
     yield put({ type: LOGIN_SUCCESS, payload: response });
+    const socket = setupConnectSocket(publicAddress);
+    yield put({ type: CONNECT_SOCKET, payload: { socket } });
   } catch (error) {
     yield put({ type: LOGIN_ERROR, error: error.message });
   }
