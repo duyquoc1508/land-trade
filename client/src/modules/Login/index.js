@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import actions from "./actions";
+import { requestLogin } from "./actions";
 
 class ButtonLogin extends Component {
   render() {
@@ -16,15 +16,15 @@ class ButtonLogin extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  status: state.login
+const mapStateToProps = (state) => ({
+  status: state.login,
 });
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     handleClick: () => {
-      dispatch(actions);
-    }
+      dispatch(requestLogin());
+    },
   };
 };
 
