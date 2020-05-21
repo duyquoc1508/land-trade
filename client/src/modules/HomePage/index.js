@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { loadScript } from "../../helper/utils";
+import Loading from "../../components/Loading/loading";
 
 class HomePage extends Component {
   componentDidMount() {

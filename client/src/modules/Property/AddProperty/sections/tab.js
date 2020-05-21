@@ -142,7 +142,7 @@ const tab = function HorizontalNonLinearStepper(props) {
       <div>
         <Stepper
           nonLinear
-          style={{ backgroundColor: "#e0ffe0" }}
+          style={{ border: "1px solid" }}
           activeStep={activeStep}
         >
           {steps.map((label, index) => (

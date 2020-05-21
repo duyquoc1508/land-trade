@@ -6497,7 +6497,7 @@ ul.icon li::before {
     font-weight: 500;
 }
 
-.filter-checkbox label::before {
+/* .filter-checkbox label::before {
     content: "";
     display: inline-block;
     width: 18px;
@@ -6526,7 +6526,7 @@ ul.icon li::before {
     border: none;
     font-family: 'Ionicons';
 
-}
+} */
 
 .full-filter .filter-checkbox label {
 

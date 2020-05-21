@@ -41,11 +41,9 @@ img {
   cursor: pointer;
   width: 100%;
   text-align: center;
-  background-color: #efebeb;
 }
 .render-preview {
   text-align: center;
-  background-color: #efebeb;
   width: 50%;
   float: left;
 }
