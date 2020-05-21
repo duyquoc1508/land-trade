@@ -78,7 +78,6 @@ export class EditProperty extends Component {
 
   render() {
     let { id } = this.props.match.params;
-    console.log(id);
     return (
       <div className="container mt-75">
         <form onSubmit={this.handleSubmit}>
@@ -97,7 +96,7 @@ export class EditProperty extends Component {
                           name="title"
                           component="input"
                           className="form-control filter-input"
-                          placeholder="Sea View Apartment"
+                          placeholder="Nhập tiêu đề"
                           onChange={(e) => this.handleChange(e)}
                         />
                       </div>
@@ -109,7 +108,7 @@ export class EditProperty extends Component {
                           name="price"
                           component="input"
                           className="form-control filter-input"
-                          placeholder="Sea View Apartment"
+                          placeholder="Nhập giá bán"
                           type="number"
                           onChange={(e) => this.handleChange(e)}
                         />
@@ -123,7 +122,7 @@ export class EditProperty extends Component {
                           className="form-control"
                           id="list_info"
                           rows="4"
-                          placeholder="Enter your text here"
+                          placeholder="Mô tả nội dung"
                           onChange={(e) => this.handleChange(e)}
                         ></textarea>
                       </div>
@@ -143,7 +142,7 @@ export class EditProperty extends Component {
                         name="areaFloor"
                         component="input"
                         className="form-control filter-input"
-                        placeholder="Sea View Apartment"
+                        placeholder="Diện tích mặt sàn"
                         type="number"
                         onChange={(e) => this.handleChange(e)}
                       />
@@ -155,7 +154,7 @@ export class EditProperty extends Component {
                           name="no_room_bed"
                           component="input"
                           className="form-control filter-input"
-                          placeholder="Sea View Apartment"
+                          placeholder="Số phòng ngủ"
                           type="number"
                           onChange={(e) => this.handleChange(e)}
                         />
@@ -168,7 +167,7 @@ export class EditProperty extends Component {
                           name="no_room_bath"
                           component="input"
                           className="form-control filter-input"
-                          placeholder="Sea View Apartment"
+                          placeholder="Số phòng tắm"
                           type="number"
                           onChange={(e) => this.handleChange(e)}
                         />
@@ -251,7 +250,7 @@ export class EditProperty extends Component {
                             <input
                               name="images"
                               type="file"
-                              className="add-listing__input-file"
+                              className="upload-container add-listing__input-file"
                               multiple
                               onChange={() => this.handleUpload()}
                             />
@@ -262,11 +261,11 @@ export class EditProperty extends Component {
                           </div>
                         </div>
                       </div>
-                      <div className="add-btn">
+                      {/* <div className="add-btn">
                         <a href="#" className="btn v3">
                           Thêm hình ảnh
                         </a>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>

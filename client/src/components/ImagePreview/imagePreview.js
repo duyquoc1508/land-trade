@@ -7,9 +7,6 @@ const ImagePreview = ({ imagefile }) =>
       <div className="image-container">
         <img src={preview} alt={name} />
       </div>
-      <div className="details">
-        {name} - {(size / 1024000).toFixed(2)}MB
-      </div>
     </div>
   ));
 
