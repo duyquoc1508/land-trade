@@ -19,9 +19,9 @@ ImagePreview.propTypes = {
       file: PropTypes.file,
       name: PropTypes.string,
       preview: PropTypes.string,
-      size: PropTypes.number
+      size: PropTypes.number,
     })
-  )
+  ),
 };
 
 export default ImagePreview;

@@ -1,28 +1,62 @@
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
 import axios from "axios";
 import { loadScript } from "../../../helper/utils";
-import DropZoneField from "../../../components/DropzoneField/dropzoneField";
-
-const imageIsRequired = (value) => (!value ? "Required" : undefined);
-
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import DropZone from "react-dropzone";
+import ImagePreview from "../../../components/ImagePreview/imagePreview";
 export class EditProperty extends Component {
   constructor(props) {
     super(props);
-    this.state = { imageFiles: [] };
+    this.state = {
+      imageFiles: [],
+      title: "",
+      price: 0,
+      description: "",
+      areaFloor: 0,
+      no_room_bed: 0,
+      no_room_bath: 0,
+      amenities: [],
+    };
+    // this.handleCheckbox = this.handleCheckbox.bind(this);
   }
   componentDidMount() {
-    loadScript("js/plugin.js");
-    console.log("load main");
-    loadScript("js/main.js");
+    loadScript(`${process.env.REACT_APP_BASE_URL}/js/plugin.js`);
+    loadScript(`${process.env.REACT_APP_BASE_URL}/js/main.js`);
   }
   handleSubmit(e) {
     console.log(e);
     alert("submit");
   }
-  handleOnDrop = async (newImageFiles, onChange) => {
-    const fd = new FormData();
+  handleChange(event) {
+    console.log(event);
+    this.setState({ [event.target.name]: event.target.value });
+  }
+  handleCheckbox(event) {
+    if (event.target.checked) {
+      console.log(true);
+      this.setState({
+        amenities: [...this.state.amenities, event.target.name],
+      });
+    } else {
+      this.setState({
+        amenities: this.state.amenities.filter(
+          (item) => item !== event.target.name
+        ),
+      });
+    }
+  }
 
+  handleOnDrop(e) {
+    this.setState({
+      imageFiles: e.target.files,
+    });
+  }
+
+  async handleUpload(event) {
+    const fd = new FormData();
+    let newImageFiles = document.querySelector("input[type=file]").files;
+    newImageFiles = Object.values(newImageFiles);
     newImageFiles.forEach((item) => {
       fd.append("images", item);
     });
@@ -37,9 +71,11 @@ export class EditProperty extends Component {
         preview: URL.createObjectURL(imageFile),
       };
     });
+    console.log(this);
+    this.setState({ imageFiles: listImages });
+    alert("anh dang upload thanh cong!");
+  }
 
-    this.setState({ imageFiles: listImages }, () => onChange(result.data.data));
-  };
   render() {
     let { id } = this.props.match.params;
     console.log(id);
@@ -54,41 +90,42 @@ export class EditProperty extends Component {
                 </div>
                 <div className="db-add-listing">
                   <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-md-8">
                       <div className="form-group">
                         <label>Tiêu đề</label>
-                        <Field
+                        <input
                           name="title"
                           component="input"
                           className="form-control filter-input"
                           placeholder="Sea View Apartment"
+                          onChange={(e) => this.handleChange(e)}
                         />
                       </div>
                     </div>
-
                     <div className="col-md-4">
                       <div className="form-group">
                         <label>Giá bán</label>
-                        <Field
+                        <input
                           name="price"
                           component="input"
                           className="form-control filter-input"
                           placeholder="Sea View Apartment"
                           type="number"
+                          onChange={(e) => this.handleChange(e)}
                         />
                       </div>
                     </div>
                     <div className="col-md-12">
                       <div className="form-group">
                         <label>Mô tả</label>
-                        <Field
+                        <textarea
                           name="description"
-                          component="textarea"
                           className="form-control"
                           id="list_info"
                           rows="4"
                           placeholder="Enter your text here"
-                        />
+                          onChange={(e) => this.handleChange(e)}
+                        ></textarea>
                       </div>
                     </div>
                   </div>
@@ -102,42 +139,97 @@ export class EditProperty extends Component {
                   <div className="row mb-30">
                     <div className="col-md-4">
                       <label>Diện tích mặt sàn</label>
-                      <Field
+                      <input
                         name="areaFloor"
                         component="input"
                         className="form-control filter-input"
                         placeholder="Sea View Apartment"
                         type="number"
+                        onChange={(e) => this.handleChange(e)}
                       />
                     </div>
                     <div className="col-md-4">
                       <div className="form-group">
                         <label>Số phòng ngủ</label>
-                        <Field
+                        <input
                           name="no_room_bed"
                           component="input"
                           className="form-control filter-input"
                           placeholder="Sea View Apartment"
                           type="number"
+                          onChange={(e) => this.handleChange(e)}
                         />
                       </div>
                     </div>
                     <div className="col-md-4">
                       <div className="form-group">
                         <label>Số phòng tắm</label>
-                        <Field
+                        <input
                           name="no_room_bath"
                           component="input"
                           className="form-control filter-input"
                           placeholder="Sea View Apartment"
                           type="number"
+                          onChange={(e) => this.handleChange(e)}
                         />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
+              <div className="act-title">
+                <h5>Tiện ích :</h5>
+              </div>
+              <div className="col-md-12">
+                <div className="form-group">
+                  <div className="filter-checkbox">
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          // checked={this.state.checkedB}
+                          onChange={(e) => this.handleCheckbox(e)}
+                          name="pool"
+                          color="primary"
+                        />
+                      }
+                      label="Bể bơi "
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          // checked={state.checkedB}
+                          onChange={(e) => this.handleCheckbox(e)}
+                          name="playground"
+                          color="primary"
+                        />
+                      }
+                      label="Sân chơi "
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          // checked={state.checkedB}
+                          onChange={(e) => this.handleCheckbox(e)}
+                          name="BBQ"
+                          color="primary"
+                        />
+                      }
+                      label="BBQ "
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          // checked={state.checkedB}
+                          onChange={(e) => this.handleCheckbox(e)}
+                          name="tenis"
+                          color="primary"
+                        />
+                      }
+                      label="Sân tenis "
+                    />
+                  </div>
+                </div>
+              </div>
               <div className="db-add-list-wrap">
                 <div className="act-title">
                   <h5>Thư viện hình ảnh :</h5>
@@ -147,14 +239,21 @@ export class EditProperty extends Component {
                     <div className="col-md-12 mb-5">
                       <div className="form-group">
                         <div className="form-group">
+                          <div className="preview-container">
+                            {this.state.imageFiles &&
+                            this.state.imageFiles.length > 0 ? (
+                              <ImagePreview imagefile={this.state.imageFiles} />
+                            ) : (
+                              ""
+                            )}
+                          </div>
                           <div className="add-listing__input-file-box">
-                            <Field
+                            <input
                               name="images"
-                              component={DropZoneField}
                               type="file"
-                              imagefile={this.state.imageFiles}
-                              handleOnDrop={this.handleOnDrop}
-                              validate={[imageIsRequired]}
+                              className="add-listing__input-file"
+                              multiple
+                              onChange={() => this.handleUpload()}
                             />
                             <div className="add-listing__input-file-wrap">
                               <i className="lnr lnr-cloud-upload"></i>
@@ -165,7 +264,7 @@ export class EditProperty extends Component {
                       </div>
                       <div className="add-btn">
                         <a href="#" className="btn v3">
-                          Add Images
+                          Thêm hình ảnh
                         </a>
                       </div>
                     </div>
@@ -176,11 +275,8 @@ export class EditProperty extends Component {
                 <div className="db-add-listing">
                   <div className="row">
                     <div className="col-md-12 text-right sm-left">
-                      <button className="btn v3 mr-5" type="submit">
-                        Preview
-                      </button>
                       <button className="btn v3" type="submit">
-                        Submit
+                        Cập nhập
                       </button>
                     </div>
                   </div>
@@ -194,9 +290,4 @@ export class EditProperty extends Component {
   }
 }
 
-const EditPropertyForm = reduxForm({
-  // a unique name for the form
-  form: "editProperty",
-})(EditProperty);
-
-export default EditPropertyForm;
+export default EditProperty;

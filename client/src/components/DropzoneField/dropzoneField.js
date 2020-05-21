@@ -8,16 +8,16 @@ const DropZoneField = ({
   handleOnDrop,
   input: { onChange },
   imagefile,
-  meta: { error, touched }
+  meta: { error, touched },
 }) => (
   <div className="preview-container">
     <DropZone
       accept="image/jpeg, image/png, image/gif, image/bmp"
-      className="upload-container"
-      onDrop={file => handleOnDrop(file, onChange)}
+      className="upload-container add-listing__input-file"
+      onDrop={(file) => handleOnDrop(file, onChange)}
       multiple={true}
     >
-      {props =>
+      {(props) =>
         imagefile && imagefile.length > 0 ? (
           <ImagePreview imagefile={imagefile} />
         ) : (
