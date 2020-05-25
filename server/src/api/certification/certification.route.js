@@ -41,6 +41,16 @@ routes.delete(
  * PUT api/v1/certification/activate/{{idCertification}}
  */
 routes.put(
+  "/edit/:idCertification",
+  authJwt,
+  certificationController.editCertification
+);
+
+/**
+ * Activate certification (Only owners)
+ * PUT api/v1/certification/activate/{{idCertification}}
+ */
+routes.put(
   "/activate/:idCertification",
   authJwt,
   certificationController.activateCertification
