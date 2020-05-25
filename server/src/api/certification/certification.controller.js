@@ -114,6 +114,52 @@ export async function deleteCertification(req, res, next) {
   }
 }
 
+export async function editCertification(req, res, next) {
+  try {
+    var certification = await Certification.findById(req.params.idCertification)
+      .select({ owners: 1 })
+      .lean();
+    const { publicAddress } = req.user;
+    const { owners } = certification;
+    // Check resource owner
+    if (!owners.includes(publicAddress)) {
+      throw new ErrorHandler(
+        403,
+        "You are not permission access to this resource"
+      );
+    }
+    let {
+      description,
+      numOfBedrooms,
+      numOfBathrooms,
+      areaFloor,
+      price,
+      galleries,
+      utilities,
+    } = req.body;
+    let query = {
+      moreInfo: {
+        description,
+        numOfBedrooms,
+        numOfBathrooms,
+        areaFloor,
+        price,
+        galleries,
+        utilities,
+      },
+    };
+    var certification = await Certification.findByIdAndUpdate(
+      req.params.idCertification,
+      query
+    )
+      .select("_id")
+      .lean();
+    return res.status(200).json({ statusCode: 200, data: certification });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // Activate Certification (Only owners)
 export async function activateCertification(req, res, next) {
   try {

@@ -73,6 +73,15 @@ const certificationSchema = new Schema(
     idInBlockchain: {
       type: Number,
     },
+    moreInfo: {
+      description: String,
+      numOfBedrooms: Number,
+      numOfBathrooms: Number,
+      areaFloor: Number,
+      price: Number,
+      galleries: [{ type: String }],
+      utilities: [{ type: String }],
+    },
   },
   { timestamps: true }
 );

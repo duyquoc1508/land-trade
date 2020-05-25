@@ -2,7 +2,7 @@ import {
   FILLING_FORM,
   // CREATE_REQUESTING,
   CREATE_SUCCESS,
-  CREATE_ERROR
+  CREATE_ERROR,
 } from "./constants";
 
 const initialState = {
@@ -10,19 +10,16 @@ const initialState = {
   messages: "",
   data: {
     owners: [],
-    title: "",
-    // attestor: "",
-    // II. Land lot, house and other properties attaching with land
     properties: {
       landLot: null,
       house: null,
       otherConstruction: "",
       prodForestIsArtificial: "",
       perennialTree: "",
-      notice: ""
+      notice: "",
     },
-    images: []
-  }
+    images: [],
+  },
 };
 
 function createReducer(state = initialState, action) {
@@ -77,13 +74,13 @@ function createReducer(state = initialState, action) {
       return {
         success: true,
         messages: "Đăng ký thành công!",
-        data: action.payload.data
+        data: action.payload.data,
       };
     case CREATE_ERROR:
       return {
         success: false,
         messages: "Đăng ký thất bại!",
-        data: action.payload.data
+        data: action.payload.data,
       };
     default:
       return state;

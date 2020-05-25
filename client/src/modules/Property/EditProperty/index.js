@@ -3,20 +3,22 @@ import axios from "axios";
 import { loadScript } from "../../../helper/utils";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import DropZone from "react-dropzone";
+import Cookie from "../../../helper/cookie";
 import ImagePreview from "../../../components/ImagePreview/imagePreview";
+import PopupNotification from "../../../components/PopupNotification";
 export class EditProperty extends Component {
   constructor(props) {
     super(props);
     this.state = {
       imageFiles: [],
+      galleries: [],
       title: "",
       price: 0,
       description: "",
       areaFloor: 0,
-      no_room_bed: 0,
-      no_room_bath: 0,
-      amenities: [],
+      numOfBedrooms: 0,
+      numOfBathrooms: 0,
+      utilities: [],
     };
     // this.handleCheckbox = this.handleCheckbox.bind(this);
   }
@@ -24,10 +26,22 @@ export class EditProperty extends Component {
     loadScript(`${process.env.REACT_APP_BASE_URL}/js/plugin.js`);
     loadScript(`${process.env.REACT_APP_BASE_URL}/js/main.js`);
   }
-  handleSubmit(e) {
-    console.log(e);
-    alert("submit");
-  }
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    let response = await axios({
+      method: "put",
+      url: `${process.env.REACT_APP_BASE_URL_API}/certification/edit/${this.props.match.params.id}`,
+      data: this.state,
+      headers: {
+        Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
+      },
+    });
+    if (response.status !== 200) {
+      this.props.history.push(`/listings`);
+    } else {
+      this.props.history.push(`/listings`);
+    }
+  };
   handleChange(event) {
     console.log(event);
     this.setState({ [event.target.name]: event.target.value });
@@ -36,11 +50,11 @@ export class EditProperty extends Component {
     if (event.target.checked) {
       console.log(true);
       this.setState({
-        amenities: [...this.state.amenities, event.target.name],
+        utilities: [...this.state.utilities, event.target.name],
       });
     } else {
       this.setState({
-        amenities: this.state.amenities.filter(
+        utilities: this.state.utilities.filter(
           (item) => item !== event.target.name
         ),
       });
@@ -71,13 +85,12 @@ export class EditProperty extends Component {
         preview: URL.createObjectURL(imageFile),
       };
     });
-    console.log(this);
+    this.setState({ galleries: result.data.data });
     this.setState({ imageFiles: listImages });
     alert("anh dang upload thanh cong!");
   }
 
   render() {
-    let { id } = this.props.match.params;
     return (
       <div className="container mt-75">
         <form onSubmit={this.handleSubmit}>
@@ -151,7 +164,7 @@ export class EditProperty extends Component {
                       <div className="form-group">
                         <label>Số phòng ngủ</label>
                         <input
-                          name="no_room_bed"
+                          name="numOfBedrooms"
                           component="input"
                           className="form-control filter-input"
                           placeholder="Số phòng ngủ"
@@ -164,7 +177,7 @@ export class EditProperty extends Component {
                       <div className="form-group">
                         <label>Số phòng tắm</label>
                         <input
-                          name="no_room_bath"
+                          name="numOfBathrooms"
                           component="input"
                           className="form-control filter-input"
                           placeholder="Số phòng tắm"

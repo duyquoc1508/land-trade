@@ -37,49 +37,6 @@ const loadWeb3 = async () => {
   }
 };
 
-// param property.properties
-function formatPropertyToSC(data) {
-  const {
-    landLot,
-    house,
-    otherConstruction,
-    prodForestIsArtificial,
-    perennialTree,
-    notice,
-  } = data.properties;
-  let result = [
-    landLot
-      ? [
-          landLot.landLotNo || 0,
-          landLot.mapSheetNo || 0,
-          landLot.commonUseArea || 0,
-          landLot.privateUseArea || 0,
-          landLot.address || "",
-          landLot.purposeOfUse || "",
-          landLot.timeOfUse || "",
-          landLot.originOfUse || "",
-        ]
-      : [],
-    house
-      ? [
-          house.houseType || "",
-          house.address || "",
-          house.constructionArea || 0,
-          house.floorArea || 0,
-          house.level || "",
-          house.numberOfFloor || "",
-          house.formOfOwn || "",
-          house.timeOfOwn || "",
-        ]
-      : [],
-    otherConstruction || "",
-    prodForestIsArtificial || "",
-    perennialTree || "",
-    notice || "",
-  ];
-  return result;
-}
-
 async function createCertificate(property) {
   try {
     await loadWeb3();
@@ -93,8 +50,10 @@ async function createCertificate(property) {
       window.alert("Please activate MetaMask first.");
       return;
     }
+    let { owners, properties, images } = property;
+    // console.log(owners, properties, images);
     appContract.methods
-      .createCertificate(formatPropertyToSC(property), property.owners)
+      .createCertificate(formatPropertyToString(properties), owners)
       .send({ from: coinbase }, function (error, transactionHash) {
         console.log(
           "%c%s",
@@ -108,9 +67,15 @@ async function createCertificate(property) {
   }
 }
 
+function formatPropertyToString(property) {
+  return JSON.stringify(property).replace(/"/g, "'");
+}
+
 function* createFlow(action) {
   try {
     let { property } = action;
+
+    console.log(`property ${JSON.stringify(property)}`);
     // id for listen event from blockchain and update data in server
     // property.idCert = idCertificate;
     // console.log("function*createFlow -> property", property)
