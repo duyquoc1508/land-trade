@@ -3,7 +3,7 @@ import Cookie from "../../helper/cookie";
 
 const initialState = {
   accessToken: Cookie.getCookie("accessToken"),
-  user: JSON.parse(localStorage.getItem("user")) || {},
+  // user: JSON.parse(localStorage.getItem("user")) || {},
   socket: null,
 };
 

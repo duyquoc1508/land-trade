@@ -57,7 +57,9 @@ const routes = [
   {
     path: "/user/profile/edit",
     exact: true,
-    main: () => <EditProfile />,
+    main: ({ match, history }) => (
+      <EditProfile match={match} history={history} />
+    ),
   },
   {
     path: "/user/my-properties/",

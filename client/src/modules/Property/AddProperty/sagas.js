@@ -5,6 +5,7 @@ import Cookie from "../../../helper/cookie";
 import RealEstateContract from "../../../contracts/RealEstate.json";
 import Web3 from "web3";
 import { realEstateContractAddress } from "../../../../config/common-path";
+import { Base64 } from 'js-base64';
 
 const handleCreateCert = async (property, transactionHash) => {
   console.log("handleCreateCert -> property", property);
@@ -50,10 +51,11 @@ async function createCertificate(property) {
       window.alert("Please activate MetaMask first.");
       return;
     }
+
     let { owners, properties, images } = property;
-    // console.log(owners, properties, images);
+    const propertyBase64 = objectToB64(properties)
     appContract.methods
-      .createCertificate(formatPropertyToString(properties), owners)
+      .createCertificate(propertyBase64, owners)
       .send({ from: coinbase }, function (error, transactionHash) {
         console.log(
           "%c%s",
@@ -67,15 +69,14 @@ async function createCertificate(property) {
   }
 }
 
-function formatPropertyToString(property) {
-  return JSON.stringify(property).replace(/"/g, "'");
+// convert object utf8 to base64
+function objectToB64(property) {
+  return Base64.encode(JSON.stringify(property))
 }
 
 function* createFlow(action) {
   try {
     let { property } = action;
-
-    console.log(`property ${JSON.stringify(property)}`);
     // id for listen event from blockchain and update data in server
     // property.idCert = idCertificate;
     // console.log("function*createFlow -> property", property)

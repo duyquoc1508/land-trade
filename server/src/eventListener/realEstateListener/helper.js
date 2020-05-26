@@ -11,7 +11,7 @@ export async function updateCertStatus(event) {
   const query = {
     transactionHash: event.transactionHash,
   };
-  return Certificate.findOneAndUpdate(query, update).then();
+  return Certificate.updateOne(query, update).then();
 }
 
 // create notification for all owners of certificate

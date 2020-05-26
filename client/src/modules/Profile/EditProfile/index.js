@@ -21,7 +21,8 @@ class EditProfile extends Component {
     })
       .then(response => {
         this.props.actUpdate(response.data.data);
-        alert("Cập nhập thành công");
+        this.props.history.goBack();
+        localStorage.setItem("user", JSON.stringify(response.data.data));
       })
       .catch(err => alert("Cập nhập thất bại"));
   }
@@ -47,7 +48,7 @@ class EditProfile extends Component {
                   <div className="col-md-4">
                     <div className="edit-profile-photo">
                       <img
-                        src={`${process.env.REACT_APP_BASE_URL}/images/agents/agent_1.jpg`}
+                        src={`${process.env.REACT_APP_BASE_URL_IMAGE}/avatar/${this.props.user.avatar}`}
                         alt=""
                       />
                       <div className="change-photo-btn">
@@ -104,7 +105,7 @@ class EditProfile extends Component {
                         </div>
                         <div className="col-md-12">
                           <div className="form-group">
-                            <label>Thư điện tử(email)</label>
+                            <label>Thư điện tử (email)</label>
                             <Field
                               component="input"
                               name="email"

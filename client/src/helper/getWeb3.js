@@ -1,4 +1,5 @@
 import Web3 from "web3";
+const providerUrl = process.env.REACT_APP_BASE_URL_PROVIDER || "http://127.0.0.1:7545";
 
 const getWeb3 = () =>
   new Promise((resolve, reject) => {
@@ -26,7 +27,7 @@ const getWeb3 = () =>
       // Fallback to localhost; use dev console port by default...
       else {
         const provider = new Web3.providers.HttpProvider(
-          "http://127.0.0.1:7545"
+          providerUrl
         );
         const web3 = new Web3(provider);
         console.log("No web3 instance injected, using Local web3.");
