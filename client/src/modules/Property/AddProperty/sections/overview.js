@@ -8,10 +8,11 @@ export class Overview extends Component {
     return (
       <div className="row">
         <div className="col-sm-6">
-          {images.map((img) => (
+          {images.map((img, index) => (
             <img
-              src={`${process.env.REACT_APP_BASE_URL_IMAGE}/${img}`}
+              src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${img}`}
               style={{ maxHeight: "100%" }}
+              key={index}
             />
           ))}
         </div>
@@ -20,8 +21,8 @@ export class Overview extends Component {
             <li className="ow-li-lv1">
               1. Chủ sở hữu:
               <ol type="a">
-                {owners.map((user) => (
-                  <li className="ow-li-lv2">
+                {owners.map((user, index) => (
+                  <li className="ow-li-lv2" key={index}>
                     <span> {user} </span>
                   </li>
                 ))}
@@ -63,33 +64,33 @@ export class Overview extends Component {
               {!properties.house ? (
                 " -/-"
               ) : (
-                <ol type="a">
-                  <li className="ow-li-lv2">
-                    <span>a) Loại nhà ở:</span> {properties.house.houseType}
-                  </li>
-                  <li className="ow-li-lv2">
-                    <span>b) Địa chỉ:</span> {properties.house.address}
-                  </li>
-                  <li className="ow-li-lv2">
-                    <span>c) Diện tích xây dựng:</span>{" "}
-                    {properties.house.constructionArea}
-                  </li>
-                  <li className="ow-li-lv2">
-                    <span>d) Diện tích sàn:</span> {properties.house.floorArea}
-                  </li>
-                  <li className="ow-li-lv2">
-                    <span>e) Cấp (Hạng):</span> {properties.house.level}
-                  </li>
-                  <li className="ow-li-lv2">
-                    <span>f) Hình thức sở hữu:</span>{" "}
-                    {properties.house.formOfOwn}
-                  </li>
-                  <li className="ow-li-lv2">
-                    <span>g) Thời gian sử dụng:</span>{" "}
-                    {properties.house.timeOfOwn}
-                  </li>
-                </ol>
-              )}
+                  <ol type="a">
+                    <li className="ow-li-lv2">
+                      <span>a) Loại nhà ở:</span> {properties.house.houseType}
+                    </li>
+                    <li className="ow-li-lv2">
+                      <span>b) Địa chỉ:</span> {properties.house.address}
+                    </li>
+                    <li className="ow-li-lv2">
+                      <span>c) Diện tích xây dựng:</span>{" "}
+                      {properties.house.constructionArea}
+                    </li>
+                    <li className="ow-li-lv2">
+                      <span>d) Diện tích sàn:</span> {properties.house.floorArea}
+                    </li>
+                    <li className="ow-li-lv2">
+                      <span>e) Cấp (Hạng):</span> {properties.house.level}
+                    </li>
+                    <li className="ow-li-lv2">
+                      <span>f) Hình thức sở hữu:</span>{" "}
+                      {properties.house.formOfOwn}
+                    </li>
+                    <li className="ow-li-lv2">
+                      <span>g) Thời gian sử dụng:</span>{" "}
+                      {properties.house.timeOfOwn}
+                    </li>
+                  </ol>
+                )}
             </li>
             <li className="ow-li-lv1">
               4. Công trình xây dựng khác:{" "}

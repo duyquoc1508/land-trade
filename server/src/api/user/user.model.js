@@ -41,7 +41,7 @@ const userSchema = new Schema(
       sparse: true //prevent duplicate value but allow multiple null
     },
     phoneNumber: {
-      type: Number,
+      type: String,
       trim: true
     },
     properties: [

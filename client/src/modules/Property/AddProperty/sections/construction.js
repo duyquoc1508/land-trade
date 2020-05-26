@@ -26,7 +26,7 @@ class ConstructionForm extends Component {
           <div className="row">
             <div className="col-md-12">
               <div className="form-group">
-                <label>Nhập thông tin công trình xây dựng khác</label>
+                <label>Công trình xây dựng khác</label>
                 <Field
                   name="otherConstruction"
                   component="textarea"

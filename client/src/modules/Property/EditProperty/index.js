@@ -200,44 +200,77 @@ export class EditProperty extends Component {
                         <Checkbox
                           // checked={this.state.checkedB}
                           onChange={(e) => this.handleCheckbox(e)}
-                          name="pool"
+                          name="Bể bơi"
                           color="primary"
                         />
                       }
-                      label="Bể bơi "
+                      label="Bể bơi"
                     />
                     <FormControlLabel
                       control={
                         <Checkbox
                           // checked={state.checkedB}
                           onChange={(e) => this.handleCheckbox(e)}
-                          name="playground"
+                          name="Sân chơi thể thao"
                           color="primary"
                         />
                       }
-                      label="Sân chơi "
+                      label="Sân chơi thể thao"
                     />
                     <FormControlLabel
                       control={
                         <Checkbox
                           // checked={state.checkedB}
                           onChange={(e) => this.handleCheckbox(e)}
-                          name="BBQ"
+                          name="Khu BBQ"
                           color="primary"
                         />
                       }
-                      label="BBQ "
+                      label="Khu BBQ"
                     />
                     <FormControlLabel
                       control={
                         <Checkbox
                           // checked={state.checkedB}
                           onChange={(e) => this.handleCheckbox(e)}
-                          name="tenis"
+                          name="Sân tenis"
                           color="primary"
                         />
                       }
-                      label="Sân tenis "
+                      label="Sân tenis"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          // checked={state.checkedB}
+                          onChange={(e) => this.handleCheckbox(e)}
+                          name="Chỗ đậu xe ô tô"
+                          color="primary"
+                        />
+                      }
+                      label="Chỗ đậu xe ô tô"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          // checked={state.checkedB}
+                          onChange={(e) => this.handleCheckbox(e)}
+                          name="Ban công"
+                          color="primary"
+                        />
+                      }
+                      label="Ban công"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          // checked={state.checkedB}
+                          onChange={(e) => this.handleCheckbox(e)}
+                          name="Vườn cây cảnh"
+                          color="primary"
+                        />
+                      }
+                      label="Vườn cây cảnh"
                     />
                   </div>
                 </div>
@@ -253,11 +286,11 @@ export class EditProperty extends Component {
                         <div className="form-group">
                           <div className="preview-container">
                             {this.state.imageFiles &&
-                            this.state.imageFiles.length > 0 ? (
-                              <ImagePreview imagefile={this.state.imageFiles} />
-                            ) : (
-                              ""
-                            )}
+                              this.state.imageFiles.length > 0 ? (
+                                <ImagePreview imagefile={this.state.imageFiles} />
+                              ) : (
+                                ""
+                              )}
                           </div>
                           <div className="add-listing__input-file-box">
                             <input

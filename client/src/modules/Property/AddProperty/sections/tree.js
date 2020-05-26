@@ -15,7 +15,7 @@ class TreeForm extends Component {
           <div className="row">
             <div className="col-md-12">
               <div className="form-group">
-                <label>Nhập thông tin cây trồng lâu năm</label>
+                <label>Cây trồng lâu năm</label>
                 <Field
                   name="perennialTree"
                   component="textarea"

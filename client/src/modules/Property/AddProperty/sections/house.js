@@ -12,8 +12,8 @@ class HouseForm extends Component {
       houseType: 1,
     };
     this.houseType = {
-      "Nha chung cu": 0,
-      "Nha o rieng le": 1,
+      "Nhà chung cư": 0,
+      "Nhà ở riêng lẻ": 1,
     };
   }
 
@@ -33,8 +33,8 @@ class HouseForm extends Component {
                   this.setState({ houseType: this.houseType[e.target.value] })
                 }
               >
-                <option value="Nha o rieng le">Nhà ở riêng lẻ</option>
-                <option value="Nha chung cu">Nhà chung cư</option>
+                <option value="Nhà ở riêng lẻ">Nhà ở riêng lẻ</option>
+                <option value="Nhà chung cư">Nhà chung cư</option>
               </Field>
             </div>
           </div>

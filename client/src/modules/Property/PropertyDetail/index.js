@@ -65,33 +65,33 @@ function PropertyDetail({ match, history, data, fetchSingleProperty }) {
               {!properties.house ? (
                 " -/-"
               ) : (
-                <ol type="a">
-                  <li className="ow-li-lv2">
-                    <span>a) Loại nhà ở:</span> {properties.house.houseType}
-                  </li>
-                  <li className="ow-li-lv2">
-                    <span>b) Địa chỉ:</span> {properties.house.address}
-                  </li>
-                  <li className="ow-li-lv2">
-                    <span>c) Diện tích xây dựng:</span>{" "}
-                    {properties.house.constructionArea}
-                  </li>
-                  <li className="ow-li-lv2">
-                    <span>d) Diện tích sàn:</span> {properties.house.floorArea}
-                  </li>
-                  <li className="ow-li-lv2">
-                    <span>e) Cấp (Hạng):</span> {properties.house.level}
-                  </li>
-                  <li className="ow-li-lv2">
-                    <span>f) Hình thức sở hữu:</span>{" "}
-                    {properties.house.formOfOwn}
-                  </li>
-                  <li className="ow-li-lv2">
-                    <span>g) Thời gian sử dụng:</span>{" "}
-                    {properties.house.timeOfOwn}
-                  </li>
-                </ol>
-              )}
+                  <ol type="a">
+                    <li className="ow-li-lv2">
+                      <span>a) Loại nhà ở:</span> {properties.house.houseType}
+                    </li>
+                    <li className="ow-li-lv2">
+                      <span>b) Địa chỉ:</span> {properties.house.address}
+                    </li>
+                    <li className="ow-li-lv2">
+                      <span>c) Diện tích xây dựng:</span>{" "}
+                      {properties.house.constructionArea}
+                    </li>
+                    <li className="ow-li-lv2">
+                      <span>d) Diện tích sàn:</span> {properties.house.floorArea}
+                    </li>
+                    <li className="ow-li-lv2">
+                      <span>e) Cấp (Hạng):</span> {properties.house.level}
+                    </li>
+                    <li className="ow-li-lv2">
+                      <span>f) Hình thức sở hữu:</span>{" "}
+                      {properties.house.formOfOwn}
+                    </li>
+                    <li className="ow-li-lv2">
+                      <span>g) Thời gian sử dụng:</span>{" "}
+                      {properties.house.timeOfOwn}
+                    </li>
+                  </ol>
+                )}
             </li>
             <li className="ow-li-lv1">
               4. Công trình xây dựng khác:{" "}
@@ -118,7 +118,7 @@ function PropertyDetail({ match, history, data, fetchSingleProperty }) {
           <h4>Sơ đồ tài sản</h4>
           {images.map((img, index) => (
             <img
-              src={`${process.env.REACT_APP_BASE_URL_IMAGE}/${img}`}
+              src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${img}`}
               style={{ maxHeight: "100%" }}
               key={index}
             />
