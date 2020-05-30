@@ -23,6 +23,7 @@ interface IRBAC {
 contract RealEstate {
     using SafeMath for uint256;
     // ------------------------------ Variables ------------------------------
+    address private owner ; // owner, who deploy this smart contract
     IRBAC roleContract; // reference to contract RoleBasedAcl
     // number of certificate (token id)
     uint256 public certificateCount;
@@ -61,27 +62,30 @@ contract RealEstate {
     constructor(IRBAC _roleContract) public {
         // Initialize roleContract
         roleContract = _roleContract;
+        owner = msg.sender;
     }
 
     // ------------------------------ Modifiers ------------------------------
 
+    modifier onlyPending(uint256 _id) {
+      require(tokenToState[_id] == State.PENDDING, "RealEstate: Require state is PENDDING");
+      _;
+    }
+
     modifier onlyActivated(uint256 _id) {
-        require(isActivated(_id), "RealEstate: Please activate first");
+        require(tokenToState[_id] == State.ACTIVATED,"RealEstate: Require state is ACTIVATED");
         _;
     }
 
     modifier onlySelling(uint256 _id) {
-        require(
-            isSelling(_id),
-            "RealEstate: The certificate doesn't allow for sale"
-        );
+        require(tokenToState[_id] == State.SELLING, "RealEstate: Require state is SELLING");
         _;
     }
 
+
     modifier onlyOwnerOf(uint256 _id) {
         require(
-            _checkExitInArray(tokenToOwners[_id], msg.sender),
-            "RealEstate: You're not owner of certificate"
+            _checkExitInArray(tokenToOwners[_id], msg.sender),"RealEstate: You're not owner of certificate"
         );
         _;
     }
@@ -113,6 +117,15 @@ contract RealEstate {
     // ------------------------------ Core public functions ------------------------------
 
     /**
+     * @notice Set role base acl contract address
+     * @dev only owner can change this contract address
+     */
+    function setRoleContractAddress(IRBAC _contractAddress) public  {
+      require(owner == msg.sender, "RealEstate: Require owner");
+      roleContract = _contractAddress;
+    }
+
+    /**
      * @notice create a new certificate with a struct
      * @dev Require role notary and list owner does not contain msg.sender
      */
@@ -141,7 +154,7 @@ contract RealEstate {
      * @dev Require msg.sender is owner of certification and msg.sender has not activated
      * Change state of certificate if all owner has activated
      */
-    function activate(uint256 _id) public onlyOwnerOf(_id) {
+    function activate(uint256 _id) public onlyOwnerOf(_id) onlyPending(_id) {
         require(
             !_checkExitInArray(tokenToApprovals[_id], msg.sender),
             "RealEstate: Account already approved"
@@ -214,6 +227,7 @@ contract RealEstate {
     function isActivated(uint256 _id) public view returns (bool) {
         return tokenToState[_id] == State.ACTIVATED;
     }
+
 
     /**
      * @notice Check state of certificate is 'SELLING'
