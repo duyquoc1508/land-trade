@@ -7,6 +7,10 @@ import Alert from "@material-ui/lab/Alert";
 
 import { loadScript } from "../../../helper/utils";
 import * as actions from "./actions";
+import RealEstateContract from "../../../contracts/RealEstate.json";
+import Web3 from "web3";
+import { realEstateContractAddress } from "../../../../config/common-path";
+import getWeb3 from "../../../helper/getWeb3"
 
 import Tab from "./sections/tab";
 
@@ -15,13 +19,28 @@ class AddProperty extends Component {
     super(props);
     this.state = { open: true };
     this.handleClose = this.handleClose.bind(this);
+
   }
-  componentDidMount() {
+  componentDidMount = async () => {
     if (window.screen.width < 1200) {
       alert("Giao diện chưa hỗ trợ trên thiết bị di dộng!");
     }
     loadScript("js/plugin.js");
     loadScript("js/main.js");
+    await this.listenEventFromBlockchain()
+  }
+
+  listenEventFromBlockchain = async () => {
+    const web3 = await getWeb3();
+    const realEstateContract = new web3.eth.Contract(RealEstateContract.abi, realEstateContractAddress);
+    realEstateContract.events
+      .NewCertificate()
+      .on("data", (event) => {
+        console.log("index -> componentDidMount -> result", event.returnValues);
+        this.props.createSuccess();
+        // then push to screen this property
+      })
+      .on("error", console.error);
   }
 
   handleClose() {
@@ -56,8 +75,8 @@ class AddProperty extends Component {
               </Alert>
             </Snackbar>
           ) : (
-            ""
-          )}
+              ""
+            )}
         </div>
       </div>
     );
@@ -68,6 +87,8 @@ const mapStateToProps = (state) => ({
   addProperty: state.addProperty,
   form: state.form,
   login: state.login,
+  loading: state.loading,
+  // realEstateContract: state.instanceContracts.realEstate
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -78,6 +99,9 @@ const mapDispatchToProps = (dispatch) => {
     createSubmit: (data) => {
       dispatch(actions.requestCreate(data));
     },
+    createSuccess: () => {
+      dispatch(actions.createSuccess())
+    }
   };
 };
 

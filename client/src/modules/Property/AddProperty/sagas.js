@@ -1,11 +1,11 @@
-import { takeEvery, call, put } from "redux-saga/effects";
-import { CREATE_REQUESTING, CREATE_SUCCESS, CREATE_ERROR } from "./constants";
+import { takeEvery, call, put, select } from "redux-saga/effects";
+import { CREATE_REQUESTING, CREATE_ERROR } from "./constants";
 import axios from "axios";
 import Cookie from "../../../helper/cookie";
 import RealEstateContract from "../../../contracts/RealEstate.json";
-import Web3 from "web3";
 import { realEstateContractAddress } from "../../../../config/common-path";
 import { Base64 } from 'js-base64';
+import getWeb3 from "../../../helper/getWeb3"
 
 const handleCreateCert = async (property, transactionHash) => {
   console.log("handleCreateCert -> property", property);
@@ -25,36 +25,30 @@ const handleCreateCert = async (property, transactionHash) => {
   };
 };
 
-const loadWeb3 = async () => {
-  if (window.ethereum) {
-    window.web3 = new Web3(window.ethereum);
-    await window.ethereum.enable();
-  } else if (window.web3) {
-    window.web3 = new Web3(window.web3.currentProvider);
-  } else {
-    window.alert(
-      "Non-Ethereum browser detected. You should consider trying MetaMask!"
-    );
-  }
-};
-
-async function createCertificate(property) {
+async function initContract() {
   try {
-    await loadWeb3();
-    const { web3 } = window;
-    const appContract = new web3.eth.Contract(
+    const web3 = await getWeb3();
+    const realEstateContract = new web3.eth.Contract(
       RealEstateContract.abi,
       realEstateContractAddress
     );
     const coinbase = await web3.eth.getCoinbase();
     if (!coinbase) {
-      window.alert("Please activate MetaMask first.");
+      window.alert("Please activate MetaMask first.")
       return;
     }
+    return { realEstateContract, coinbase }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
+async function createCertificate(property) {
+  try {
+    const { realEstateContract, coinbase } = await initContract();
     let { owners, properties, images } = property;
     const propertyBase64 = objectToB64(properties)
-    appContract.methods
+    realEstateContract.methods
       .createCertificate(propertyBase64, owners)
       .send({ from: coinbase }, function (error, transactionHash) {
         console.log(
@@ -74,23 +68,15 @@ function objectToB64(property) {
   return Base64.encode(JSON.stringify(property))
 }
 
+// can using instance contract in store ??
+// get instance of smart contract in store
+const getInstanceContract = state => state.instanceContracts.realEstate;
+
 function* createFlow(action) {
   try {
-    let { property } = action;
-    // id for listen event from blockchain and update data in server
-    // property.idCert = idCertificate;
-    // console.log("function*createFlow -> property", property)
-    // const response = yield call(createCertificate, property);
-
-    const resFromBlockChain = yield call(createCertificate, property);
-    // const resFromServer = yield call(handleClick, property);
-    // const [resFromServer, resFromBlockChain] = yield all([
-    //   call(handleClick, property),
-    //   call(createCertificate, property)
-    // ])
-    // console.log("function*createFlow -> resFromServer", resFromServer);
-    console.log("function*createFlow -> resFromBlockChain", resFromBlockChain);
-    yield put({ type: CREATE_SUCCESS, payload: resFromBlockChain });
+    const { property } = action;
+    // const realEstateContract = yield select(getInstanceContract);
+    yield call(createCertificate, property);
   } catch (error) {
     yield put({ type: CREATE_ERROR, payload: error.message });
   }

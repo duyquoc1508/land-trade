@@ -1,4 +1,4 @@
-import { FILLING_FORM, CREATE_REQUESTING } from "./constants";
+import { FILLING_FORM, CREATE_REQUESTING, CREATE_SUCCESS } from "./constants";
 
 export function fillForm(data) {
   return {
@@ -12,4 +12,8 @@ export function requestCreate(property) {
     type: CREATE_REQUESTING,
     property
   };
+}
+
+export function createSuccess() {
+  return { type: CREATE_SUCCESS }
 }

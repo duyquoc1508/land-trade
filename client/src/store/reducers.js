@@ -7,6 +7,7 @@ import myListing from "../modules/Property/ListProperties/reducers";
 import notifications from "../components/Header/Notifications/reducers";
 import confirmProperty from "../modules/Property/ConfirmProperty/reducers";
 import propertyDetail from "../modules/Property/PropertyDetail/reducers";
+import instanceContracts from "../modules/InstanceContracts/reducers";
 import { reducer as formReducer } from "redux-form";
 
 const rootReducer = combineReducers({
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   notifications,
   confirmProperty,
   propertyDetail,
+  instanceContracts,
   form: formReducer,
 });
 
