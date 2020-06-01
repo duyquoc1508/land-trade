@@ -1,12 +1,13 @@
 import {
   FILLING_FORM,
-  // CREATE_REQUESTING,
+  CREATE_REQUESTING,
   CREATE_SUCCESS,
   CREATE_ERROR,
 } from "./constants";
 
 const initialState = {
   success: false,
+  loading: false,
   messages: "",
   data: {
     owners: [],
@@ -70,17 +71,22 @@ function createReducer(state = initialState, action) {
       )
         state.data.images = action.data.upload.values.images;
       return state;
+    case CREATE_REQUESTING: {
+      return { ...state, loading: true };
+    }
     case CREATE_SUCCESS:
       return {
         success: true,
         messages: "Đăng ký thành công!",
-        data: action.payload.data,
+        // data: action.payload.data,
+        loading: false
       };
     case CREATE_ERROR:
       return {
         success: false,
         messages: "Đăng ký thất bại!",
         data: action.payload.data,
+        loading: false
       };
     default:
       return state;
