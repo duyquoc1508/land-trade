@@ -55,3 +55,6 @@ Deploy smart contracts using truffle framework
   ```
   truffle migrate --reset --network ropsten
   ```
+
+rpc provider (web3): http://167.179.75.85:8545
+ws provider: http://167.179.75.85:8546

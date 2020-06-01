@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import MaterialTable from "material-table";
 import getWeb3 from "../../helper/getWeb3";
 import RoleBasedAclContract from "../../contracts/RoleBasedAcl.json";
+import { roleContractAddress } from "../../../config/common-path"
 
 export default class Role extends Component {
   constructor(props) {
@@ -23,6 +24,7 @@ export default class Role extends Component {
       web3: null,
       accounts: null,
       contract: null,
+      _isLoading: false
     };
     this.role = ["Super Admin", "Notary"];
   }
@@ -37,10 +39,12 @@ export default class Role extends Component {
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = RoleBasedAclContract.networks[networkId];
       if (!deployedNetwork) {
-        throw new Error("Switch Ether network to http://127.0.0.1:7545");
+        alert(`Switch Ether network to ${process.env.REACT_APP_BASE_URL_PROVIDER}`)
+        throw new Error(`Switch Ether network to ${process.env.REACT_APP_BASE_URL_PROVIDER}`);
       }
       const instance = new web3.eth.Contract(
         RoleBasedAclContract.abi,
+        // roleContractAddress
         deployedNetwork && deployedNetwork.address
       );
       // init event
@@ -49,8 +53,6 @@ export default class Role extends Component {
         .on("data", (event) => {
           const result = event.returnValues;
           console.log("index -> componentDidMount -> result", result);
-          // Use 'setTimeout' to simulate the actual environment (for dev) (3s: transition comfirmed)
-          setTimeout(this.fetchData, 5000);
           this.fetchData();
         })
         .on("error", console.error);
@@ -59,9 +61,7 @@ export default class Role extends Component {
         .on("data", (event) => {
           const result = event.returnValues;
           console.log("index -> componentDidMount -> result", result);
-          // Use 'setTimeout' to simulate the actual environment (for dev) (3s: transition comfirmed)
-          setTimeout(this.fetchData, 3000);
-          // this.fetchData()
+          this.fetchData();
         })
         .on("error", console.error);
       // handle change account in metamask
@@ -99,7 +99,7 @@ export default class Role extends Component {
       });
 
       this.setState({
-        isLoading: false,
+        _isLoading: false,
         data: listAddressAndRole,
       });
     } catch (error) {
@@ -111,13 +111,15 @@ export default class Role extends Component {
     const { publicAddress, role } = newData;
     const { contract, accounts } = this.state;
     try {
+      this.setState({ _isLoading: true })
       // add role for address
       contract.methods
         .addRole(publicAddress, role)
-        .send({ from: accounts[0] }, (_err, _result) => {
-          this.setState({ isLoading: true }); // Use loading effect. Waiting event 'RoleAdded' from the blockchain are emited
-        });
-      console.log("added");
+        .send({ from: accounts[0] }, (error, _transactionHash) => {
+          if (error) {
+            this.setState({ _isLoading: false })
+          }
+        })
     } catch (error) {
       alert(error.message);
     }
@@ -127,12 +129,14 @@ export default class Role extends Component {
     const { publicAddress, role } = oldData;
     const { contract, accounts } = this.state;
     try {
+      this.setState({ _isLoading: true })
       contract.methods
         .removeRole(publicAddress, role)
-        .send({ from: accounts[0] }, (_error, _result) => {
-          this.setState({ isLoading: true }); // Remove this line if not use loading effect
+        .send({ from: accounts[0] }, (error, _transactionHash) => {
+          if (error) {
+            this.setState({ _isLoading: false }); // Remove this line if not use loading effect
+          }
         });
-      console.log("removed");
     } catch (error) {
       alert(error.message);
     }
@@ -144,14 +148,13 @@ export default class Role extends Component {
     }
     return (
       <div className="mt-100 container">
-        <MaterialTable
+        <MaterialTable isLoading={this.state._isLoading}
           title="Role Based RealEstate"
           columns={this.state.columns}
           options={{
             actionsColumnIndex: -1,
           }}
           data={this.state.data}
-          isLoading={this.state.isLoading}
           editable={{
             onRowAdd: (newData) => this.addRole(newData),
             onRowDelete: (oldData) => this.removeRole(oldData),
