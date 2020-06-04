@@ -10,7 +10,7 @@ import Profile from "../Profile";
 import EditProfile from "../Profile/EditProfile";
 import Transaction from "../Transaction";
 import Role from "../Role";
-import PropertyDetail from "../Property/PropertyDetail";
+import PropertyStandard from "../Property/PropertyStandard";
 import ComfirmProperty from "../Property/ConfirmProperty";
 import NotFound from "../NotFound";
 
@@ -36,14 +36,21 @@ const routes = [
     main: ({ history }) => <AddProperty history={history} />,
   },
   {
-    path: "/property/edit/:id",
+    path: "/property/:hash",
+    exact: true,
+    main: ({ match, history }) => (
+      <PropertyStandard match={match} history={history} />
+    ),
+  },
+  {
+    path: "/my-property/edit/:hash",
     exact: true,
     main: ({ match, history }) => (
       <EditProperty match={match} history={history} />
     ),
   },
   {
-    path: "/property/confirm/:hash/:idInBlockchain",
+    path: "/my-property/confirm/:hash/:idInBlockchain",
     exact: true,
     main: ({ match, history }) => (
       <ComfirmProperty match={match} history={history} />
@@ -62,7 +69,7 @@ const routes = [
     ),
   },
   {
-    path: "/user/my-properties/",
+    path: "/my-properties/",
     exact: true,
     main: () => <TabListProperties />,
   },
@@ -80,7 +87,7 @@ const routes = [
     path: "",
     exact: false,
     main: () => <NotFound />,
-  },
+  }
 ];
 
 export default routes;

@@ -5,8 +5,10 @@ import listingSaga from "../modules/Property/ListProperties/sagas";
 import listingSaleSaga from "../modules/Listings/sagas";
 import notificationsSaga from "../components/Header/Notifications/saga";
 import confirmProperty from "../modules/Property/ConfirmProperty/saga";
-import propertyDetail from "../modules/Property/PropertyDetail/saga";
+import propertyStandard from "../modules/Property/PropertyStandard/saga";
 import instanceContracts from "../modules/InstanceContracts/saga";
+import propertySelling from "../modules/Property/PropertySelling/saga";
+import propertyActivated from "../modules/Property/PropertyActivated/saga"
 
 function* rootSaga() {
   // yield loginSaga();
@@ -17,8 +19,10 @@ function* rootSaga() {
     listingSaleSaga(),
     notificationsSaga(),
     confirmProperty(),
-    propertyDetail(),
-    instanceContracts()
+    propertyStandard(),
+    instanceContracts(),
+    propertySelling(),
+    propertyActivated()
   ]);
 }
 

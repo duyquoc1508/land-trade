@@ -31,7 +31,7 @@ class LandForm extends Component {
                 <label>Tờ bản đồ số </label>
                 <Field
                   name="mapSheetNo"
-                  type="number"
+                  type="text"
                   className="form-control filter-input"
                   placeholder="Tờ bản đồ số"
                   component="input"
@@ -54,29 +54,39 @@ class LandForm extends Component {
             <div className="col-md-4">
               <div className="form-group">
                 <label>
-                  Diện tích sử dụng chung ( đơn vị: m <sup>2</sup> )
+                  Diện tích sử dụng chung
                 </label>
-                <Field
-                  name="commonUseArea"
-                  component="input"
-                  type="number"
-                  className="form-control filter-input"
-                  placeholder="Diện tích"
-                />
+                <div className="input-group">
+                  <Field
+                    name="commonUseArea"
+                    component="input"
+                    type="number"
+                    className="form-control filter-input"
+                    placeholder="Diện tích"
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text"> m<sup>2</sup> </span>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="col-md-4">
               <div className="form-group">
                 <label>
-                  Diện tích sử dụng riêng ( đơn vị: m <sup>2</sup> )
+                  Diện tích sử dụng riêng
                 </label>
-                <Field
-                  name="privateUseArea"
-                  component="input"
-                  type="number"
-                  className="form-control filter-input"
-                  placeholder="Diện tích"
-                />
+                <div className="input-group">
+                  <Field
+                    name="privateUseArea"
+                    component="input"
+                    type="number"
+                    className="form-control filter-input"
+                    placeholder="Diện tích"
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text"> m<sup>2</sup> </span>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="col-md-4">

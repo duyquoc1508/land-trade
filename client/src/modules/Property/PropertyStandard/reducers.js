@@ -10,7 +10,7 @@ const initialState = {
   error: "",
 };
 
-export default function PropertyDetailReducer(state = initialState, action) {
+export default function PropertyStandardReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_SINGLE_PROPERTY_REQUEST:
       return { ...state, loading: true };

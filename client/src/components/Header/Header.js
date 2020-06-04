@@ -176,7 +176,7 @@ class Menu extends Component {
                       </div>
                       <div className="account-dropdown__item">
                         <Link
-                          to={"/user/my-properties"}
+                          to={"/my-properties"}
                           onClick={this.changeToggleAuth}
                         >
                           Danh sách tài sản
@@ -199,8 +199,8 @@ class Menu extends Component {
                   </div>
                 </div>
               ) : (
-                <ButtonLogin />
-              )}
+                  <ButtonLogin />
+                )}
             </div>
           </div>
         </div>

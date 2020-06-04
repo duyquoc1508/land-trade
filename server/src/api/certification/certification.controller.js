@@ -116,9 +116,9 @@ export async function deleteCertification(req, res, next) {
 
 export async function editCertification(req, res, next) {
   try {
-    var certification = await Certification.findById(req.params.idCertification)
-      .select({ owners: 1 })
+    var certification = await Certification.findOne({ transactionHash: req.params.txHash })
       .lean();
+    console.log(req.params.txHash);
     const { publicAddress } = req.user;
     const { owners } = certification;
     // Check resource owner
@@ -148,12 +148,11 @@ export async function editCertification(req, res, next) {
         utilities,
       },
     };
-    var certification = await Certification.findByIdAndUpdate(
-      req.params.idCertification,
-      query
+    const a = await Certification.updateOne(
+      { transactionHash: req.params.txHash },
+      query, { new: true }
     )
-      .select("_id")
-      .lean();
+    console.log("editCertification -> a", a)
     return res.status(200).json({ statusCode: 200, data: certification });
   } catch (error) {
     next(error);
@@ -213,18 +212,50 @@ export async function activateSales(req, res, next) {
         "You are not permission access to this resource"
       );
     }
-    // Check if not yet allow selling
+    // // Check if not yet allow selling
     if (!ownersAllowedSale.includes(publicAddress)) {
       const query = { $push: { ownersAllowedSale: publicAddress } };
       if (owners.length - 1 === ownersAllowedSale.length) query["state"] = 2;
       var certification = await Certification.findByIdAndUpdate(
         req.params.idCertification,
-        query,
+        { state: 2 },
         { new: true }
       )
         .select({ owners: 1, ownersAllowedSale: 1, state: 1 })
         .lean();
     }
+    return res.status(200).json({ statusCode: 200, data: certification });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Activate sales (Only owners)
+export async function cancelSale(req, res, next) {
+  try {
+    var certification = await Certification.findById(req.params.idCertification)
+      .select({ owners: 1, state: 1 })
+      .lean();
+    // Only allow selling when the cetificate is activated
+    if (certification.state === 0) {
+      throw new ErrorHandler(405, "Certification not activated");
+    }
+    const { publicAddress } = req.user;
+    const { owners } = certification;
+    // Check resource owner
+    if (!owners.includes(publicAddress)) {
+      throw new ErrorHandler(
+        403,
+        "You are not permission access to this resource"
+      );
+    }
+    var certification = await Certification.findByIdAndUpdate(
+      req.params.idCertification,
+      { state: 1, ownersAllowedSale: [] },
+      { new: true }
+    )
+      .select({ owners: 1, state: 1 })
+      .lean();
     return res.status(200).json({ statusCode: 200, data: certification });
   } catch (error) {
     next(error);
