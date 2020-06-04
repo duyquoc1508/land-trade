@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import PropertyDetail from "../PropertyDetail";
+import PropertyStandard from "../PropertyStandard";
 import { activateCertificateRequest } from "./action";
 
-export const ComfirmProperty = (props) => {
+const ComfirmProperty = (props) => {
   console.log(props);
   return (
     <div className="mt-85 container">
-      <PropertyDetail match={props.match} history={props.history} />
+      <PropertyStandard match={props.match} history={props.history} />
       <div
         className="listing-button mb-50"
         style={{

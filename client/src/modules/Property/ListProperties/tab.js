@@ -9,6 +9,8 @@ import { connect } from "react-redux";
 import { requestFetch } from "./actions";
 import ListProperties from "./list";
 import PropertyPending from "../PropertyPending";
+import PropertyActivated from "../PropertyActivated";
+import PropertySelling from "../PropertySelling"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -63,7 +65,7 @@ function ScrollableTabsButtonAuto(props) {
         <div className="col-md-8">
           <div className="recent-activity my-listing">
             <div className="act-title">
-              <h5>My Listings</h5>
+              <h5>Danh sách tài sản</h5>
             </div>
             <div className={classes.root}>
               <AppBar
@@ -80,17 +82,17 @@ function ScrollableTabsButtonAuto(props) {
                   <Tab label="Chờ duyệt " {...a11yProps(0)} />
                   <Tab label="Đã duyệt " {...a11yProps(1)} />
                   <Tab label="Đang bán " {...a11yProps(2)} />
-                  <Tab label="Yêu thích " {...a11yProps(3)} />
+                  <Tab label="Tất cả " {...a11yProps(3)} />
                 </Tabs>
               </AppBar>
               <TabPanel value={value} index={0}>
                 <PropertyPending />
               </TabPanel>
               <TabPanel value={value} index={1}>
-                <ListProperties list={listActive} />
+                <PropertyActivated />
               </TabPanel>
               <TabPanel value={value} index={2}>
-                <ListProperties list={listSale} />
+                <PropertySelling />
               </TabPanel>
               <TabPanel value={value} index={3}>
                 <ListProperties list={props.myListing} />

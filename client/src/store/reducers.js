@@ -6,8 +6,10 @@ import listingSale from "../modules/Listings/reducers";
 import myListing from "../modules/Property/ListProperties/reducers";
 import notifications from "../components/Header/Notifications/reducers";
 import confirmProperty from "../modules/Property/ConfirmProperty/reducers";
-import propertyDetail from "../modules/Property/PropertyDetail/reducers";
+import propertyStandard from "../modules/Property/PropertyStandard/reducers";
 import instanceContracts from "../modules/InstanceContracts/reducers";
+import propertySelling from "../modules/Property/PropertySelling/reducers";
+import propertyActivated from "../modules/Property/PropertyActivated/reducers";
 import { reducer as formReducer } from "redux-form";
 
 const rootReducer = combineReducers({
@@ -18,8 +20,10 @@ const rootReducer = combineReducers({
   listingSale,
   notifications,
   confirmProperty,
-  propertyDetail,
+  propertyStandard,
   instanceContracts,
+  propertySelling,
+  propertyActivated,
   form: formReducer,
 });
 

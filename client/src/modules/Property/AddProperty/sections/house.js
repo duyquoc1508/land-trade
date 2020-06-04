@@ -56,16 +56,21 @@ class HouseForm extends Component {
             <div className="col-md-6">
               <div className="form-group">
                 <label>
-                  Diện tích xây dựng( đơn vị: m <sup>2</sup> )
+                  Diện tích xây dựng
                 </label>
-                <Field
-                  name="constructionArea"
-                  component="input"
-                  type="number"
-                  className="form-control filter-input"
-                  placeholder="Diện tích xây dựng"
-                  disabled={this.houseType[this.state.houseType]}
-                />
+                <div className="input-group">
+                  <Field
+                    name="constructionArea"
+                    component="input"
+                    type="number"
+                    className="form-control filter-input"
+                    placeholder="Diện tích xây dựng"
+                    disabled={this.houseType[this.state.houseType]}
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text"> m<sup>2</sup> </span>
+                  </div>
+                </div>
               </div>
             </div>
           ) : null}
@@ -73,15 +78,20 @@ class HouseForm extends Component {
           <div className="col-md-6">
             <div className="form-group">
               <label>
-                Diện tích sàn( đơn vị: m <sup>2</sup> )
+                Diện tích sàn
               </label>
-              <Field
-                name="floorArea"
-                component="input"
-                type="number"
-                className="form-control filter-input"
-                placeholder="Diện tích sàn"
-              />
+              <div className="input-group">
+                <Field
+                  name="floorArea"
+                  component="input"
+                  type="number"
+                  className="form-control filter-input"
+                  placeholder="Diện tích sàn"
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text"> m<sup>2</sup> </span>
+                </div>
+              </div>
             </div>
           </div>
 

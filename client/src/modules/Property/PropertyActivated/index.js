@@ -1,27 +1,28 @@
 import React from "react";
 import { connect } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
+import { activateSaleRequest } from "./action";
 
-function PropertyPending({ properties }) {
+function PropertyActivated({ properties, activateSale }) {
   const history = useHistory();
   return (
     <div className="viewd-item-wrap">
       {properties.map((property, index) => (
         <div className={`most-viewed-item`} key={index}>
           <div className="most-viewed-img">
-            <a>
+            <a >
               <img
                 src={`${process.env.REACT_APP_BASE_URL}/images/property/property_1.jpg`}
                 alt="..."
               />
             </a>
             <ul className="feature_text">
-              <li className="feature_or">Chờ duyệt</li>
+              <li className="feature_cb">Đã duyệt</li>
             </ul>
           </div>
           <div className="most-viewed-detail">
             <h3>
-              {/* <Link to={`/property/${property.transactionHash}`}> */}
+              {/* <Link to={`/user/my-properties/${property.transactionHash}`}> */}
               {property.transactionHash.substr(0, 21) +
                 "..." +
                 property.transactionHash.substr(50)}
@@ -52,26 +53,52 @@ function PropertyPending({ properties }) {
               className="btn v3"
               onClick={() =>
                 history.push(
-                  `/my-property/confirm/${property.transactionHash}/${property.idInBlockchain}`
+                  `property/${property.transactionHash}`
                 )
               }
             >
               <i className="ion-edit"></i> Chi tiết
             </button>
+            <button
+              className="btn v4 ml-2"
+              onClick={() =>
+                history.push(
+                  `my-property/edit/${property.transactionHash}`
+                )
+              }
+            >
+              <i className="ion-android-add-circle"></i> Thêm thông tin
+            </button>
+            <button
+              className="btn v4 ml-2"
+              onClick={() =>
+                activateSale(property._id)
+              }
+            >
+              <i className="ion-android-add-circle"></i> Bán
+            </button>
           </div>
-
         </div>
-      ))}
-    </div>
+      ))
+      }
+    </div >
   );
 }
 
 const mapStateToProps = (state) => {
   return {
     properties: state.myListing.properties.filter(
-      (property) => property.state === 0
+      (property) => property.state > 0
     ),
   };
 };
 
-export default connect(mapStateToProps, null)(PropertyPending);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    activateSale: (idCertificate) => {
+      dispatch(activateSaleRequest(idCertificate))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PropertyActivated);

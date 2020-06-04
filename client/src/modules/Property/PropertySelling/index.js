@@ -1,27 +1,29 @@
 import React from "react";
 import { connect } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
+import { cancelSaleRequest } from "./action";
 
-function PropertyPending({ properties }) {
+function PropertySelling({ properties, cancelSale }) {
   const history = useHistory();
+
   return (
     <div className="viewd-item-wrap">
       {properties.map((property, index) => (
         <div className={`most-viewed-item`} key={index}>
           <div className="most-viewed-img">
-            <a>
+            <a >
               <img
                 src={`${process.env.REACT_APP_BASE_URL}/images/property/property_1.jpg`}
                 alt="..."
               />
             </a>
             <ul className="feature_text">
-              <li className="feature_or">Chờ duyệt</li>
+              <li className="feature_or">Đang bán</li>
             </ul>
           </div>
           <div className="most-viewed-detail">
             <h3>
-              {/* <Link to={`/property/${property.transactionHash}`}> */}
+              {/* <Link to={`/user/my-properties/${property.transactionHash}`}> */}
               {property.transactionHash.substr(0, 21) +
                 "..." +
                 property.transactionHash.substr(50)}
@@ -52,14 +54,19 @@ function PropertyPending({ properties }) {
               className="btn v3"
               onClick={() =>
                 history.push(
-                  `/my-property/confirm/${property.transactionHash}/${property.idInBlockchain}`
+                  `property/${property.transactionHash}`
                 )
               }
             >
               <i className="ion-edit"></i> Chi tiết
             </button>
+            <button
+              className="btn v4 ml-2"
+              onClick={() => cancelSale(property._id)}
+            >
+              <i className="ion-android-delete"></i> Hủy bán
+            </button>
           </div>
-
         </div>
       ))}
     </div>
@@ -69,9 +76,17 @@ function PropertyPending({ properties }) {
 const mapStateToProps = (state) => {
   return {
     properties: state.myListing.properties.filter(
-      (property) => property.state === 0
+      (property) => property.state === 2
     ),
   };
 };
 
-export default connect(mapStateToProps, null)(PropertyPending);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    cancelSale: (idCertificate) => {
+      dispatch(cancelSaleRequest(idCertificate));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PropertySelling);

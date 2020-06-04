@@ -41,7 +41,7 @@ routes.delete(
  * PUT api/v1/certification/activate/{{idCertification}}
  */
 routes.put(
-  "/edit/:idCertification",
+  "/edit/:txHash",
   authJwt,
   certificationController.editCertification
 );
@@ -64,6 +64,16 @@ routes.put(
   "/sale/:idCertification",
   authJwt,
   certificationController.activateSales
+);
+
+/**
+ * Activate certification (Only owners)
+ * PUT api/v1/certification/activate/{{idCertification}}
+ */
+routes.put(
+  "/cancel-sale/:idCertification",
+  authJwt,
+  certificationController.cancelSale
 );
 
 /**

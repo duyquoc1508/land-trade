@@ -19,7 +19,7 @@ const certificationSchema = new Schema(
     properties: {
       landLot: {
         landLotNo: Number,
-        mapSheetNo: Number,
+        mapSheetNo: String,
         commonUseArea: Number,
         privateUseArea: Number,
         address: String,
