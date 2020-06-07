@@ -8,7 +8,9 @@ import confirmProperty from "../modules/Property/ConfirmProperty/saga";
 import propertyStandard from "../modules/Property/PropertyStandard/saga";
 import instanceContracts from "../modules/InstanceContracts/saga";
 import propertySelling from "../modules/Property/PropertySelling/saga";
-import propertyActivated from "../modules/Property/PropertyActivated/saga"
+import propertyActivated from "../modules/Property/PropertyActivated/saga";
+import initTransaction from "../modules/InitTransaction/saga";
+import transaction from "../modules/Transaction/saga";
 
 function* rootSaga() {
   // yield loginSaga();
@@ -22,7 +24,9 @@ function* rootSaga() {
     propertyStandard(),
     instanceContracts(),
     propertySelling(),
-    propertyActivated()
+    propertyActivated(),
+    initTransaction(),
+    transaction(),
   ]);
 }
 

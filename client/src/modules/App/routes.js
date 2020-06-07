@@ -12,6 +12,7 @@ import Transaction from "../Transaction";
 import Role from "../Role";
 import PropertyStandard from "../Property/PropertyStandard";
 import ComfirmProperty from "../Property/ConfirmProperty";
+import InitTransaction from "../InitTransaction";
 import NotFound from "../NotFound";
 
 const routes = [
@@ -23,7 +24,7 @@ const routes = [
   {
     path: "/listings",
     exact: true,
-    main: () => <Listings />,
+    main: ({ match, history }) => <Listings match={match} history={history} />,
   },
   {
     path: "/property",
@@ -74,9 +75,18 @@ const routes = [
     main: () => <TabListProperties />,
   },
   {
-    path: "/transaction",
+    path: "/transaction/:idTransaction",
     exact: true,
-    main: () => <Transaction />,
+    main: ({ match, history }) => (
+      <Transaction match={match} history={history} />
+    ),
+  },
+  {
+    path: "/create-transaction/:hash",
+    exact: true,
+    main: ({ match, history }) => (
+      <InitTransaction match={match} history={history} />
+    ),
   },
   {
     path: "/role",
@@ -87,7 +97,7 @@ const routes = [
     path: "",
     exact: false,
     main: () => <NotFound />,
-  }
+  },
 ];
 
 export default routes;

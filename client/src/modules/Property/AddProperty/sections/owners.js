@@ -1,43 +1,98 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import axios from "axios";
+import Cookie from "../../../../helper/cookie";
+import Multiselect from "react-widgets/lib/Multiselect";
+import "react-widgets/dist/css/react-widgets.css";
 import "./owner.css";
+// const renderMultiselect = ({ input, data, valueField, textField }) => (
+//   <Multiselect
+//     {...input}
+//     onBlur={() => input.onBlur()}
+//     value={input.value || []} // requires value to be an array
+//     data={data}
+//     valueField={valueField}
+//     textField={(item) =>
+//       `<ul><li>${item.fullName}</li> <li> ${item.idNumber}</li></ul>`
+//     }
+//   />
+// );
 
 class OwnersForm extends Component {
   getValue(data) {
-    // console.log(data);
+    console.log(data);
   }
   constructor(props) {
     super(props);
-    this.state = { options: ["Nhap tim kiem ket qua"], owners: [1] };
+    this.state = {
+      options: [],
+      owners: [1],
+      listAllUser: [],
+      idNumberToPublicAddresses: {},
+      currentIndex: 0,
+    };
     this.handleChange = this.handleChange.bind(this);
   }
 
-  async handleChange(e) {
+  async componentDidMount() {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL_API}/users/search?q=${e.target.value}`
+      `${process.env.REACT_APP_BASE_URL_API}/users`,
+      {
+        headers: { Authorization: `Bearer ${Cookie.getCookie("accessToken")}` },
+      }
     );
-    const owners = await response.data.data;
-    console.log(owners.length);
-    if (owners.length === 0) {
-      this.setState({ options: ["Không tìm thấy kết quả ..."] });
-    }
-    this.setState({ options: owners.map(owner => owner.publicAddress) });
+    const owners = response.data.data;
+    this.setState({
+      idNumberToPublicAddresses: owners.reduce(
+        (accumulator, current) => ({
+          ...accumulator,
+          [current.idNumber]: current.publicAddress,
+        }),
+        {}
+      ),
+    });
+    this.setState({ listAllUser: owners });
   }
 
-  render() {
-    const { handleSubmit } = this.props;
-    return (
-      <form onSubmit={handleSubmit(this.getValue)}>
-        {this.showInput(this.state.owners)}
+  async handleChange(e) {
+    const options = this.state.listAllUser.filter((user) =>
+      JSON.stringify(user).includes(e.target.value)
+    );
+    this.setState({ options });
 
+    this.props.change(
+      `publicAddress[${this.state.currentIndex}]`,
+      this.getPublicAddress(e.target.value)
+    );
+    // e.target.parentNode.children[1].setAttribute(
+    //   "value",
+    //   this.getPublicAddress(e.target.value)
+    // );
+  }
+
+  getPublicAddress = (str) => {
+    let idNumber = str.split(" - ")[1];
+    // console.log(this.state);
+    // idNumber = "224528479";
+    // console.log();
+    return this.state.idNumberToPublicAddresses[idNumber];
+  };
+
+  handleSubmit() {}
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        {this.showInput(this.state.owners)}
+        {/* <div class="input-search"></div> */}
         <div className="col-md-12">
           <button
             type="button"
             className="btn btn-primary btn-xs"
             onClick={() => {
               this.setState({
-                owners: [...this.state.owners, 1]
+                owners: [...this.state.owners, 1],
+                currentIndex: this.state.currentIndex + 1,
               });
               console.log(this.state.owners);
             }}
@@ -52,7 +107,7 @@ class OwnersForm extends Component {
               const [first, ...arrOwners] = this.state.owners;
               console.log(first);
               this.setState({
-                owners: arrOwners
+                owners: arrOwners,
               });
             }}
           >
@@ -64,39 +119,44 @@ class OwnersForm extends Component {
     );
   }
 
-  showInput = owners => {
+  showInput = (owners) => {
     var res = null;
     if (owners.length > 0) {
       res = owners.map((item, index) => {
         return (
           <div key={index}>
-            <label className="col-md-8">
+            <label className="col-md-12 ">
               Địa chỉ của chủ sỡ hữu {index + 1}
             </label>
-            <div className="col-md-8">
-              <div className="input-group mb-3 input-search">
-                <Field
-                  name={`publicAddress[${index}]`}
-                  placeholder="Địa chỉ của chủ sỡ hữu"
-                  component="input"
-                  type="text"
-                  className="form-control filter-input"
-                  list="browsers"
-                  autoComplete="on"
-                  onMouseOver={() =>
-                    this.setState({ options: ["Nhập từ khóa tìm kiếm"] })
-                  }
-                  onChange={this.handleChange}
-                />
 
-                <datalist
-                  className=""
-                  id="browsers"
-                  style={{ display: "none", width: "100%" }}
-                >
-                  {this.showOptions(this.state.options)}
-                </datalist>
-              </div>
+            <div className="input-group mb-3 input-search">
+              <input
+                // name={`owners[${index}]`}
+                placeholder="Địa chỉ của chủ sỡ hữu"
+                component="input"
+                type="text"
+                className="form-control filter-input"
+                list={`owner_${index}`}
+                autoComplete="on"
+                onChange={this.handleChange}
+              />
+              <Field
+                name={`publicAddress[${index}]`}
+                // placeholder="Địa chỉ của chủ sỡ hữu"
+                component="input"
+                type="hidden"
+                // className="form-control filter-input"
+                // list={`owner_${index}`}
+                // autoComplete="on"
+                // onChange={this.handleChange}
+              />
+
+              <datalist
+                id={`owner_${index}`}
+                style={{ display: "none", width: "100%" }}
+              >
+                {this.showOptions(this.state.listAllUser)}
+              </datalist>
             </div>
           </div>
         );
@@ -105,19 +165,27 @@ class OwnersForm extends Component {
     return res;
   };
 
-  showOptions = options => {
+  showOptions = (options) => {
     var result = null;
     if (options.length > 0) {
       result = options.map((option, index) => {
-        return <option key={option} value={option} />;
+        return (
+          <option
+            key={index}
+            value={`${option.fullName} - ${option.idNumber}`}
+            label={option.publicAddress}
+            data-address={option.publicAddress}
+          />
+        );
       });
     }
     return result;
   };
 }
+
 OwnersForm = reduxForm({
   // a unique name for the form
-  form: "owners"
+  form: "owners",
 })(OwnersForm);
 
 export default OwnersForm;

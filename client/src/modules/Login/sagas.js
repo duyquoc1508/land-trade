@@ -57,7 +57,7 @@ const handleAuthenticate = async (publicAddress, signature) => {
 const getNonce = async (publicAddress) => {
   try {
     let res = await axios.get(
-      `${process.env.REACT_APP_BASE_URL_API}/users?publicAddress=${publicAddress}`
+      `${process.env.REACT_APP_BASE_URL_API}/users/check_registed?publicAddress=${publicAddress}`
     );
     return res.data.data.nonce;
   } catch (error) {}

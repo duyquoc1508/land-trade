@@ -53,6 +53,18 @@ class Listings extends Component {
           <div className="views">
             Views : <span>45</span>
           </div>
+          <div className="listing-button">
+            <button
+              className="btn v3"
+              onClick={() =>
+                this.props.history.push(
+                  `/create-transaction/${item.transactionHash}`
+                )
+              }
+            >
+              <i className="ion-edit"></i> Mua
+            </button>
+          </div>
         </div>
       </div>
     ));
