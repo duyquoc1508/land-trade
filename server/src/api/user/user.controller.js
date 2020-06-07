@@ -162,6 +162,16 @@ export async function search(req, res, next) {
   }
 }
 
+// Search user with idNumber or publicAddress
+export async function getAllUser(req, res, next) {
+  try {
+    const listUser = await User.find({}).lean();
+    return res.status(200).json({ statusCode: 200, data: listUser });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // Get your personal information
 export async function getPersonalInfo(req, res, next) {
   try {

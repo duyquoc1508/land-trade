@@ -23,7 +23,7 @@ const camelcase = () => {
 export default (app) => {
   app.use(bodyParser.json({ limit: "500kb" }));
   app.use(bodyParser.urlencoded({ limit: "500kb", extended: true }));
-  app.use(camelcase());
+  // app.use(camelcase());
   app.use(passport.initialize());
   // app.use(cors({ origin: "http://localhost:8081" }));
 
