@@ -7,10 +7,16 @@ import { validateRequest } from "../../utils/validator";
 const routes = new Router();
 
 /**
+ * Get all user
+ * GET api/v1/api/users/
+ */
+routes.get("/", authJwt, userController.getAllUser);
+
+/**
  * Check user registered
  * GET api/v1/users
  */
-routes.get("/", userController.checkAddressRegistered);
+routes.get("/check_registed", userController.checkAddressRegistered);
 
 /**
  * Get all properties of user
