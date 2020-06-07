@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import MuiExpansionPanel from "@material-ui/core/ExpansionPanel";
 import MuiExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import MuiExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Typography from "@material-ui/core/Typography";
+import { connect } from "react-redux";
 
 import Info from "./sections/1_info";
 import Contract from "./sections/2_contract";
@@ -15,21 +16,23 @@ import PayTaxes from "./sections/7_pay_taxes";
 import TaxesComfirm from "./sections/8_taxes_confirm";
 import Finished from "./sections/9_finished";
 
+import { fetchTransactionRequest } from "./action";
+
 const ExpansionPanel = withStyles({
   root: {
     border: "1px solid rgba(0, 0, 0, .125)",
     boxShadow: "none",
     "&:not(:last-child)": {
-      borderBottom: 0
+      borderBottom: 0,
     },
     "&:before": {
-      display: "none"
+      display: "none",
     },
     "&$expanded": {
-      margin: "auto"
-    }
+      margin: "auto",
+    },
   },
-  expanded: {}
+  expanded: {},
 })(MuiExpansionPanel);
 
 const ExpansionPanelSummary = withStyles({
@@ -39,30 +42,32 @@ const ExpansionPanelSummary = withStyles({
     marginBottom: -1,
     minHeight: 56,
     "&$expanded": {
-      minHeight: 56
-    }
+      minHeight: 56,
+    },
   },
   content: {
     "&$expanded": {
-      margin: "12px 0"
-    }
+      margin: "12px 0",
+    },
   },
-  expanded: {}
+  expanded: {},
 })(MuiExpansionPanelSummary);
 
-const ExpansionPanelDetails = withStyles(theme => ({
+const ExpansionPanelDetails = withStyles((theme) => ({
   root: {
-    padding: theme.spacing(2)
-  }
+    padding: theme.spacing(2),
+  },
 }))(MuiExpansionPanelDetails);
 
-export default function CustomizedExpansionPanels() {
+const CustomizedExpansionPanels = (props) => {
   const [expanded, setExpanded] = React.useState(false);
-
-  const handleChange = panel => (event, newExpanded) => {
+  const idTransaction = props.match.params.idTransaction;
+  useEffect(() => {
+    props.fetchTransaction(idTransaction);
+  }, []);
+  const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
-
   return (
     <div className="container mt-85 mb-100">
       <h3>Quá trình giao dịch tài sản</h3>
@@ -76,12 +81,12 @@ export default function CustomizedExpansionPanels() {
           id="panel1d-header"
         >
           <Typography style={{ color: "green" }}>
-            #1 Khởi tạo giao dịch {""}
-            <i class="far fa-check-circle" style={{ color: "green" }}></i>
+            Thông tin giao dịch {""}
+            <i className="far fa-check-circle" style={{ color: "green" }}></i>
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <Info />
+          {expanded === "panel1" && <Info match={props.match} />}
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
@@ -93,7 +98,7 @@ export default function CustomizedExpansionPanels() {
           aria-controls="panel2d-content"
           id="panel2d-header"
         >
-          <Typography>#2 Hợp đồng sang nhượng</Typography>
+          <Typography>Tạo hợp đồng đặt cọc</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Contract />
@@ -108,7 +113,7 @@ export default function CustomizedExpansionPanels() {
           aria-controls="panel3d-content"
           id="panel3d-header"
         >
-          <Typography>#3 Thanh toán đặt cọc</Typography>
+          <Typography>Đăng hợp đồng đặt cọc</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <DepositPayment />
@@ -123,7 +128,7 @@ export default function CustomizedExpansionPanels() {
           aria-controls="panel4d-content"
           id="panel4d-header"
         >
-          <Typography>#4 Xác nhận thanh toán đặt cọc</Typography>
+          <Typography>Tạo hợp đồng chuyển nhượng</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <DepositConfirm />
@@ -138,7 +143,7 @@ export default function CustomizedExpansionPanels() {
           aria-controls="panel5d-content"
           id="panel5d-header"
         >
-          <Typography>#5 Thanh toán</Typography>
+          <Typography>Đăng hợp đồng chuyển nhượng</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Payment />
@@ -153,7 +158,7 @@ export default function CustomizedExpansionPanels() {
           aria-controls="panel6d-content"
           id="panel6d-header"
         >
-          <Typography>#6 Xác nhận thanh toán</Typography>
+          <Typography>Kê khai thuế</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <PaymentConfirm />
@@ -168,7 +173,7 @@ export default function CustomizedExpansionPanels() {
           aria-controls="panel7d-content"
           id="panel7d-header"
         >
-          <Typography>#7 Đóng thuế nhà nước</Typography>
+          <Typography>Đóng thuế nhà nước</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <PayTaxes />
@@ -183,7 +188,7 @@ export default function CustomizedExpansionPanels() {
           aria-controls="panel8d-content"
           id="panel8d-header"
         >
-          <Typography>#8 Xác nhận đóng thuế</Typography>
+          <Typography>Xác nhận đóng thuế</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <TaxesComfirm />
@@ -199,7 +204,7 @@ export default function CustomizedExpansionPanels() {
           aria-controls="panel9d-content"
           id="panel9d-header"
         >
-          <Typography>#9 Kết thúc</Typography>
+          <Typography>Kết thúc</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Finished />
@@ -207,4 +212,21 @@ export default function CustomizedExpansionPanels() {
       </ExpansionPanel>
     </div>
   );
-}
+};
+
+const mapStateToProps = (state) => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchTransaction: (idTransaction) => {
+      dispatch(fetchTransactionRequest(idTransaction));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CustomizedExpansionPanels);

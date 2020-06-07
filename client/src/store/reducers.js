@@ -10,6 +10,8 @@ import propertyStandard from "../modules/Property/PropertyStandard/reducers";
 import instanceContracts from "../modules/InstanceContracts/reducers";
 import propertySelling from "../modules/Property/PropertySelling/reducers";
 import propertyActivated from "../modules/Property/PropertyActivated/reducers";
+import initTransaction from "../modules/InitTransaction/reducers";
+import transaction from "../modules/Transaction/reducers";
 import { reducer as formReducer } from "redux-form";
 
 const rootReducer = combineReducers({
@@ -24,6 +26,8 @@ const rootReducer = combineReducers({
   instanceContracts,
   propertySelling,
   propertyActivated,
+  initTransaction,
+  transaction,
   form: formReducer,
 });
 

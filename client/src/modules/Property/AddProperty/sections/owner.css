@@ -1,4 +1,6 @@
-input[list]
-{
-    max-width: 55%;
+input[list] {
+  max-width: 55%;
+}
+.rw-multiselect.rw-widget {
+  width: 100%;
 }
