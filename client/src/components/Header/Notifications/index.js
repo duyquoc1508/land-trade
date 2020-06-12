@@ -9,7 +9,7 @@ function Notifications(props) {
     "header-button-item has-noti js-item-menu"
   );
   const [toggleNotificationsStatus, setToggleNotificationsStatus] = useState(
-    true
+    false
   );
   const changeToggleNotifications = () => {
     if (!toggleNotificationsStatus) {
@@ -17,7 +17,7 @@ function Notifications(props) {
       setToggleNotifications(
         "header-button-item has-noti js-item-menu show-dropdown"
       );
-      if (props.notifications.length === 0) props.fetchNotifications();
+      props.fetchNotifications();
     } else {
       setToggleNotificationsStatus(false);
       setToggleNotifications("header-button-item has-noti js-item-menu");

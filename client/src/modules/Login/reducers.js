@@ -3,8 +3,7 @@ import Cookie from "../../helper/cookie";
 
 const initialState = {
   accessToken: Cookie.getCookie("accessToken"),
-  // user: JSON.parse(localStorage.getItem("user")) || {},
-  socket: null,
+  // user: JSON.parse(localStorage.getItem("user")) || {}
 };
 
 export default function loginReducer(state = initialState, action) {
@@ -20,11 +19,6 @@ export default function loginReducer(state = initialState, action) {
         // id: null,
         ...state,
         accessToken: null,
-      };
-    case CONNECT_SOCKET:
-      return {
-        ...state,
-        socket: action.payload.socket,
       };
     default:
       return state;

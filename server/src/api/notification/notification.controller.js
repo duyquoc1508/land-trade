@@ -24,7 +24,6 @@ export async function getNotifications(req, res, next) {
  */
 export async function createNotification(req, res, next) {
   try {
-    console.log(req.body);
     const notification = await Notification.create(req.body);
     return res.status(201).json({ statusCode: 201, data: notification });
   } catch (error) {
