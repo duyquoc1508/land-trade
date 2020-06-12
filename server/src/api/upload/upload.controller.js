@@ -36,11 +36,25 @@ export async function uploadMultipleImages(req, res, next) {
       throw new ErrorHandler(400, "Please provide a file to upload");
     }
     const arrayImages = [];
-    await asyncForEach(req.files, async file => {
+    await asyncForEach(req.files, async (file) => {
       let filename = await fileUpload.save(file.buffer);
       arrayImages.push(filename);
     });
     return res.status(201).json({ statusCode: 201, data: arrayImages });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * upload pdf file
+ */
+export async function uploadFile(req, res, next) {
+  try {
+    if (!req.file) {
+      throw new ErrorHandler(400, "Please provide a file to upload");
+    }
+    return res.status(201).json({ statusCode: 201, data: req.file.filename });
   } catch (error) {
     next(error);
   }
