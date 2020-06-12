@@ -13,33 +13,31 @@ export async function createTransaction(req, res, next) {
       publicAddress: item,
       isAccept: false,
     }));
-    console.log(buyer);
-    console.log(seller);
     const { price, downPayment, idProperty } = req.body;
     const newTransaction = { buyer, seller, price, downPayment, idProperty };
     const transaction = await Transaction.create(newTransaction);
     const sellerContent = {
       senderAddress: req.user.publicAddress,
       url: `/transaction/${transaction._id}`,
-      message: "Bạn nhận được một đề xuất bán tài sản.",
+      message: "Bạn nhận được một lời mời bán tài sản.",
     };
     const buyerContent = {
       senderAddress: req.user.publicAddress,
       url: `/transaction/${transaction._id}`,
       message: "Bạn được mời tham gia vào một giao dịch.",
     };
-    const p1 = transaction.seller.map((publicAddress) =>
+    const p1 = transaction.seller.map((seller) => {
       Notification.create({
-        userAddress: publicAddress,
+        userAddress: seller.publicAddress,
         ...sellerContent,
-      }).then()
-    );
-    const p2 = transaction.buyer.map((publicAddress) =>
+      }).then();
+    });
+    const p2 = transaction.buyer.map((buyer) => {
       Notification.create({
-        userAddress: publicAddress,
+        userAddress: buyer.publicAddress,
         ...buyerContent,
-      }).then()
-    );
+      }).then();
+    });
     Promise.all([p1, p2]);
     return res.status(201).json({ statusCode: 201, data: transaction });
   } catch (error) {

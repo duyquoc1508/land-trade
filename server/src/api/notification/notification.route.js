@@ -14,6 +14,6 @@ routes.get("/", authJwt, pagination, notificationController.getNotifications);
  * @dev create notification for TEST. Notifications will be created when handling events from the blockchain.
  * Production: remove this endpoint
  */
-routes.post("/", notificationController.createNotification);
+routes.post("/", authJwt, notificationController.createNotification);
 
 export default routes;

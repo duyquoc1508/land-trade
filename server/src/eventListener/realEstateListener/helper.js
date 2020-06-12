@@ -28,7 +28,7 @@ export async function createNotification(event) {
   // emit event new certificate for owners
   owners.forEach((owner) =>
     socketService.emitEventToIndividualClient(
-      "new certification",
+      "new-certification",
       owner,
       "Bạn có 1 tài sản mới đang chờ xác nhận"
     )

@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import Cookie from "../../helper/cookie";
 import Notifications from "./Notifications";
 import PopupNotification from "../PopupNotification";
+import io from "socket.io-client";
+import { initSocket } from "./action";
 
 const menus = [
   {
@@ -51,36 +53,53 @@ class Menu extends Component {
       messageNotification: "",
     };
   }
+
+  // reconnect socket with server when component reaload
+  componentDidMount() {
+    const accessToken = Cookie.getCookie("accessToken");
+    if (accessToken) {
+      const socket = io(process.env.REACT_APP_BASE_URL_SOCKET);
+      socket.emit("user-connected", accessToken);
+      this.props.initSocket(socket);
+    }
+  }
+
+  // listener event from server
   componentDidUpdate(preProps, preState) {
-    const { socket } = this.props;
-    if (socket && socket != preProps.socket) {
-      console.log(
-        "Menu -> componentDidUpdate -> listening event new certification"
-      );
-      // listener event new certification
-      socket.on("new certification", (message) => {
+    // create new connection if it doesn't exist'
+    if (!this.props.socket) {
+      const accessToken = Cookie.getCookie("accessToken");
+      if (accessToken) {
+        const socket = io(process.env.REACT_APP_BASE_URL_SOCKET);
+        socket.emit("user-connected", accessToken);
+        this.props.initSocket(socket);
+      }
+    }
+    // listener event
+    if (this.props.socket && this.props.socket !== preProps.socket) {
+      // listen event new certification
+      this.props.socket.on("new-certification", (message) => {
         this.setState({
           toggleNotification: true,
           messageNotification: message,
         });
         setTimeout(() => {
           this.setState({ toggleNotification: false });
-        }, 3000);
+        }, 5000);
+      });
+
+      // listen event transaction
+      this.props.socket.on("new-transaction", (message) => {
+        this.setState({
+          toggleNotification: true,
+          messageNotification: message,
+        });
+        setTimeout(() => {
+          this.setState({ toggleNotification: false });
+        }, 5000);
       });
     }
   }
-
-  // setupConnectSocket(publicAddress) {
-  //   console.log(publicAddress);
-  //   const socket = io(process.env.REACT_APP_BASE_URL_SOCKET);
-  //   socket.emit("user connected", publicAddress);
-  // socket.on("notifications", () => {
-  //   this.setState({ toggleNotification: true });
-  //   setTimeout(() => {
-  //     this.setState({ toggleNotification: false });
-  //   }, 3000);
-  // });
-  // }
 
   changeToggleAuth = () => {
     if (!this.state.toggleAuthStatus) {
@@ -189,6 +208,7 @@ class Menu extends Component {
                             console.log("click logout");
                             Cookie.setCookie("accessToken", "", 0);
                             localStorage.removeItem("user");
+                            localStorage.removeItem("socket");
                           }}
                           href="/"
                         >
@@ -199,8 +219,8 @@ class Menu extends Component {
                   </div>
                 </div>
               ) : (
-                  <ButtonLogin />
-                )}
+                <ButtonLogin />
+              )}
             </div>
           </div>
         </div>
@@ -233,8 +253,14 @@ const mapStateToProps = (state) => {
   return {
     checkAuth: state.login.accessToken,
     user: state.user,
-    socket: state.login.socket,
+    socket: state.header.socket,
   };
 };
 
-export default connect(mapStateToProps)(Menu);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    initSocket: (socket) => dispatch(initSocket(socket)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);
