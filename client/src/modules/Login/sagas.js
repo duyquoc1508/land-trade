@@ -100,7 +100,13 @@ const handleClick = async () => {
     }
     let { signature } = await handleSignMessage(publicAddress, nonce);
     let accessToken = await handleAuthenticate(publicAddress, signature);
-    Cookie.setCookie("accessToken", accessToken, 1 / 48);
+    // 1 day
+    Cookie.setCookie("accessToken", accessToken);
+    let currentTime = new Date();
+    let expiredTime = currentTime.setMinutes(
+      currentTime.getMinutes() + 24 * 60
+    );
+    Cookie.setCookie("expiredToken", expiredTime, 1);
     let user = await getInfoUser(accessToken);
     localStorage.setItem("user", JSON.stringify(user));
     // console.log(accessToken, user);
