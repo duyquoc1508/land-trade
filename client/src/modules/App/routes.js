@@ -14,6 +14,8 @@ import PropertyStandard from "../Property/PropertyStandard";
 import ComfirmProperty from "../Property/ConfirmProperty";
 import InitTransaction from "../InitTransaction";
 import NotFound from "../NotFound";
+import DownPaymentContract from "../Transaction/sections/DownPaymentContract";
+import TradeContract from "../Transaction/sections/TradeContract";
 
 const routes = [
   {
@@ -92,6 +94,16 @@ const routes = [
     path: "/role",
     exact: true,
     main: () => <Role />,
+  },
+  {
+    path: "/down-payment-contract",
+    exact: false,
+    main: () => <DownPaymentContract />,
+  },
+  {
+    path: "/trade-contract",
+    exact: false,
+    main: () => <TradeContract />,
   },
   {
     path: "",

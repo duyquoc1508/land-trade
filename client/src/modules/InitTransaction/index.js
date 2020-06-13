@@ -22,11 +22,6 @@ function InitTransaction(props) {
     }
     return newStr;
   }
-  useEffect(() => {
-    if (props.idTransaction) {
-      props.history.push(`/transaction/${props.idTransaction}`);
-    }
-  }, [props.idTransaction]);
 
   return (
     <div className="container mt-75">
@@ -91,11 +86,8 @@ function InitTransaction(props) {
         onClick={() => {
           if (confirm("Bạn chắc chắn muốn tạo giao dịch?"))
             props.initTransaction({
-              seller,
-              buyer,
-              downPayment,
-              price,
-              idProperty,
+              history: props.history,
+              data: { seller, buyer, downPayment, price, idProperty },
             });
         }}
       >
@@ -122,8 +114,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    initTransaction: (body) => {
-      dispatch(initTransactionRequest(body));
+    initTransaction: (data) => {
+      dispatch(initTransactionRequest(data));
     },
   };
 };

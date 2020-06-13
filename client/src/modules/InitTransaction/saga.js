@@ -35,9 +35,11 @@ const getBuyerAndSellerOfTransaction = (transaction) => {
 
 function* initTransactionFlow(action) {
   try {
+    const { history } = action.payload;
     const socket = yield select(getSocket);
-    const response = yield call(initTransaction, action.payload);
+    const response = yield call(initTransaction, action.payload.data);
     yield put({ type: INIT_TRANSACTION_SUCCESS, payload: response });
+    history.push(`/transaction/${response._id}`);
     const { buyer, seller } = yield call(
       getBuyerAndSellerOfTransaction,
       response
