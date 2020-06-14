@@ -13,16 +13,31 @@ const menus = [
     name: "Trang Chủ",
     to: "/",
     exact: true,
+    role: "all",
   },
   {
     name: "Mua Bán",
     to: "/listings",
     exact: false,
+    role: "all",
+  },
+  {
+    name: "Tra cứu",
+    to: "/search",
+    exact: false,
+    role: "all",
+  },
+  {
+    name: "Số hóa tài sản",
+    to: "/add-property",
+    exact: false,
+    role: "Notary",
   },
   {
     name: "Giao dịch",
-    to: "/transaction",
-    exact: true,
+    to: "/add-property",
+    exact: false,
+    role: "Notary",
   },
 ];
 
@@ -62,10 +77,18 @@ class Menu extends Component {
       socket.emit("user-connected", accessToken);
       this.props.initSocket(socket);
     }
+    // check role
   }
 
   // listener event from server
   componentDidUpdate(preProps, preState) {
+    // logout after 1 day
+    let expiredTime = Cookie.getCookie("expiredToken");
+    if (expiredTime) {
+      setTimeout(() => {
+        this.logout();
+      }, expiredTime - Date.now());
+    }
     // create new connection if it doesn't exist'
     if (!this.props.socket) {
       const accessToken = Cookie.getCookie("accessToken");
@@ -117,12 +140,22 @@ class Menu extends Component {
       });
     }
   };
+
+  logout = () => {
+    // e.preventDefault();
+    Cookie.setCookie("accessToken", "", 0);
+    Cookie.setCookie("expiredToken", "", 0);
+    localStorage.removeItem("user");
+    window.location.href = process.env.REACT_APP_BASE_URL;
+  };
+
   render() {
+    let { user } = this.props;
     return (
       <header className="db-top-header">
         <div className="container-fluid">
           <div className="row align-items-center">
-            <div className="col-md-1 col-sm-3 col-3">
+            <div className="col-md-1 col-sm-3 col-4">
               <Link className="navbar-brand" to={"/"}>
                 <img
                   src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
@@ -131,13 +164,13 @@ class Menu extends Component {
                 />
               </Link>
             </div>
-            <div className="col-md-8 col-sm-3 col-1">
+            <div className="col-md-8 col-sm-3 col-2">
               <div className="site-navbar-wrap v2 style2">
                 <div className="site-navbar">
                   <nav className="site-navigation">
                     <div className="container">
                       <ul className="site-menu js-clone-nav d-none d-lg-block">
-                        {this.showMenus(menus)}
+                        {this.showMenus(menus, user)}
                       </ul>
                     </div>
                   </nav>
@@ -158,7 +191,7 @@ class Menu extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-md-3 col-sm-6 col-7">
+            <div className="col-md-2 col-sm-6 col-6">
               {!!this.props.checkAuth ? (
                 <div className="header-button">
                   <Notifications />
@@ -179,38 +212,29 @@ class Menu extends Component {
                     <div className="account-dropdown__body">
                       <div className="account-dropdown__item">
                         <Link
-                          to="/add-property"
-                          onClick={this.changeToggleAuth}
-                        >
-                          Số Hóa Tài Sản
-                        </Link>
-                      </div>
-                      <div className="account-dropdown__item">
-                        <Link
                           to={"/user/profile"}
                           onClick={this.changeToggleAuth}
                         >
                           Trang cá nhân
                         </Link>
                       </div>
-                      <div className="account-dropdown__item">
-                        <Link
-                          to={"/my-properties"}
-                          onClick={this.changeToggleAuth}
-                        >
-                          Danh sách tài sản
-                        </Link>
-                      </div>
+                      {user && user.role == "owner" ? (
+                        <div className="account-dropdown__item">
+                          <Link
+                            to={"/my-properties"}
+                            onClick={this.changeToggleAuth}
+                          >
+                            Tài sản của tôi
+                          </Link>
+                        </div>
+                      ) : (
+                        ""
+                      )}
                       <div className="account-dropdown__item">
                         <a
                           type="button"
-                          onClick={() => {
-                            console.log("click logout");
-                            Cookie.setCookie("accessToken", "", 0);
-                            localStorage.removeItem("user");
-                            localStorage.removeItem("socket");
-                          }}
-                          href="/"
+                          style={{ cursor: "pointer" }}
+                          onClick={this.logout}
                         >
                           Đăng xuất
                         </a>
@@ -231,18 +255,20 @@ class Menu extends Component {
     );
   }
 
-  showMenus = (menus) => {
+  showMenus = (menus, user) => {
     var result = null;
     if (menus.length > 0) {
       result = menus.map((menu, index) => {
-        return (
-          <MenuLink
-            key={index}
-            label={menu.name}
-            to={menu.to}
-            activeOnlyWhenExact={menu.exact}
-          />
-        );
+        if (menu.role == "all" || menu.role == user.role) {
+          return (
+            <MenuLink
+              key={index}
+              label={menu.name}
+              to={menu.to}
+              activeOnlyWhenExact={menu.exact}
+            />
+          );
+        }
       });
     }
     return result;
@@ -252,7 +278,7 @@ class Menu extends Component {
 const mapStateToProps = (state) => {
   return {
     checkAuth: state.login.accessToken,
-    user: state.user,
+    user: state.user.data,
     socket: state.header.socket,
   };
 };

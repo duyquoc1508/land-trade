@@ -16,15 +16,15 @@ class EditProfile extends Component {
       url: `${process.env.REACT_APP_BASE_URL_API}/users`,
       data: this.props.profile.values,
       headers: {
-        Authorization: `Bearer ${this.props.accessToken}`
-      }
+        Authorization: `Bearer ${this.props.accessToken}`,
+      },
     })
-      .then(response => {
+      .then((response) => {
         this.props.actUpdate(response.data.data);
         this.props.history.goBack();
         localStorage.setItem("user", JSON.stringify(response.data.data));
       })
-      .catch(err => alert("Cập nhập thất bại"));
+      .catch((err) => alert("Cập nhập thất bại"));
   }
   componentDidMount() {
     const user = this.props.user;
@@ -133,20 +133,20 @@ class EditProfile extends Component {
 
 EditProfile = reduxForm({
   // a unique name for the form
-  form: "profile"
+  form: "profile",
 })(EditProfile);
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   profile: state.form.profile,
   accessToken: state.login.accessToken,
-  user: state.user
+  user: state.user.data,
 });
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    actUpdate: user => {
+    actUpdate: (user) => {
       dispatch(UpdateUser(user));
-    }
+    },
   };
 };
 
