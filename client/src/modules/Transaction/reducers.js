@@ -9,7 +9,7 @@ const initialState = {
   data: null,
   loading: false,
   error: "",
-  property: "",
+  property: null,
 };
 
 export default function transactionReducers(state = initialState, action) {

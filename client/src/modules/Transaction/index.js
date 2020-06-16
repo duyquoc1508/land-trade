@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import { connect } from "react-redux";
 
 import Info from "./sections/1_info";
-import Contract from "./sections/2_contract";
+import DepositContract from "./sections/2_deposit_contract";
 import DepositPayment from "./sections/3_deposit_payment";
 import DepositConfirm from "./sections/4_deposit_confirm";
 import Payment from "./sections/5_payment";
@@ -101,7 +101,7 @@ const CustomizedExpansionPanels = (props) => {
           <Typography>Tạo hợp đồng đặt cọc</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <Contract />
+          {expanded === "panel2" && <DepositContract />}
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel

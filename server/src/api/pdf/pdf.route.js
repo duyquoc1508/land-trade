@@ -33,7 +33,7 @@ routes.post("/down-payment", (req, res) => {
             } else {
               res.json({
                 message: "File created successfully",
-                url: `/static/pdf/${fileName}`,
+                url: `pdf/${fileName}`,
               });
             }
           });

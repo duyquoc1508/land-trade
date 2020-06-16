@@ -17,7 +17,7 @@ const transactionSchema = new Schema(
         isAccept: { type: Boolean },
       },
     ],
-    price: Number,
+    transferPrice: Number,
     downPayment: Number,
     idProperty: String,
   },
