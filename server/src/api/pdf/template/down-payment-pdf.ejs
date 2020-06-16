@@ -119,7 +119,8 @@
                   <tr>
                     <td>
                       <div class="mb-20">
-                        Hôm nay, ngày .. . Tại .., Chúng tôi gồm có:
+                        Hôm nay, ngày <%= dateContract %> . Tại <%=
+                        addressContract %> , Chúng tôi gồm có:
                       </div>
                     </td>
                   </tr>
@@ -132,6 +133,7 @@
             <td>
               <table border="0" width="100%">
                 <tbody>
+                  <% buyers.forEach(buyer => { %>
                   <tr>
                     <td>
                       <div class="font-weight-bold mb-20">
@@ -145,36 +147,37 @@
                         <tbody>
                           <tr>
                             <td>
-                              Ông bà:
+                              Ông (Bà): <%= buyer.fullName %>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Sinh ngày:
+                              Sinh ngày: <%= buyer.birthday %>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Chứng minh nhân dân số:
+                              Chứng minh nhân dân số: <%= buyer.idNumber %>
                             </td>
 
                             <td>
-                              Cấp ngày:
+                              Cấp ngày: <%= buyer.issueDate %>
                             </td>
 
                             <td>
-                              Nơi cấp:
+                              Nơi cấp: <%= buyer.issuedBy %>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Hộ Khẩu thường trú:
+                              Hộ Khẩu thường trú: <%= buyer.address %>
                             </td>
                           </tr>
                         </tbody>
                       </table>
                     </td>
                   </tr>
+                  <% }) %>
                 </tbody>
               </table>
             </td>
@@ -195,37 +198,39 @@
                     <td>
                       <table>
                         <tbody>
+                          <% sellers.forEach(seller => { %>
                           <tr>
                             <td>
-                              Ông bà:
+                              Ông (Bà): <%= seller.fullName %>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Sinh ngày:
+                              Sinh ngày: <%= seller.birthday %>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Chứng minh nhân dân số:
+                              Chứng minh nhân dân số: <%= seller.idNumber %>
                             </td>
                             <td>
-                              Cấp ngày:
+                              Cấp ngày: <%= seller.issueDate %>
                             </td>
                             <td>
-                              Nơi cấp:
+                              Nơi cấp: <%= seller.issuedBy %>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Hộ Khẩu thường trú:
+                              Hộ Khẩu thường trú: <%= seller.address %>
                             </td>
                           </tr>
+                          <% }) %>
                         </tbody>
                       </table>
                     </td>
                   </tr>
-                  <tr>
+                  <!-- <tr>
                     <td>
                       <div class="font-weight-bold mb-20 mt-20">
                         Các thành viên của hộ gia đình bên B:
@@ -266,7 +271,7 @@
                         </tbody>
                       </table>
                     </td>
-                  </tr>
+                  </tr> -->
                 </tbody>
               </table>
             </td>
@@ -351,12 +356,12 @@
                           <tr>
                             <td>
                               Bên A đặt cọc cho bên B bằng tiền mặt với số tiền
-                              là
+                              là: <%= downPayment %> VNĐ
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Bằng chữ:
+                              Bằng chữ: <%= downPaymentInWord %> đồng.
                             </td>
                           </tr>
                         </tbody>
@@ -376,10 +381,12 @@
                             </td>
                           </tr>
                           <tr>
-                            <td>Thời hạn đặt cọc là</td>
+                            <td>
+                              Thời hạn đặt cọc là <%= depositPeriod %> ngày
+                            </td>
                           </tr>
                           <tr>
-                            <td>Tính từ ngày</td>
+                            <td>Tính từ ngày <%= startDeposit %></td>
                           </tr>
                         </tbody>
                       </table>
@@ -400,29 +407,31 @@
                           <tr>
                             <td>
                               1. Bằng việc đặt cọc này Bên A cam kết mua đất của
-                              bên B tại Bên B nhận tiền đặt cọc và cam kết sẽ
-                              bán đất thuộc sở hữu hợp pháp và không có bất kỳ
-                              tranh chấp nào liên quan đến mảnh đất mà bên B
-                              giao bán cho bên A tại : . với diện tích là {" "}
-                              .m2 giá bán là
+                              bên B tại <%= propertyAddress %> Bên B nhận tiền
+                              đặt cọc và cam kết sẽ bán đất thuộc sở hữu hợp
+                              pháp và không có bất kỳ tranh chấp nào liên quan
+                              đến mảnh đất mà bên B giao bán cho bên A tại : <%=
+                              propertyAddress %> với diện tích là <%= area %>
+                              .m2 giá bán là <%= transferPrice %> VNĐĐ
                             </td>
                           </tr>
                           <tr>
                             <td>
                               2. Trong thời gian đặt cọc, bên B cam kết sẽ làm
                               các thủ tục pháp lý để chuyển nhượng quyền sử dụng
-                              đất cho bên A, bên A cam kết sẽ trả.. khi hai bên
-                              ký hợp đồng mua bán đất tại phòng công chứng Nhà
-                              Nước sẽ được bên A thanh toán nốt khi bên B giao
-                              giấy chứng nhận quyền sử dụng đất. Bên B cam kết
-                              sẽ giao giấy chứng nhận quyền sử dụng đất trong
-                              vòng 7 ngày kể từ ngày bên A và bên B ký hợp đồng
-                              mua bán tại phòng công chứng Nhà Nước. Bên B có
-                              nghĩa vụ nộp các khoản thuế phát sinh trong quá
-                              trình giao dịch theo đúng quy định của pháp luật
-                              (đối với thuế đất, thuế chuyển nhượng bên B sẽ là
-                              người thanh toán mà bên A không phải trả bất cứ
-                              khoản phí nào) .
+                              đất cho bên A, bên A cam kết sẽ trả <%=
+                              remainingAmount %> VNĐ khi hai bên ký hợp đồng mua
+                              bán đất tại phòng công chứng Nhà Nước sẽ được bên
+                              A thanh toán nốt khi bên B giao giấy chứng nhận
+                              quyền sử dụng đất. Bên B cam kết sẽ giao giấy
+                              chứng nhận quyền sử dụng đất trong vòng 7 ngày kể
+                              từ ngày bên A và bên B ký hợp đồng mua bán tại
+                              phòng công chứng Nhà Nước. Bên B có nghĩa vụ nộp
+                              các khoản thuế phát sinh trong quá trình giao dịch
+                              theo đúng quy định của pháp luật (đối với thuế
+                              đất, thuế chuyển nhượng bên B sẽ là người thanh
+                              toán mà bên A không phải trả bất cứ khoản phí nào)
+                              .
                             </td>
                           </tr>
                         </tbody>
@@ -635,7 +644,8 @@
                           </tr>
                           <tr>
                             <td>
-                              3. Hợp đồng có hiệu lực từ
+                              3. Hợp đồng có hiệu lực từ <%= timeContractValid
+                              %>
                               <!-- <input type="date" class="" /> -->
                             </td>
                           </tr>
@@ -667,7 +677,7 @@
                   <tr>
                     <td style="width: 50%; text-align: center;"></td>
                     <td style="width: 50%; text-align: center;">
-                      ..., ngày ....
+                      <%= signAddress %> , ngày <%= signDate %>
                     </td>
                   </tr>
                 </tbody>

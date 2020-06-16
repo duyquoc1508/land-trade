@@ -13,8 +13,14 @@ export async function createTransaction(req, res, next) {
       publicAddress: item,
       isAccept: false,
     }));
-    const { price, downPayment, idProperty } = req.body;
-    const newTransaction = { buyer, seller, price, downPayment, idProperty };
+    const { transferPrice, downPayment, idProperty } = req.body;
+    const newTransaction = {
+      buyer,
+      seller,
+      transferPrice,
+      downPayment,
+      idProperty,
+    };
     const transaction = await Transaction.create(newTransaction);
     const sellerContent = {
       senderAddress: req.user.publicAddress,
