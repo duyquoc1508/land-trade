@@ -42,10 +42,10 @@ routes.post("/down-payment", (req, res) => {
   );
 });
 
-routes.post('/trade-contract', (req, res)=>{
+routes.post("/transfer-contract", (req, res) => {
   let data = req.body;
   ejs.renderFile(
-    path.join(__dirname, "/template/trade-contract-pdf.ejs"),
+    path.join(__dirname, "/template/transfer-contract-pdf.ejs"),
     data,
     (err, data) => {
       if (err) {
@@ -61,7 +61,7 @@ routes.post('/trade-contract', (req, res)=>{
             height: "20mm",
           },
         };
-        let fileName = `trade-contract-${Date.now()}.pdf`;
+        let fileName = `transfer-contract-${Date.now()}.pdf`;
         pdf
           .create(data, options)
           .toFile(`./src/public/pdf/${fileName}`, function (err, data) {
@@ -70,13 +70,13 @@ routes.post('/trade-contract', (req, res)=>{
             } else {
               res.json({
                 message: "File created successfully",
-                url: `/static/pdf/${fileName}`,
+                url: `pdf/${fileName}`,
               });
             }
           });
       }
     }
   );
-})
+});
 
 export default routes;

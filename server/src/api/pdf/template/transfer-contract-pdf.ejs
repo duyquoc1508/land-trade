@@ -113,8 +113,8 @@
               <tr>
                 <td>
                   <div class="mb-20">
-                    Hôm nay, ngày ... tháng ... năm .... Tại ..., Chúng tôi gồm
-                    có:
+                    Hôm nay, ngày .... tháng .... năm .... Tại ...., Chúng tôi
+                    gồm có:
                   </div>
                 </td>
               </tr>
@@ -135,31 +135,33 @@
               <tr>
                 <td>
                   <table>
+                    <% sellers.forEach(seller => { %>
                     <tr>
-                      <td>Ông bà: ....</td>
+                      <td>Ông bà: <%= seller.fullName %></td>
                     </tr>
                     <tr>
-                      <td>Sinh ngày: ....</td>
+                      <td>Sinh ngày: <%=seller.birthday %></td>
                     </tr>
                     <tr>
-                      <td>Chứng minh nhân dân số: ....</td>
-                      <td>Cấp ngày: ....</td>
-                      <td>Nơi cấp: ....</td>
+                      <td>Chứng minh nhân dân số: <%=seller.idNumber %></td>
+                      <td>Cấp ngày: <%=seller.issueDate %></td>
+                      <td>Nơi cấp: <%=seller.issuedBy %></td>
                     </tr>
                     <tr>
-                      <td>Hộ Khẩu thường trú: ....</td>
+                      <td>Hộ Khẩu thường trú: <%=seller.address %></td>
                     </tr>
+                    <% }) %>
                   </table>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td>
                   <div class="font-weight-bold mb-20 mt-20">
                     Các thành viên của hộ gia đình bên A:
                   </div>
                 </td>
-              </tr>
-              <tr>
+              </tr> -->
+              <!-- <tr>
                 <td>
                   <table>
                     <tr>
@@ -178,7 +180,7 @@
                     </tr>
                   </table>
                 </td>
-              </tr>
+              </tr> -->
             </table>
           </td>
         </tr>
@@ -196,31 +198,33 @@
               <tr>
                 <td>
                   <table>
+                    <% buyers.forEach(buyer => { %>
                     <tr>
-                      <td>Ông bà: ....</td>
+                      <td>Ông bà: <%=buyer.fullName %></td>
                     </tr>
                     <tr>
-                      <td>Sinh ngày: ....</td>
+                      <td>Sinh ngày: <%=buyer.birthday %></td>
                     </tr>
                     <tr>
-                      <td>Chứng minh nhân dân số: ....</td>
-                      <td>Cấp ngày: ....</td>
-                      <td>Nơi cấp: ....</td>
+                      <td>Chứng minh nhân dân số: <%=buyer.idNumber %></td>
+                      <td>Cấp ngày: <%=buyer.issueDate %></td>
+                      <td>Nơi cấp: <%=buyer.issuedBy %></td>
                     </tr>
                     <tr>
-                      <td>Hộ Khẩu thường trú: ....</td>
+                      <td>Hộ Khẩu thường trú: <%=buyer.address %></td>
                     </tr>
+                    <% }) %>
                   </table>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td>
                   <div class="font-weight-bold mb-20 mt-20">
                     Các thành viên của hộ gia đình bên B:
                   </div>
                 </td>
-              </tr>
-              <tr>
+              </tr> -->
+              <!-- <tr>
                 <td>
                   <table>
                     <tr>
@@ -239,7 +243,7 @@
                     </tr>
                   </table>
                 </td>
-              </tr>
+              </tr> -->
             </table>
           </td>
         </tr>
@@ -258,20 +262,20 @@
                 <td>
                   <table>
                     <tr>
-                      <td>Ông bà:</td>
+                      <td>Ông bà: ....</td>
                     </tr>
                     <tr>
-                      <td>Sinh ngày:</td>
+                      <td>Sinh ngày: ....</td>
                     </tr>
                     <tr>
-                      <td>Chứng minh nhân dân số:</td>
+                      <td>Chứng minh nhân dân số: ....</td>
 
-                      <td>Cấp ngày:</td>
+                      <td>Cấp ngày: ....</td>
 
-                      <td>Nơi cấp:</td>
+                      <td>Nơi cấp: ....</td>
                     </tr>
                     <tr>
-                      <td>Hộ Khẩu thường trú:</td>
+                      <td>Hộ Khẩu thường trú: ....</td>
                     </tr>
                   </table>
                 </td>
@@ -307,7 +311,8 @@
                     <tr>
                       <td>
                         1. Hiện Bên A đang có quyền sử dụng đất, quyền sở hữu
-                        nhà ở tại địa chỉ: ... theo số ... do ... cấp ngày ...
+                        nhà ở tại địa chỉ: .... theo số .... do .... cấp ngày
+                        ....
                       </td>
                     </tr>
                     <tr>
@@ -317,74 +322,92 @@
                       <td>
                         <table>
                           <tr>
-                            <td>Thửa đât</td>
+                            <td><b>Thửa đât</b></td>
                           </tr>
                           <tr>
                             <td>
-                              Thửa đất số ...
+                              Thửa đất số: <%=propertyDetail.landLot.landLotNo
+                              %>
                             </td>
                             <td>
-                              Tờ bản đồ số ...
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Địa chỉ ...</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              Diện tích ...
+                              Tờ bản đồ số: <%=propertyDetail.landLot.mapSheetNo
+                              %>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Mục đích sử dụng ...
+                              Địa chỉ: <%=propertyDetail.landLot.address %>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Thời hạn sử dụng ...
+                              Diện tích: <%=propertyDetail.landLot.commonUseArea
+                              + propertyDetail.landLot.privateUseArea %> m
+                              <sup>2</sup>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Nguồn gốc sử dụng ...
+                              Mục đích sử dụng:
+                              <%=propertyDetail.landLot.purposeOfUse %>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              Thời hạn sử dụng:
+                              <%=propertyDetail.landLot.timeOfUse %>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              Nguồn gốc sử dụng:
+                              <%=propertyDetail.landLot.originOfUse %>
                             </td>
                           </tr>
                         </table>
                       </td>
                     </tr>
+                    <% if (propertyDetail.house) { %>
                     <tr>
                       <td>
                         <table>
                           <tr>
-                            <td>Nhà ở</td>
+                            <td><b>Nhà ở</b></td>
                           </tr>
                           <tr>
-                            <td>Địa chỉ ...</td>
+                            <td>Địa chỉ: <%=propertyDetail.house.address %></td>
                           </tr>
                           <tr>
                             <td>
-                              Diện tích sử dụng ...
+                              Diện tích xây dựng:
+                              <%=propertyDetail.house.constructionArea %> m<sup
+                                >2</sup
+                              >
                             </td>
                             <td>
-                              Diện tích sàn ...
+                              Diện tích sàn: <%=propertyDetail.house.floorArea
+                              %> 2<sup>2</sup>
                             </td>
                           </tr>
                           <tr>
-                            <td>Kết cấu ...</td>
+                            <td>Kết cấu: ....</td>
                             <td>
-                              Cấp hạng nhà ở ...
+                              Cấp hạng nhà ở: <%=propertyDetail.house.level %>
                             </td>
                           </tr>
                           <tr>
-                            <td>Số tầng ...</td>
+                            <td>
+                              Số tầng: <%=propertyDetail.house.numberOfFloor %>
+                            </td>
                           </tr>
                           <tr>
-                            <td>Ghi chú ...</td>
+                            <td>Ghi chú: ....</td>
                           </tr>
                         </table>
                       </td>
                     </tr>
+                    <% } %>
+
                     <tr>
                       <td>
                         2. Bằng Hợp đồng này Bên A đồng ý chuyển nhượng toàn bộ
@@ -410,13 +433,14 @@
                     <tr>
                       <td>
                         1. Giá chuyển nhượng quyền sử dụng đất, quyền sở hữu nhà
-                        ở nêu tại Điều 1 của Hợp đồng này là: ... VNĐ (Bằng chữ:
-                        ...).
+                        ở nêu tại Điều 1 của Hợp đồng này là:
+                        <%=transaction.transferPrice %> VNĐ (Bằng chữ: <%=""
+                        %>).
                       </td>
                     </tr>
                     <tr>
                       <td>
-                        2. Phương thức thanh toán: (2) ...
+                        2. Phương thức thanh toán: (2) ....
                       </td>
                     </tr>
                     <tr>
@@ -472,8 +496,8 @@
                     <tr>
                       <td>
                         Thuế, lệ phí liên quan đến việc chuyển nhượng quyền sử
-                        dụng đất, quyền sở hữu nhà ở theo Hợp đồng này do ...
-                        chịu trách nhiệm đóng.
+                        dụng đất, quyền sở hữu nhà ở theo Hợp đồng này do <%=""
+                        %> chịu trách nhiệm đóng.
                       </td>
                     </tr>
                   </table>

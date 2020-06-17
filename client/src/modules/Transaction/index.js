@@ -10,7 +10,7 @@ import Info from "./sections/1_info";
 import DepositContract from "./sections/2_deposit_contract";
 import DepositPayment from "./sections/3_deposit_payment";
 import DepositConfirm from "./sections/4_deposit_confirm";
-import Payment from "./sections/5_payment";
+import TransferContract from "./sections/5_transfer_contract";
 import PaymentConfirm from "./sections/6_payment_confirm";
 import PayTaxes from "./sections/7_pay_taxes";
 import TaxesComfirm from "./sections/8_taxes_confirm";
@@ -131,7 +131,7 @@ const CustomizedExpansionPanels = (props) => {
           <Typography>Tạo hợp đồng chuyển nhượng</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <DepositConfirm />
+          {expanded === "panel4" && <TransferContract />}
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
@@ -146,7 +146,7 @@ const CustomizedExpansionPanels = (props) => {
           <Typography>Đăng hợp đồng chuyển nhượng</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <Payment />
+          <DepositConfirm />
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
