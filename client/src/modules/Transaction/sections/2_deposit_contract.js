@@ -15,6 +15,7 @@ const DepositContract = (props) => {
     props.property.properties.landLot.commonUseArea +
     props.property.properties.landLot.privateUseArea;
   const propertyAddress = props.property.properties.landLot.address;
+
   const previewContract = async () => {
     setLoading(true);
     // get all value of input and name

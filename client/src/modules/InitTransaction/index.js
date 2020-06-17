@@ -2,26 +2,14 @@ import React, { useState, useEffect } from "react";
 import { initTransactionRequest } from "./action";
 import { connect } from "react-redux";
 import CardProperty from "../CardProperty";
+import formatCurrency from "../../utils/formatCurrency";
 
 function InitTransaction(props) {
-  const [price, setPrice] = useState("");
+  const [transferPrice, setTransferPrice] = useState("");
   const [downPayment, setDownPayment] = useState("");
   const [seller] = useState(props.saleItem.owners);
   const [buyer, setBuyer] = useState([props.user.publicAddress]);
   const idProperty = props.match.params.hash;
-
-  function formatCurrency(value) {
-    const str = value.replace(/\./g, "");
-    const offset = str.length % 3;
-    let newStr = "";
-    for (let i = 0; i < str.length; i++) {
-      if (i > 0 && i % 3 === offset) {
-        newStr += ".";
-      }
-      newStr += str[i];
-    }
-    return newStr;
-  }
 
   return (
     <div className="container mt-75">
@@ -71,9 +59,9 @@ function InitTransaction(props) {
             type="text"
             className="form-control filter-input"
             placeholder="Giá mua"
-            value={price}
+            value={transferPrice}
             onChange={(e) => {
-              setPrice(formatCurrency(e.target.value));
+              setTransferPrice(formatCurrency(e.target.value));
             }}
           />
           <div className="input-group-append">
@@ -87,7 +75,13 @@ function InitTransaction(props) {
           if (confirm("Bạn chắc chắn muốn tạo giao dịch?"))
             props.initTransaction({
               history: props.history,
-              data: { seller, buyer, downPayment, price, idProperty },
+              data: {
+                seller,
+                buyer,
+                idProperty,
+                downPayment: downPayment.replace(/\./g, ""),
+                transferPrice: transferPrice.replace(/\./g, ""),
+              },
             });
         }}
       >
@@ -100,14 +94,17 @@ function InitTransaction(props) {
 const mapStateToProps = (state, ownProps) => {
   const transactionHash = ownProps.match.params.hash;
   return {
-    // saleItem: state.listingSale.find((item) => item.transactionHash == transactionHash),
+    saleItem: state.listingSale.find(
+      (item) => item.transactionHash == transactionHash
+    ),
     user: JSON.parse(localStorage.getItem("user")),
-    saleItem: {
-      createdAt: "2020-06-03T05:54:43.779Z",
-      idInBlockchain: 4,
-      owners: ["0x37F35c2024bDaf633e0bf6768f2087bCFd32C0D9"],
-      _id: "5ed73b238c55940b04c54d40",
-    },
+    // for test
+    // saleItem: {
+    //   createdAt: "2020-06-03T05:54:43.779Z",
+    //   idInBlockchain: 4,
+    //   owners: ["0x37F35c2024bDaf633e0bf6768f2087bCFd32C0D9"],
+    //   _id: "5ed73b238c55940b04c54d40",
+    // },
     idTransaction: state.initTransaction.data && state.initTransaction.data._id,
   };
 };
