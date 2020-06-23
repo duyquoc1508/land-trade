@@ -77,14 +77,14 @@ const routes = [
     main: () => <TabListProperties />,
   },
   {
-    path: "/transaction/:idTransaction",
+    path: "/transaction/:txHash",
     exact: true,
     main: ({ match, history }) => (
       <Transaction match={match} history={history} />
     ),
   },
   {
-    path: "/create-transaction/:hash",
+    path: "/create-transaction/:transactionHash",
     exact: true,
     main: ({ match, history }) => (
       <InitTransaction match={match} history={history} />
