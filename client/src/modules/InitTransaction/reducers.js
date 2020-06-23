@@ -7,13 +7,14 @@ import {
 const initialState = {
   loading: false,
   error: "",
-  data: null,
+  data: "",
 };
 
 export default function initTransactionReducer(state = initialState, action) {
   switch (action.type) {
     case INIT_TRANSACTION_REQUEST:
       return {
+        ...state,
         loading: true,
       };
     case INIT_TRANSACTION_SUCCESS:

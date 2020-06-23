@@ -5,8 +5,10 @@ import { connect } from "react-redux";
 import Cookie from "../../helper/cookie";
 import Notifications from "./Notifications";
 import PopupNotification from "../PopupNotification";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import io from "socket.io-client";
-import { initSocket } from "./action";
+import { initSocket, refreshPage } from "./action";
 
 const menus = [
   {
@@ -76,6 +78,7 @@ class Menu extends Component {
       const socket = io(process.env.REACT_APP_BASE_URL_SOCKET);
       socket.emit("user-connected", accessToken);
       this.props.initSocket(socket);
+      this.props.refreshPage();
     }
     // check role
   }
@@ -102,24 +105,18 @@ class Menu extends Component {
     if (this.props.socket && this.props.socket !== preProps.socket) {
       // listen event new certification
       this.props.socket.on("new-certification", (message) => {
-        this.setState({
-          toggleNotification: true,
-          messageNotification: message,
+        toast.info(`${message}`, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: false,
         });
-        setTimeout(() => {
-          this.setState({ toggleNotification: false });
-        }, 5000);
       });
 
       // listen event transaction
       this.props.socket.on("new-transaction", (message) => {
-        this.setState({
-          toggleNotification: true,
-          messageNotification: message,
+        toast.info(`${message}`, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: false,
         });
-        setTimeout(() => {
-          this.setState({ toggleNotification: false });
-        }, 5000);
       });
     }
   }
@@ -248,9 +245,10 @@ class Menu extends Component {
             </div>
           </div>
         </div>
-        {this.state.toggleNotification && (
+        {/* {this.state.toggleNotification && (
           <PopupNotification message={this.state.messageNotification} />
-        )}
+        )} */}
+        <ToastContainer />
       </header>
     );
   }
@@ -286,6 +284,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     initSocket: (socket) => dispatch(initSocket(socket)),
+    refreshPage: () => dispatch(refreshPage()),
   };
 };
 

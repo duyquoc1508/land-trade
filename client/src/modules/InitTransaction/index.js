@@ -1,27 +1,69 @@
 import React, { useState, useEffect } from "react";
-import { initTransactionRequest } from "./action";
+import { initTransactionRequest, initTransactionSuccess } from "./action";
 import { connect } from "react-redux";
 import CardProperty from "../CardProperty";
 import formatCurrency from "../../utils/formatCurrency";
+import { convertVNDtoETH } from "../../utils/convertCurrency";
+import Loading from "../../components/Loading/loading";
+import axios from "axios";
+import Cookie from "../../helper/cookie";
 
 function InitTransaction(props) {
+  const [depositPrice, setDepositPrice] = useState("");
   const [transferPrice, setTransferPrice] = useState("");
-  const [downPayment, setDownPayment] = useState("");
-  const [seller] = useState(props.saleItem.owners);
   const [buyer, setBuyer] = useState([props.user.publicAddress]);
-  const idProperty = props.match.params.hash;
+  const [depositTime, setDepositTime] = useState(60);
+  const [saleItem, setSaleItem] = useState(props.saleItem);
+  // const idProperty = props.match.params.hash;
+
+  useEffect(() => {
+    // listen event TransactionCreated from blockchain and emit event INIT_TRANSACTION_SUCCESS
+    props.transactionContract &&
+      props.transactionContract.events
+        .TransactionCreated()
+        .on("data", (event) => {
+          props.initTransactionSuccess({
+            history: props.history,
+            txHash: event.transactionHash,
+          });
+        })
+        .on("error", console.error);
+  }, [props.transactionContract]);
+
+  const fetchPropertyTrading = async (transactionHash) => {
+    const response = await axios({
+      method: "GET",
+      url: `${process.env.REACT_APP_BASE_URL_API}/certification/${transactionHash}`,
+      headers: {
+        Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
+      },
+    });
+    return response.data.data;
+  };
+
+  useEffect(() => {
+    if (!saleItem) {
+      (async () => {
+        const response = await fetchPropertyTrading(
+          props.match.params.transactionHash
+        );
+        setSaleItem(response);
+      })();
+    }
+  }, []);
 
   return (
     <div className="container mt-75">
+      {props.loading && <Loading isLoading={props.loading} />}
       <h3>Khởi tạo giao dịch</h3>
       <h6>Tài sản</h6>
       <CardProperty />
-      Mã tài sản: {idProperty}
+      Mã tài sản: {saleItem && saleItem.transactionHash}
       <h6>Bên bán</h6>
       <div>
-        {seller.map((owner, index) => (
-          <p key={index}>{owner}</p>
-        ))}
+        {saleItem &&
+          saleItem.owners &&
+          saleItem.owners.map((owner, index) => <p key={index}>{owner}</p>)}
       </div>
       <h6>Bên mua</h6>
       <div>
@@ -33,25 +75,60 @@ function InitTransaction(props) {
       </div>
       <div className="form-group">
         <h6>Số tiền đặt cọc</h6>
-        <div className="input-group">
-          <input
-            name="downPayment"
-            component="input"
-            type="text"
-            className="form-control filter-input"
-            placeholder="Số tiền đặt cọc"
-            value={downPayment}
-            onChange={(e) => {
-              setDownPayment(formatCurrency(e.target.value));
-            }}
-          />
-          <div className="input-group-append">
-            <span className="input-group-text"> VND </span>
+        <div className="row">
+          <div className="input-group col-6">
+            <input
+              name="depositPrice"
+              component="input"
+              type="text"
+              className="form-control filter-input"
+              placeholder="Số tiền đặt cọc"
+              value={depositPrice}
+              onChange={(e) => {
+                setDepositPrice(formatCurrency(e.target.value));
+              }}
+            />
+            <div className="input-group-append">
+              <span className="input-group-text"> VND </span>
+            </div>
+          </div>
+          <div className="input-group col-6">
+            <div>
+              {" =>"} {convertVNDtoETH(depositPrice)}
+              {" ETH"}
+            </div>
           </div>
         </div>
       </div>
       <div className="form-group">
         <h6>Giá mua</h6>
+        <div className="row">
+          <div className="input-group col-6">
+            <input
+              name="price"
+              component="input"
+              type="text"
+              className="form-control filter-input"
+              placeholder="Giá mua"
+              value={transferPrice}
+              onChange={(e) => {
+                setTransferPrice(formatCurrency(e.target.value));
+              }}
+            />
+            <div className="input-group-append">
+              <span className="input-group-text"> VND </span>
+            </div>
+          </div>
+          <div className="input-group col-6">
+            <div>
+              {" =>"} {convertVNDtoETH(transferPrice)}
+              {" ETH"}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="form-group">
+        <h6>Thời gian đặt cọc</h6>
         <div className="input-group">
           <input
             name="price"
@@ -59,28 +136,35 @@ function InitTransaction(props) {
             type="text"
             className="form-control filter-input"
             placeholder="Giá mua"
-            value={transferPrice}
+            value={depositTime}
             onChange={(e) => {
-              setTransferPrice(formatCurrency(e.target.value));
+              setDepositTime(e.target.value);
             }}
           />
           <div className="input-group-append">
-            <span className="input-group-text"> VND </span>
+            <span className="input-group-text"> Ngày </span>
           </div>
         </div>
+      </div>
+      {/* notice */}
+      <div style={{ color: "red", fontWeight: "bold" }}>
+        Khi bạn xác nhận tạo giao dịch này, tài khoản của bạn sẽ bị trừ đi{" "}
+        {convertVNDtoETH(depositPrice)}
+        ETH. Bạn có thể hủy giao dịch và nhận lại tiền bất cứ khi nào người bán
+        chưa chấp nhận giao dịch.
       </div>
       <button
         className="btn v3"
         onClick={() => {
           if (confirm("Bạn chắc chắn muốn tạo giao dịch?"))
-            props.initTransaction({
+            props.initTransactionRequest({
               history: props.history,
               data: {
-                seller,
                 buyer,
-                idProperty,
-                downPayment: downPayment.replace(/\./g, ""),
-                transferPrice: transferPrice.replace(/\./g, ""),
+                idPropertyInBlockchain: saleItem.idInBlockchain,
+                depositPrice: depositPrice,
+                transferPrice: transferPrice,
+                depositTime: depositTime,
               },
             });
         }}
@@ -92,27 +176,25 @@ function InitTransaction(props) {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const transactionHash = ownProps.match.params.hash;
+  const transactionHash = ownProps.match.params.transactionHash;
   return {
     saleItem: state.listingSale.find(
       (item) => item.transactionHash == transactionHash
     ),
     user: JSON.parse(localStorage.getItem("user")),
-    // for test
-    // saleItem: {
-    //   createdAt: "2020-06-03T05:54:43.779Z",
-    //   idInBlockchain: 4,
-    //   owners: ["0x37F35c2024bDaf633e0bf6768f2087bCFd32C0D9"],
-    //   _id: "5ed73b238c55940b04c54d40",
-    // },
     idTransaction: state.initTransaction.data && state.initTransaction.data._id,
+    loading: state.initTransaction.loading,
+    transactionContract: state.instanceContracts.transaction,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    initTransaction: (data) => {
+    initTransactionRequest: (data) => {
       dispatch(initTransactionRequest(data));
+    },
+    initTransactionSuccess: (data) => {
+      dispatch(initTransactionSuccess(data));
     },
   };
 };
