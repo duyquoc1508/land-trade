@@ -1,7 +1,6 @@
 pragma solidity >=0.4.21 <0.7.0;
 import "./SafeMath.sol";
 
-
 interface IRBAC {
     /**
      * @param _account account to check roleContract
@@ -14,7 +13,6 @@ interface IRBAC {
         returns (bool);
 }
 
-
 /**
  * @title RealEstate
  * @dev Real estate management and transaction
@@ -23,12 +21,12 @@ interface IRBAC {
 contract RealEstate {
     using SafeMath for uint256;
     // ------------------------------ Variables ------------------------------
-    address private owner ; // owner, who deploy this smart contract
+    address private owner; // owner, who deploy this smart contract
     IRBAC roleContract; // reference to contract RoleBasedAcl
     // number of certificate (token id)
     uint256 public certificateCount;
     // State of certificate
-    enum State {PENDDING, ACTIVATED, SELLING} //sate of token PENDDING: 0, ACTIVATED: 1, SELLING: 2
+    enum State {PENDDING, ACTIVATED, SELLING, IN_TRANSACTION} //sate of token. 0: PENDING - 1: ACTIVATE - 2: IN_TRANSACTION
 
     // mapping token to owners
     mapping(uint256 => address[]) tokenToOwners;
@@ -49,8 +47,7 @@ contract RealEstate {
     event Transfer(
         address[] oldOwner,
         address[] newOwner,
-        uint256 idCertificate,
-        address indexed notary
+        uint256 idCertificate
     );
 
     /// @dev Emits when the owner activate certificate (PENDDING => ACTIVATED)
@@ -68,24 +65,33 @@ contract RealEstate {
     // ------------------------------ Modifiers ------------------------------
 
     modifier onlyPending(uint256 _id) {
-      require(tokenToState[_id] == State.PENDDING, "RealEstate: Require state is PENDDING");
-      _;
+        require(
+            tokenToState[_id] == State.PENDDING,
+            "RealEstate: Require state is PENDDING"
+        );
+        _;
     }
 
     modifier onlyActivated(uint256 _id) {
-        require(tokenToState[_id] == State.ACTIVATED,"RealEstate: Require state is ACTIVATED");
+        require(
+            tokenToState[_id] == State.ACTIVATED,
+            "RealEstate: Require state is ACTIVATED"
+        );
         _;
     }
 
     modifier onlySelling(uint256 _id) {
-        require(tokenToState[_id] == State.SELLING, "RealEstate: Require state is SELLING");
+        require(
+            tokenToState[_id] == State.SELLING,
+            "RealEstate: Require state is SELLING"
+        );
         _;
     }
 
-
     modifier onlyOwnerOf(uint256 _id) {
         require(
-            _checkExitInArray(tokenToOwners[_id], msg.sender),"RealEstate: You're not owner of certificate"
+            _checkExitInArray(tokenToOwners[_id], msg.sender),
+            "RealEstate: You're not owner of certificate"
         );
         _;
     }
@@ -120,9 +126,9 @@ contract RealEstate {
      * @notice Set role base acl contract address
      * @dev only owner can change this contract address
      */
-    function setRoleContractAddress(IRBAC _contractAddress) public  {
-      require(owner == msg.sender, "RealEstate: Require owner");
-      roleContract = _contractAddress;
+    function setRoleContractAddress(IRBAC _contractAddress) public {
+        require(owner == msg.sender, "RealEstate: Require owner");
+        roleContract = _contractAddress;
     }
 
     /**
@@ -195,29 +201,48 @@ contract RealEstate {
         emit ActivateSale(_id, msg.sender, tokenToState[_id]);
     }
 
+    function transferOwnership(
+        uint256 _idCertificate,
+        address[] calldata _newOwners
+    ) external {
+        // first owner is representative of owners of certificate
+        require(
+            _newOwners.length > 0,
+            "RealEstate(transfer): require one owner at least"
+        );
+        address[] memory currentOwners = tokenToOwners[_idCertificate];
+        address representativeOwners = currentOwners[0];
+        require(
+            (msg.sender == representativeOwners),
+            "RealEstate(transfer): Require representative of owner of cert"
+        );
+        tokenToOwners[_idCertificate] = _newOwners;
+        emit Transfer(currentOwners, _newOwners, _idCertificate);
+    }
+
     /**
      * @notice Transfer ownership of certificate
      * @dev Only notary allowed && msg.sender is not the owner
      */
-    function transfer(address[] memory _newOwners, uint256 _id)
-        public
-        onlySelling(_id) // require state of certificate is 'SELLING'
-    {
-        require(
-            roleContract.hasRole(msg.sender, 1),
-            "RealEstate: Require notary"
-        );
-        require(
-            !_checkExitInArray(_newOwners, msg.sender),
-            "RealEstate: Can't transfer to current owner"
-        );
-        // require(_newOwners.length > 0, "RealEstate: Require one owner at least");
-        address[] memory _currentOwners = getOwnersOf(_id);
-        tokenToOwners[_id] = _newOwners;
-        tokenToState[_id] = State.ACTIVATED;
-        delete tokenToApprovals[_id];
-        emit Transfer(_currentOwners, _newOwners, _id, msg.sender);
-    }
+    // function transfer(address[] memory _newOwners, uint256 _id)
+    //     public
+    //     onlySelling(_id) // require state of certificate is 'SELLING'
+    // {
+    //     require(
+    //         roleContract.hasRole(msg.sender, 1),
+    //         "RealEstate: Require notary"
+    //     );
+    //     require(
+    //         !_checkExitInArray(_newOwners, msg.sender),
+    //         "RealEstate: Can't transfer to current owner"
+    //     );
+    //     // require(_newOwners.length > 0, "RealEstate: Require one owner at least");
+    //     address[] memory _currentOwners = getOwnersOf(_id);
+    //     tokenToOwners[_id] = _newOwners;
+    //     tokenToState[_id] = State.ACTIVATED;
+    //     delete tokenToApprovals[_id];
+    //     emit Transfer(_currentOwners, _newOwners, _id, msg.sender);
+    // }
 
     /**
      * @notice Check state of certificate is 'ACTIVATED'
@@ -228,7 +253,6 @@ contract RealEstate {
         return tokenToState[_id] == State.ACTIVATED;
     }
 
-
     /**
      * @notice Check state of certificate is 'SELLING'
      * @param _id identifier of certificate
@@ -236,6 +260,39 @@ contract RealEstate {
      */
     function isSelling(uint256 _id) public view returns (bool) {
         return tokenToState[_id] == State.SELLING;
+    }
+
+    function getOwnersOfCert(uint256 _idCertificate)
+        external
+        view
+        returns (address[] memory)
+    {
+        return tokenToOwners[_idCertificate];
+    }
+
+    // get representative of owners of certificate (owners[0])
+    function getRepresentativeOfOwners(uint256 _idCertificate)
+        external
+        view
+        returns (address)
+    {
+        return tokenToOwners[_idCertificate][0];
+    }
+
+    function getStateOfCert(uint256 _idCertificate)
+        external
+        view
+        returns (State)
+    {
+        return tokenToState[_idCertificate];
+    }
+
+    function setStateOfCertInTransaction(uint256 _idCertificate) external {
+        tokenToState[_idCertificate] = State.IN_TRANSACTION;
+    }
+
+    function setStateOfCertOutTransaction(uint256 _idCertificate) external {
+        tokenToState[_idCertificate] = State.ACTIVATED;
     }
 
     // ------------------------------ Helper functions (internal functions) ------------------------------
