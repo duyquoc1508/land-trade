@@ -26,7 +26,7 @@ contract RealEstate {
     // number of certificate (token id)
     uint256 public certificateCount;
     // State of certificate
-    enum State {PENDDING, ACTIVATED, SELLING, IN_TRANSACTION} //sate of token. 0: PENDING - 1: ACTIVATE - 2: IN_TRANSACTION
+    enum State {PENDDING, ACTIVATED, IN_TRANSACTION} //sate of token. 0: PENDING - 1: ACTIVATE - 2: IN_TRANSACTION
 
     // mapping token to owners
     mapping(uint256 => address[]) tokenToOwners;
@@ -53,8 +53,8 @@ contract RealEstate {
     /// @dev Emits when the owner activate certificate (PENDDING => ACTIVATED)
     event Activate(uint256 idCertificate, address owner, State state);
 
-    /// @dev Emits when the owner activate sale for certificate (ACTIVATED => SELLING)
-    event ActivateSale(uint256 idCertificate, address owner, State state);
+    // /// @dev Emits when the owner activate sale for certificate (ACTIVATED => SELLING)
+    // event ActivateSale(uint256 idCertificate, address owner, State state);
 
     constructor(IRBAC _roleContract) public {
         // Initialize roleContract
@@ -80,13 +80,13 @@ contract RealEstate {
         _;
     }
 
-    modifier onlySelling(uint256 _id) {
-        require(
-            tokenToState[_id] == State.SELLING,
-            "RealEstate: Require state is SELLING"
-        );
-        _;
-    }
+    // modifier onlySelling(uint256 _id) {
+    //     require(
+    //         tokenToState[_id] == State.SELLING,
+    //         "RealEstate: Require state is SELLING"
+    //     );
+    //     _;
+    // }
 
     modifier onlyOwnerOf(uint256 _id) {
         require(
@@ -176,30 +176,30 @@ contract RealEstate {
         emit Activate(_id, msg.sender, tokenToState[_id]);
     }
 
-    /**
-     * @notice Activate for sale
-     * @dev require current token state is 'ACTIVATED'
-     * @dev Require msg.sender is owner of certification and msg.sender has not activated
-     * Change state of certificate if all owner has activated
-     */
-    function activateSale(uint256 _id)
-        public
-        onlyActivated(_id)
-        onlyOwnerOf(_id)
-    {
-        // require msg.sender dot not ACTIVATED
-        require(
-            !_checkExitInArray(tokenToApprovals[_id], msg.sender),
-            "RealEstate: Account already approved"
-        );
-        // store msg.sender to list approved
-        tokenToApprovals[_id].push(msg.sender);
-        // if all owner approved => set state of certificate to 'SELLING'
-        if (tokenToApprovals[_id].length == tokenToOwners[_id].length) {
-            tokenToState[_id] = State.SELLING;
-        }
-        emit ActivateSale(_id, msg.sender, tokenToState[_id]);
-    }
+    // /**
+    //  * @notice Activate for sale
+    //  * @dev require current token state is 'ACTIVATED'
+    //  * @dev Require msg.sender is owner of certification and msg.sender has not activated
+    //  * Change state of certificate if all owner has activated
+    //  */
+    // function activateSale(uint256 _id)
+    //     public
+    //     onlyActivated(_id)
+    //     onlyOwnerOf(_id)
+    // {
+    //     // require msg.sender dot not ACTIVATED
+    //     require(
+    //         !_checkExitInArray(tokenToApprovals[_id], msg.sender),
+    //         "RealEstate: Account already approved"
+    //     );
+    //     // store msg.sender to list approved
+    //     tokenToApprovals[_id].push(msg.sender);
+    //     // if all owner approved => set state of certificate to 'SELLING'
+    //     if (tokenToApprovals[_id].length == tokenToOwners[_id].length) {
+    //         tokenToState[_id] = State.SELLING;
+    //     }
+    //     emit ActivateSale(_id, msg.sender, tokenToState[_id]);
+    // }
 
     function transferOwnership(
         uint256 _idCertificate,
@@ -212,8 +212,11 @@ contract RealEstate {
         );
         address[] memory currentOwners = tokenToOwners[_idCertificate];
         address representativeOwners = currentOwners[0];
+        // called in Transaction Contract => mean: msg.sender = TransactionContract
+        // using tx.origin will be the account that initiated the chain of contract calls
+        // or using msg.sender as the reliable input
         require(
-            (msg.sender == representativeOwners),
+            (tx.origin == representativeOwners),
             "RealEstate(transfer): Require representative of owner of cert"
         );
         tokenToOwners[_idCertificate] = _newOwners;
@@ -253,14 +256,14 @@ contract RealEstate {
         return tokenToState[_id] == State.ACTIVATED;
     }
 
-    /**
-     * @notice Check state of certificate is 'SELLING'
-     * @param _id identifier of certificate
-     * @return bool
-     */
-    function isSelling(uint256 _id) public view returns (bool) {
-        return tokenToState[_id] == State.SELLING;
-    }
+    // /**
+    //  * @notice Check state of certificate is 'SELLING'
+    //  * @param _id identifier of certificate
+    //  * @return bool
+    //  */
+    // function isSelling(uint256 _id) public view returns (bool) {
+    //     return tokenToState[_id] == State.SELLING;
+    // }
 
     function getOwnersOfCert(uint256 _idCertificate)
         external
