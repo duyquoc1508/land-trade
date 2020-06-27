@@ -1,7 +1,9 @@
 module.exports = {
-  realEstateContractAddress: "0xC159057dd7771dCb170547c650f471cC4df5de76",
-  roleContractAddress: "0x3945eaF2De7E208a9a2ac9B72DeD025ECC632e9E",
+  roleContractAddress: "0x4aD48a7560158e02006812362E42155B64B2aDCe",
+  realEstateContractAddress: "0x49638945bA4559989F98C507c5cc607859D3B160",
+  transactionContractAddress: "0x20830F2e305E48191e8E21eC946bDaad2582A08e",
   //vps
-  // realEstateContractAddress: "0x417cE6Af65a70068C79dB69106C29AA5CBBbAEd3",
-  // roleBasedAclContractAddress: ""
+  // roleContractAddress: "0xaa74A2540259bD0E4b8b63201aedB11B534c719E",
+  // realEstateContractAddress: "0x417cE6Af65a70068C79dB69106C29AA5CBBbAEd3"
+  // transactionContractAddress: ""
 };

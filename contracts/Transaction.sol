@@ -87,18 +87,21 @@ contract Transaction {
 	    State state
 	);
 
+    event Payment(uint256 idTransaction);
+
 	event TransactionSuccess(
         uint256 idTransaction
 	);
 
 	constructor(IRealEstate _realEstateContractAddress) public {
-		RealEstate = _realEstateContractAddress;
+		RealEstate =  IRealEstate(_realEstateContractAddress);
+// 		_realEstateContractAddress;
 	}
 
 	function setRealEstateContract(IRealEstate _realEstateContractAddress)
 		public
 	{
-		RealEstate = _realEstateContractAddress;
+		RealEstate = IRealEstate(_realEstateContractAddress);
 	}
 
     // ------------------------------ Core Function ------------------------------
@@ -113,7 +116,7 @@ contract Transaction {
 		uint256 _transferPrice,
 		uint256 _depositTime // days
 	) public payable {
-		require(RealEstate.getStateOfCert(_idCertificate) == 2, "Transaction(createTransaction): Require state of certificate is ACTIVATE");
+		require(RealEstate.getStateOfCert(_idCertificate) == 1, "Transaction(createTransaction): Require state of certificate is ACTIVATE");
 	   // require(_buyers[0] == msg.sender, "Transaction: Require first buyer is msg.sender");
 		require(
 			msg.value >= _depositPrice,
@@ -250,14 +253,15 @@ contract Transaction {
 		uint256 remainingAmount = transaction.transferPrice.sub(
 			transaction.depositPrice
 		);
-		uint256 registrationTax = transaction.transferPrice.div(200); // 0.5% tax
+		uint256 registrationTax = transaction.transferPrice.div(200); // 0.05% tax
 		uint256 totalAmount = remainingAmount.add(registrationTax);
 		require(
 			(msg.value >= totalAmount),
 			"Transaction(payment): You're not enough balance"
 		);
 		idToState[_idTransaction] = State.TRANSFER_REQUEST;
-	}
+        emit Payment(_idTransaction);
+    }
 
 
 	/**
@@ -267,17 +271,18 @@ contract Transaction {
      */
 	function confirmTransaction(uint256 _idTransaction)
 		public
-		onlyState(_idTransaction, State.TRANSFER_REQUEST)
+// 		onlyState(_idTransaction, State.TRANSFER_REQUEST)
 	{
 		Transaction memory transaction = idToTransaction[_idTransaction];
-		require(now <= transaction.timeEnd, "transaction(confirmTransaction): Transaction has terminated");
+		require(now  <= transaction.timeEnd, "transaction(confirmTransaction): Transaction has terminated");
 		address representativeSellers = transaction.sellers[0];
 		require(
 			msg.sender == representativeSellers,
 			"Transaction(sellerConfirmTransaction): require representative of sellers"
 		);
 		uint256 personalIncomeTax = transaction.transferPrice.div(50); // 2% tax
-		msg.sender.transfer(transaction.transferPrice.sub(personalIncomeTax));
+		uint256 valueAfterTax = transaction.transferPrice.sub(personalIncomeTax);
+		msg.sender.transfer(valueAfterTax);
 		RealEstate.transferOwnership(
 			transaction.idCertificate,
 			transaction.buyers
