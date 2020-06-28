@@ -9,7 +9,6 @@ export default function PopupNotification(props) {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
   return (

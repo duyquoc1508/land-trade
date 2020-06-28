@@ -81,7 +81,7 @@ export async function updateUserProfile(req, res, next) {
     const newUser = req.body;
     // send emal verify if user update new email
     if (req.body.email) {
-      newUser["isVerifired"] = false;
+      newUser["isVerifired"] = 0;
     }
     const user = await User.findByIdAndUpdate(req.user._id, newUser, {
       new: true,

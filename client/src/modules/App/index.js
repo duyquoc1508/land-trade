@@ -6,6 +6,7 @@ import createStore from "../../store/createStore";
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import routes from "./routes";
 import Header from "../../components/Header/Header";
+import FixedNotification from "../../components/FixedNotification";
 
 const store = createStore();
 
@@ -16,6 +17,7 @@ class Index extends Component {
         <Router>
           <Header />
           {this.showContentMenus(routes)}
+          <FixedNotification />
         </Router>
       </Provider>
     );

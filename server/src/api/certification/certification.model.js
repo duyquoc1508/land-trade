@@ -74,6 +74,7 @@ const certificationSchema = new Schema(
       type: Number,
     },
     moreInfo: {
+      title: String,
       description: String,
       numOfBedrooms: Number,
       numOfBathrooms: Number,
