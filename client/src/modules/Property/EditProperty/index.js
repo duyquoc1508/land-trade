@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
 import axios from "axios";
 import { loadScript } from "../../../helper/utils";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -7,6 +8,7 @@ import Cookie from "../../../helper/cookie";
 import ImagePreview from "../../../components/ImagePreview/imagePreview";
 import PopupNotification from "../../../components/PopupNotification";
 import PropertyStandard from "../PropertyStandard";
+
 export class EditProperty extends Component {
   constructor(props) {
     super(props);
@@ -23,9 +25,35 @@ export class EditProperty extends Component {
     };
     // this.handleCheckbox = this.handleCheckbox.bind(this);
   }
-  componentDidMount() {
-    loadScript(`${process.env.REACT_APP_BASE_URL}/js/plugin.js`);
-    loadScript(`${process.env.REACT_APP_BASE_URL}/js/main.js`);
+  async componentDidMount() {
+    let response = await axios({
+      method: "get",
+      url: `${process.env.REACT_APP_BASE_URL_API}/certification/${this.props.match.params.hash}`,
+    });
+    // console.log(response);
+    let property = response.data.data;
+
+    let imgResBlob = await Promise.all(
+      property.moreInfo.galleries.map((item) =>
+        fetch(
+          `${process.env.REACT_APP_BASE_URL_IMAGE}/images/${item}`
+        ).then((response) => response.blob())
+      )
+    );
+
+    let previewImg = imgResBlob.map((item) =>
+      Object.assign({}, { preview: URL.createObjectURL(item) })
+    );
+    this.setState({
+      title: property.moreInfo.title || "",
+      price: property.moreInfo.price,
+      description: property.moreInfo.description,
+      areaFloor: property.moreInfo.areaFloor,
+      numOfBedrooms: property.moreInfo.numOfBedrooms,
+      numOfBathrooms: property.moreInfo.numOfBathrooms,
+      galleries: property.moreInfo.galleries,
+      imageFiles: previewImg,
+    });
   }
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,8 +94,6 @@ export class EditProperty extends Component {
     });
   }
 
-  fetch
-
   async handleUpload(event) {
     const fd = new FormData();
     let newImageFiles = document.querySelector("input[type=file]").files;
@@ -93,7 +119,10 @@ export class EditProperty extends Component {
   render() {
     return (
       <Fragment>
-        <PropertyStandard match={this.props.match} history={this.props.history} />
+        <PropertyStandard
+          match={this.props.match}
+          history={this.props.history}
+        />
         <div className="container">
           <form onSubmit={this.handleSubmit}>
             <div className="row">
@@ -113,12 +142,13 @@ export class EditProperty extends Component {
                             className="form-control filter-input"
                             placeholder="Nhập tiêu đề"
                             onChange={(e) => this.handleChange(e)}
+                            value={this.state.title}
                           />
                         </div>
                       </div>
                       <div className="col-md-4">
                         {/* <div className="form-group" > */}
-                        <label >Giá bán</label>
+                        <label>Giá bán</label>
                         <div className="input-group">
                           <input
                             name="price"
@@ -127,6 +157,7 @@ export class EditProperty extends Component {
                             placeholder="Nhập giá bán"
                             type="number"
                             onChange={(e) => this.handleChange(e)}
+                            value={this.state.price}
                           />
                           <div className="input-group-append">
                             <span className="input-group-text"> VND </span>
@@ -144,6 +175,7 @@ export class EditProperty extends Component {
                             rows="4"
                             placeholder="Mô tả nội dung"
                             onChange={(e) => this.handleChange(e)}
+                            value={this.state.description}
                           ></textarea>
                         </div>
                       </div>
@@ -166,9 +198,13 @@ export class EditProperty extends Component {
                             placeholder="Diện tích mặt sàn"
                             type="number"
                             onChange={(e) => this.handleChange(e)}
+                            value={this.state.areaFloor}
                           />
                           <div className="input-group-append">
-                            <span className="input-group-text"> m<sup>2</sup> </span>
+                            <span className="input-group-text">
+                              {" "}
+                              m<sup>2</sup>{" "}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -182,6 +218,7 @@ export class EditProperty extends Component {
                             placeholder="Số phòng ngủ"
                             type="number"
                             onChange={(e) => this.handleChange(e)}
+                            value={this.state.numOfBedrooms}
                           />
                         </div>
                       </div>
@@ -195,6 +232,7 @@ export class EditProperty extends Component {
                             placeholder="Số phòng tắm"
                             type="number"
                             onChange={(e) => this.handleChange(e)}
+                            value={this.state.numOfBathrooms}
                           />
                         </div>
                       </div>
@@ -296,34 +334,43 @@ export class EditProperty extends Component {
                       <div className="col-md-12 mb-5">
                         <div className="form-group">
                           <div className="form-group">
-                            <div className="preview-container">
-                              {this.state.imageFiles &&
-                                this.state.imageFiles.length > 0 ? (
-                                  <ImagePreview imagefile={this.state.imageFiles} />
-                                ) : (
-                                  ""
-                                )}
-                            </div>
-                            <div className="add-listing__input-file-box">
-                              <input
-                                name="images"
-                                type="file"
-                                className="upload-container add-listing__input-file"
-                                multiple
-                                onChange={() => this.handleUpload()}
-                              />
-                              <div className="add-listing__input-file-wrap">
-                                <i className="lnr lnr-cloud-upload"></i>
-                                <p>Click here to upload your images</p>
+                            {this.state.imageFiles &&
+                            this.state.imageFiles.length > 0 ? (
+                              <div className="preview-container">
+                                <ImagePreview
+                                  imagefile={this.state.imageFiles}
+                                />
                               </div>
-                            </div>
+                            ) : (
+                              <div className="add-listing__input-file-box">
+                                <input
+                                  name="images"
+                                  type="file"
+                                  className="upload-container add-listing__input-file"
+                                  multiple
+                                  onChange={() => this.handleUpload()}
+                                />
+                                <div className="add-listing__input-file-wrap">
+                                  <i className="lnr lnr-cloud-upload"></i>
+                                  <p>Click here to upload your images</p>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
-                        {/* <div className="add-btn">
-                        <a href="#" className="btn v3">
-                          Thêm hình ảnh
-                        </a>
-                      </div> */}
+                        <div className="add-btn">
+                          <button
+                            className="btn v3"
+                            onClick={() =>
+                              this.setState({
+                                imageFiles: [],
+                                galleries: [],
+                              })
+                            }
+                          >
+                            Xóa ảnh
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -334,7 +381,7 @@ export class EditProperty extends Component {
                       <div className="col-md-12 text-right sm-left">
                         <button className="btn v3" type="submit">
                           Cập nhập
-                      </button>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -343,9 +390,17 @@ export class EditProperty extends Component {
             </div>
           </form>
         </div>
-      </Fragment >
+      </Fragment>
     );
   }
 }
 
-export default EditProperty;
+const mapStateToProps = (state) => {
+  return {
+    properties: state.myListing.properties.filter(
+      (property) => property.state === 2
+    ),
+  };
+};
+
+export default connect(mapStateToProps, null)(EditProperty);

@@ -6,6 +6,7 @@ import notificationRoutes from "./notification/notification.route";
 import transactionRoutes from "./transaction/transaction.route";
 import onlinePaymentRoutes from "./onlinepayment/onlinepayment.route";
 import pdfRoutes from "./pdf/pdf.route";
+import otpRoutes from './otp/otp.route';
 
 export default (app) => {
   app.use("/api/v1/upload", uploadRoutes);
@@ -16,4 +17,5 @@ export default (app) => {
   app.use("/api/v1/transaction", transactionRoutes);
   app.use("/api/v1/online_payment", onlinePaymentRoutes);
   app.use("/api/v1/pdf", pdfRoutes);
+  app.use("/api/v1/otp", otpRoutes);
 };

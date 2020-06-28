@@ -47,14 +47,21 @@ export async function uploadMultipleImages(req, res, next) {
 }
 
 /**
- * upload pdf file
+ * upload cmnd
  */
 export async function uploadFile(req, res, next) {
   try {
-    if (!req.file) {
+    const imagePath = "src/public/uploads/CMND";
+    const fileUpload = new Resize(imagePath);
+    if (!req.files) {
       throw new ErrorHandler(400, "Please provide a file to upload");
     }
-    return res.status(201).json({ statusCode: 201, data: req.file.filename });
+    const arrayImages = [];
+    await asyncForEach(req.files, async (file) => {
+      let filename = await fileUpload.save(file.buffer);
+      arrayImages.push(filename);
+    });
+    return res.status(201).json({ statusCode: 201, data: arrayImages });
   } catch (error) {
     next(error);
   }

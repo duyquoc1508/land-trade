@@ -1,23 +1,23 @@
-input {
+td input {
   padding: 5px 10px;
 }
 
-input[type="text"] {
+td input[type="text"] {
   border: none;
   border-bottom: 1px dashed;
 }
 
-input[type="text"]:focus {
+td input[type="text"]:focus {
   border: none;
   border-bottom: 1px dashed;
 }
 
-input[type="date"] {
+td input[type="date"] {
   border: none;
   border-bottom: 1px dashed;
 }
 
-input[type="date"]:focus {
+td input[type="date"]:focus {
   border: none;
   border-bottom: 1px dashed;
 }

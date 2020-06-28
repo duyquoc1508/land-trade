@@ -16,6 +16,8 @@ import InitTransaction from "../InitTransaction";
 import NotFound from "../NotFound";
 import DownPaymentContract from "../Transaction/sections/DownPaymentContract";
 import TradeContract from "../Transaction/sections/TradeContract";
+import ManagementUser from "../ManagementUser";
+import VerifyAccount from "../ManagementUser/verifyAccount";
 
 const routes = [
   {
@@ -104,6 +106,18 @@ const routes = [
     path: "/trade-contract",
     exact: false,
     main: () => <TradeContract />,
+  },
+  {
+    path: "/management-user",
+    exact: false,
+    main: () => <ManagementUser />,
+  },
+  {
+    path: "/verify-account",
+    exact: false,
+    main: ({ match, history }) => (
+      <VerifyAccount match={match} history={history} />
+    ),
   },
   {
     path: "",

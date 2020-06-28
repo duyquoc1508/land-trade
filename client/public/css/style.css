@@ -3408,7 +3408,7 @@ input[type="text"]:focus {
   flex-direction: column;
   justify-content: center;
   height: 100%;
-  padding: 0 30px 0 10px;
+  padding: 0 20px 0;
 }
 
 .property-img {
@@ -3940,7 +3940,7 @@ input[type="text"]:focus {
 
 .property-title-box h4 {
   font-family: "Roboto", sans-serif;
-  margin-bottom: 10px;
+  margin: 15px 0;
   line-height: 1;
   display: inline-block;
 }
