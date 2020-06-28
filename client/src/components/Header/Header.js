@@ -77,7 +77,7 @@ class Menu extends Component {
     };
   }
 
-  // reconnect socket with server when component reaload
+  // handler refresh header => reconect socket
   componentDidMount() {
     const accessToken = Cookie.getCookie("accessToken");
     if (accessToken) {
@@ -86,7 +86,6 @@ class Menu extends Component {
       this.props.initSocket(socket);
       this.props.refreshPage();
     }
-    // check role
   }
 
   // listener event from server
@@ -98,30 +97,73 @@ class Menu extends Component {
         this.logout();
       }, expiredTime - Date.now());
     }
-    // create new connection if it doesn't exist'
+    // create new connection socket if it doesn't exist' (login)
     if (!this.props.socket) {
       const accessToken = Cookie.getCookie("accessToken");
       if (accessToken) {
         const socket = io(process.env.REACT_APP_BASE_URL_SOCKET);
         socket.emit("user-connected", accessToken);
         this.props.initSocket(socket);
+        this.props.refreshPage();
       }
     }
-    // listener event
+    // handle event socket
     if (this.props.socket && this.props.socket !== preProps.socket) {
-      // listen event new certification
-      this.props.socket.on("new-certification", (message) => {
-        toast.info(`${message}`, {
+      const { history } = this.props;
+      this.props.socket.on("new-certification", (data) => {
+        toast.info(`${data.message}`, {
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: false,
+          onClick: () => history.push(data.url),
         });
       });
 
       // listen event transaction
-      this.props.socket.on("new-transaction", (message) => {
-        toast.info(`${message}`, {
+      this.props.socket.on("new-transaction", (data) => {
+        toast.info(`${data.message}`, {
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: false,
+          onClick: () => history.push(data.url),
+        });
+      });
+
+      this.props.socket.on("new_transaction", (data) => {
+        toast.info(`${data.message}`, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: false,
+          onClick: () => history.push(data.url),
+        });
+      });
+
+      this.props.socket.on("deposit_confirmed", (data) => {
+        toast.info(`${data.message}`, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: false,
+          onClick: () => history.push(data.url),
+        });
+      });
+
+      this.props.socket.on("payment_request", (data) => {
+        toast.info(`${data.message}`, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: false,
+          onClick: () => history.push(data.url),
+        });
+      });
+
+      this.props.socket.on("payment_confirmed", (data) => {
+        toast.info(`${data.message}`, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: false,
+          onClick: () => history.push(data.url),
+        });
+      });
+
+      this.props.socket.on("transaction_canceled", (data) => {
+        toast.info(`${data.message}`, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: false,
+          onClick: () => history.push(data.url),
         });
       });
     }
@@ -129,14 +171,12 @@ class Menu extends Component {
 
   changeToggleAuth = () => {
     if (!this.state.toggleAuthStatus) {
-      // console.log("show");
       this.setState({ toggleAuthStatus: true });
       this.setState({
         toggleAuth:
           "setting-menu js-right-sidebar d-none d-lg-block show-sidebar",
       });
     } else {
-      // console.log("close");
       this.setState({ toggleAuthStatus: false });
       this.setState({
         toggleAuth: "setting-menu js-right-sidebar d-none d-lg-block",
