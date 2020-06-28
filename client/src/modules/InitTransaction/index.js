@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import CardProperty from "../CardProperty";
 import formatCurrency from "../../utils/formatCurrency";
 import { convertVNDtoETH } from "../../utils/convertCurrency";
-import Loading from "../../components/Loading/loading";
 import axios from "axios";
 import Cookie from "../../helper/cookie";
 
@@ -14,7 +13,6 @@ function InitTransaction(props) {
   const [buyer, setBuyer] = useState([props.user.publicAddress]);
   const [depositTime, setDepositTime] = useState(60);
   const [saleItem, setSaleItem] = useState(props.saleItem);
-  // const idProperty = props.match.params.hash;
 
   useEffect(() => {
     // listen event TransactionCreated from blockchain and emit event INIT_TRANSACTION_SUCCESS
@@ -54,7 +52,6 @@ function InitTransaction(props) {
 
   return (
     <div className="container mt-75">
-      {props.loading && <Loading isLoading={props.loading} />}
       <h3>Khởi tạo giao dịch</h3>
       <h6>Tài sản</h6>
       <CardProperty />
@@ -154,6 +151,7 @@ function InitTransaction(props) {
         chưa chấp nhận giao dịch.
       </div>
       <button
+        disabled={props.loading}
         className="btn v3"
         onClick={() => {
           if (confirm("Bạn chắc chắn muốn tạo giao dịch?"))

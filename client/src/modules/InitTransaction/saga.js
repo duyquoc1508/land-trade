@@ -1,93 +1,75 @@
 import { takeEvery, call, put, select } from "redux-saga/effects";
 import getWeb3 from "../../helper/getWeb3";
-import TransactionContract from "../../contracts/Transaction.json";
-import { transactionContractAddress } from "../../../config/common-path";
 import { convertVNDtoETH } from "../../utils/convertCurrency";
 
 import {
   INIT_TRANSACTION_REQUEST,
   INIT_TRANSACTION_SUCCESS,
   INIT_TRANSACTION_FAILURE,
+  INIT_TRANSACTION_WAIT_BLOCKCHAIN_CONFIRM,
 } from "./constants";
 
-const initContract = async () => {
-  try {
-    const web3 = await getWeb3();
-    const transactionContract = new web3.eth.Contract(
-      TransactionContract.abi,
-      transactionContractAddress
-    );
-    const coinbase = await web3.eth.getCoinbase();
-    if (!coinbase) {
-      window.alert("Please activate MetaMask first.");
-      return;
-    }
-    return { transactionContract, coinbase, web3 };
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const createTransaction = async (data) => {
-  try {
-    const { transactionContract, coinbase, web3 } = await initContract();
-    const {
-      buyer,
-      idPropertyInBlockchain,
-      transferPrice,
-      depositPrice,
-      depositTime,
-    } = data;
-    const depositPriceEth = convertVNDtoETH(depositPrice);
-    const depositPriceWei = web3.utils.toWei(
-      depositPriceEth.toString(),
-      "ether"
-    );
-    const transferPriceEth = convertVNDtoETH(transferPrice);
-    const transferPriceWei = web3.utils.toWei(
-      transferPriceEth.toString(),
-      "ether"
-    );
-    web3.eth.getTransactionCount(coinbase, (error, txCount) => {
-      if (error) {
-        console.log(error);
-      }
-      console.log(txCount);
-      transactionContract.methods
-        .createTransaction(
+const createTransaction = (transactionContract, data) => {
+  return new Promise((resolve, reject) => {
+    let web3 = "";
+    getWeb3()
+      .then((result) => {
+        web3 = result;
+        return web3.eth.getCoinbase();
+      })
+      .then((coinbase) => {
+        const {
           buyer,
           idPropertyInBlockchain,
-          depositPriceWei,
-          transferPriceWei,
-          depositTime
-        )
-        .send(
-          {
-            from: coinbase,
-            value: depositPriceWei,
-          },
-          function (error, transactionHash) {
-            if (error) {
-              throw error;
-            } else {
-              console.log(
-                "%c%s",
-                "color: green; font-weight: bold",
-                `TxHash: ${transactionHash}`
-              );
-            }
-          }
+          transferPrice,
+          depositPrice,
+          depositTime,
+        } = data;
+        const depositPriceEth = convertVNDtoETH(depositPrice);
+        const depositPriceWei = web3.utils.toWei(
+          depositPriceEth.toString(),
+          "ether"
         );
-    });
-  } catch (error) {
-    console.log(error);
-  }
+        const transferPriceEth = convertVNDtoETH(transferPrice);
+        const transferPriceWei = web3.utils.toWei(
+          transferPriceEth.toString(),
+          "ether"
+        );
+        web3.eth.getTransactionCount(coinbase, (error, txCount) => {
+          if (error) {
+            reject(error);
+          }
+          transactionContract.methods
+            .createTransaction(
+              buyer,
+              idPropertyInBlockchain,
+              depositPriceWei,
+              transferPriceWei,
+              depositTime
+            )
+            .send(
+              {
+                nonce: txCount,
+                from: coinbase,
+                value: depositPriceWei,
+              },
+              (error, transactionHash) => {
+                if (error) {
+                  reject(error);
+                } else {
+                  resolve(transactionHash);
+                }
+              }
+            )
+            .catch((error) => {
+              reject(error);
+            });
+        });
+      });
+  });
 };
 
-// const getSocket = (state) => state.header.socket;
-
-// const getTransactionContract = (state) =>
-//   state.instanceContracts.transactionContract;
+const getTransactionContract = (state) => state.instanceContracts.transaction;
 
 // const emitEventInitTransition = (socket, participants) => {
 //   socket.emit("new-transaction", participants);
@@ -101,16 +83,23 @@ const createTransaction = async (data) => {
 
 function* initTransactionRequestFlow(action) {
   try {
-    // const { history } = action.payload;
-    // const socket = yield select(getSocket);
-    const response = yield call(createTransaction, action.payload.data);
-    console.log("function*initTransactionRequestFlow -> response", response);
+    const transactionContract = yield select(getTransactionContract);
+    const response = yield call(
+      createTransaction,
+      transactionContract,
+      action.payload.data
+    );
+    // put action wait blockchain confirm for popup process (after sign transaction)
+    yield put({
+      type: INIT_TRANSACTION_WAIT_BLOCKCHAIN_CONFIRM,
+      payload: response,
+    });
   } catch (error) {
     yield put({ type: INIT_TRANSACTION_FAILURE, payload: error.message });
-    console.log(error);
   }
 }
 
+// listen event from blockchain
 function* initTransactionSuccessFlow(action) {
   try {
     const { history } = action.payload;
@@ -118,7 +107,6 @@ function* initTransactionSuccessFlow(action) {
     // popup notification for user
   } catch (error) {
     yield put({ type: INIT_TRANSACTION_FAILURE, payload: error.message });
-    console.log(error);
   }
 }
 

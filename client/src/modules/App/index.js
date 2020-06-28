@@ -14,7 +14,8 @@ class Index extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <Header />
+          {/*add <Header/> to Route for access history, location, match from <Header/> */}
+          <Route component={Header} />
           {this.showContentMenus(routes)}
         </Router>
       </Provider>

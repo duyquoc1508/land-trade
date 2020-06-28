@@ -1,24 +1,42 @@
 import { takeEvery, call, put } from "redux-saga/effects";
-import { LOGIN_SUCCESS, INIT_CONTRACT_SUCCESS } from "./constants";
+import {
+  REFRESH_PAGE,
+  INIT_CONTRACT_SUCCESS,
+  INIT_CONTRACT_FAILURE,
+} from "./constants";
 import getWeb3 from "../../helper/getWeb3";
 import RealEstateContract from "../../contracts/RealEstate.json";
-import { realEstateContractAddress } from "../../../config/common-path";
+import TransactionContract from "../../contracts/Transaction.json";
+import {
+  realEstateContractAddress,
+  transactionContractAddress,
+} from "../../../config/common-path";
 
-const initRealEstateContract = async () => {
+const initContract = async () => {
   const web3 = await getWeb3();
-  const instance = new web3.eth.Contract(RealEstateContract.abi, realEstateContractAddress);
-  return instance;
-}
+  const realEstateContract = new web3.eth.Contract(
+    RealEstateContract.abi,
+    realEstateContractAddress
+  );
+  const transactionContract = new web3.eth.Contract(
+    TransactionContract.abi,
+    transactionContractAddress
+  );
+  return { realEstateContract, transactionContract };
+};
 
-function* initContract() {
-  const realEstate = yield call(initRealEstateContract);
-  yield put({ type: INIT_CONTRACT_SUCCESS, payload: { realEstate } });
+function* initContractFlow() {
+  try {
+    const response = yield call(initContract);
+    yield put({
+      type: INIT_CONTRACT_SUCCESS,
+      payload: response,
+    });
+  } catch (error) {
+    yield put({ type: INIT_CONTRACT_FAILURE, payload: error.message });
+  }
 }
-
 
 export default function* initContractWatcher() {
-  return yield takeEvery(LOGIN_SUCCESS, initContract);
+  return yield takeEvery(REFRESH_PAGE, initContractFlow);
 }
-
-
-
