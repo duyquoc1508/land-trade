@@ -11,7 +11,7 @@ export async function updateCertStatus(event) {
   const query = {
     transactionHash: event.transactionHash,
   };
-  return Certificate.updateOne(query, update).then();
+  return Certificate.updateOne(query, update);
 }
 
 // create notification for all owners of certificate
@@ -19,7 +19,7 @@ export async function createNotification(event) {
   const owners = event.returnValues.owners;
   const data = {
     url: `/my-properties`,
-    message: "Bạn có 1 tài sản mới đang chờ xác nhận",
+    message: "Bạn có 1 tài sản mới đang chờ xác nhận.",
   };
   const promises = owners.map((owner) => {
     data.userAddress = owner;
@@ -27,11 +27,7 @@ export async function createNotification(event) {
   });
   // emit event new certificate for owners
   owners.forEach((owner) =>
-    socketService.emitEventToIndividualClient(
-      "new-certification",
-      owner,
-      "Bạn có 1 tài sản mới đang chờ xác nhận"
-    )
+    socketService.emitEventToIndividualClient("new-certification", owner, data)
   );
   return promises;
 }

@@ -40,11 +40,7 @@ routes.delete(
  * Activate certification (Only owners)
  * PUT api/v1/certification/activate/{{idCertification}}
  */
-routes.put(
-  "/edit/:txHash",
-  authJwt,
-  certificationController.editCertification
-);
+routes.put("/edit/:txHash", authJwt, certificationController.editCertification);
 
 /**
  * Activate certification (Only owners)
@@ -99,6 +95,15 @@ routes.get("/user", authJwt, certificationController.getAllPropertiesOfUser);
 //  * GET api/v1/certification/{{idCertification}}
 //  */
 // routes.get("/:idCertification", certificationController.getCertification);
+
+/**
+ * GET certificate information with id in blockchain
+ * GET api/v1/certification/id-in-blockchain
+ */
+routes.get(
+  "/id-in-blockchain/:idInBlockchain",
+  certificationController.getCertificationWithIdInBlockchain
+);
 
 /**
  * GET certificate information with txHash

@@ -25,6 +25,21 @@ export async function getCertificationWithTxHash(req, res, next) {
   }
 }
 
+// Get certificate with TxHash
+export async function getCertificationWithIdInBlockchain(req, res, next) {
+  try {
+    const certification = await Certification.findOne({
+      idInBlockchain: req.params.idInBlockchain,
+    }).lean();
+    if (!certification) {
+      throw new ErrorHandler(404, "Certification not found");
+    }
+    return res.status(200).json({ statusCode: 200, data: certification });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // Get Certification
 export async function getCertification(req, res, next) {
   try {
@@ -116,8 +131,9 @@ export async function deleteCertification(req, res, next) {
 
 export async function editCertification(req, res, next) {
   try {
-    var certification = await Certification.findOne({ transactionHash: req.params.txHash })
-      .lean();
+    var certification = await Certification.findOne({
+      transactionHash: req.params.txHash,
+    }).lean();
     console.log(req.params.txHash);
     const { publicAddress } = req.user;
     const { owners } = certification;
@@ -150,9 +166,10 @@ export async function editCertification(req, res, next) {
     };
     const a = await Certification.updateOne(
       { transactionHash: req.params.txHash },
-      query, { new: true }
-    )
-    console.log("editCertification -> a", a)
+      query,
+      { new: true }
+    );
+    console.log("editCertification -> a", a);
     return res.status(200).json({ statusCode: 200, data: certification });
   } catch (error) {
     next(error);

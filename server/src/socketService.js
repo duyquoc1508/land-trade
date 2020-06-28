@@ -17,23 +17,23 @@ export class SocketService {
         }
       });
 
-      socket.on("new-transaction", (participants) => {
-        console.log("listening new transaction");
-        participants.buyer.map((buyer) =>
-          this.emitEventToIndividualClient(
-            "new-transaction",
-            buyer.publicAddress,
-            "Bạn được mời tham gia vào một giao dịch."
-          )
-        );
-        participants.seller.map((seller) =>
-          this.emitEventToIndividualClient(
-            "new-transaction",
-            seller.publicAddress,
-            "Bạn nhận được một lời mời bán tài sản."
-          )
-        );
-      });
+      // socket.on("new-transaction", (participants) => {
+      //   console.log("listening new transaction");
+      //   participants.buyer.map((buyer) =>
+      //     this.emitEventToIndividualClient(
+      //       "new-transaction",
+      //       buyer.publicAddress,
+      //       "Bạn được mời tham gia vào một giao dịch."
+      //     )
+      //   );
+      //   participants.seller.map((seller) =>
+      //     this.emitEventToIndividualClient(
+      //       "new-transaction",
+      //       seller.publicAddress,
+      //       "Bạn nhận được một lời mời bán tài sản."
+      //     )
+      //   );
+      // });
 
       socket.on("disconnect", () => {
         for (let publicAddress in this.user) {
