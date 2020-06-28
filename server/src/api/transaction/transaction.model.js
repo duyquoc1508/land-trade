@@ -1,25 +1,47 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
+const transactionState = [
+  "DEPOSIT_REQUEST",
+  "DEPOSIT_CONFIRMED",
+  "PAYMENT_REQUEST",
+  "PAYMENT_CONFIRMED",
+  "CANCELED",
+];
+
+const cancellationStatus = [
+  "DEPOSIT_CANCELED_BY_BUYER",
+  "DEPOSIT_CANCELED_BY_SELLER",
+  "DEPOSIT_BROKEN_BY_SELLER",
+  "DEPOSIT_BROKEN_BY_BUYER",
+  "TRANSFER_CANCELED_BY_SELLER",
+];
+
 const transactionSchema = new Schema(
   {
-    buyer: [
-      {
-        _id: false,
-        publicAddress: { type: String }, // multiple publicAddress of user
-        isAccept: { type: Boolean },
-      },
-    ],
-    seller: [
-      {
-        _id: false,
-        publicAddress: { type: String },
-        isAccept: { type: Boolean },
-      },
-    ],
-    transferPrice: Number,
-    downPayment: Number,
-    idProperty: String,
+    buyers: { type: Array },
+    sellers: { type: Array },
+    idProperty: { type: String },
+    transferPrice: { type: Number },
+    depositPrice: { type: Number },
+    timeStart: { type: Date }, // = timeDeposit
+    timeEnd: { type: Date },
+    transactionHash: { type: String },
+    idInBlockchain: { type: Number },
+    // deposit: { txHash: String, time: Number},
+    depositConfirmed: { txHash: String, time: Date },
+    payment: { txHash: String, time: Date },
+    paymentConfirmed: { txHash: String, time: Date },
+    transactionCanceled: {
+      txHash: String,
+      time: Date,
+      reason: { type: String, enum: cancellationStatus },
+    },
+    state: {
+      type: String,
+      enum: transactionState,
+      default: transactionState[0], // DEPOSIT_REQUEST
+    },
   },
   { timestamps: true }
 );

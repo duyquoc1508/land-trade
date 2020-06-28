@@ -45,7 +45,7 @@ const certificationSchema = new Schema(
     },
     state: {
       type: Number,
-      default: 0, //0: Not activated, 1: Activated, 2: Selling
+      default: 0, //0: Not activated, 1: Activated, 2: Selling, 3: In transaction
     },
     ownersActivated: [
       {

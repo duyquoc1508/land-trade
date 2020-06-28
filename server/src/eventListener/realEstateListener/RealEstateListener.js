@@ -24,9 +24,10 @@ async function handleEvent(event) {
   console.log(event);
   switch (event.event) {
     case RealEstateEvent.NEW_CERTIFICATE:
-      const p1 = helper.updateCertStatus(event);
-      const p2 = helper.createNotification(event);
-      return Promise.all([p1, ...p2]);
+      helper.updateCertStatus(event);
+      helper.createNotification(event);
+      return;
+    // Promise.all([p1, ...p2]);
     case RealEstateEvent.ACTIVATE:
       return helper.handleActivateCertificate(event);
     case RealEstateEvent.ACTIVATE_SALE:

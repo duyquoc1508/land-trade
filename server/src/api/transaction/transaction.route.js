@@ -11,10 +11,10 @@ const routes = Router();
 routes.post("/", authJwt, transactionController.createTransaction);
 
 /**
- * Create new transaction
- * POST api/v1/transaction
+ * Get info transaction
+ * POST api/v1/transactionHash
  */
-routes.get("/:idTransaction", authJwt, transactionController.getTransaction);
+routes.get("/:txHash", authJwt, transactionController.getTransaction);
 
 /**
  * Seller accept transaction

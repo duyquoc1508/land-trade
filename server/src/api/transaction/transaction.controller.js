@@ -53,7 +53,9 @@ export async function createTransaction(req, res, next) {
 
 export async function getTransaction(req, res, next) {
   try {
-    const transaction = await Transaction.findById(req.params.idTransaction);
+    const transaction = await Transaction.findOne({
+      transactionHash: req.params.txHash,
+    });
     return res.status(200).json({ statusCode: 200, data: transaction });
   } catch (error) {
     next(error);
