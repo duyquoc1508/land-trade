@@ -1,82 +1,77 @@
 import { takeEvery, call, put, select } from "redux-saga/effects";
-import { CREATE_REQUESTING, CREATE_ERROR } from "./constants";
+import {
+  CREATE_REQUESTING,
+  CREATE_ERROR,
+  CREATE_CERT_WAIT_BLOCKCHAIN_CONFIRM,
+} from "./constants";
 import axios from "axios";
 import Cookie from "../../../helper/cookie";
-import RealEstateContract from "../../../contracts/RealEstate.json";
-import { realEstateContractAddress } from "../../../../config/common-path";
-import { Base64 } from 'js-base64';
-import getWeb3 from "../../../helper/getWeb3"
+import { Base64 } from "js-base64";
+import getWeb3 from "../../../helper/getWeb3";
 
-const handleCreateCert = async (property, transactionHash) => {
-  console.log("handleCreateCert -> property", property);
-  let response = await axios({
-    method: "post",
-    url: `${process.env.REACT_APP_BASE_URL_API}/certification`,
-    data: { ...property, transactionHash },
-    headers: {
-      Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
-    },
-  });
-  return {
-    success: true,
-    errors: false,
-    messages: [],
-    data: response.data,
-  };
-};
-
-async function initContract() {
-  try {
-    const web3 = await getWeb3();
-    const realEstateContract = new web3.eth.Contract(
-      RealEstateContract.abi,
-      realEstateContractAddress
-    );
-    const coinbase = await web3.eth.getCoinbase();
-    if (!coinbase) {
-      window.alert("Please activate MetaMask first.")
-      return;
-    }
-    return { realEstateContract, coinbase }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function createCertificate(property) {
-  try {
-    const { realEstateContract, coinbase } = await initContract();
-    let { owners, properties, images } = property;
-    const propertyBase64 = objectToB64(properties)
-    realEstateContract.methods
-      .createCertificate(propertyBase64, owners)
-      .send({ from: coinbase }, function (error, transactionHash) {
-        console.log(
-          "%c%s",
-          "color: green; font-weight: bold",
-          `TxHash: ${transactionHash}`
-        );
-        handleCreateCert(property, transactionHash);
+function createCertificate(realEstateContract, property) {
+  console.log(property);
+  let { owners, properties, images } = property;
+  const propertyBase64 = objectToB64(properties);
+  return new Promise((resolve, reject) => {
+    let web3 = "";
+    getWeb3()
+      .then((result) => {
+        web3 = result;
+        return web3.eth.getCoinbase();
+      })
+      .then((coinbase) => {
+        web3.eth.getTransactionCount(coinbase, (error, txCount) => {
+          if (error) {
+            reject(error);
+          }
+          realEstateContract.methods
+            .createCertificate(propertyBase64, owners)
+            .send(
+              { nonce: txCount, from: coinbase },
+              (error, transactionHash) => {
+                if (error) {
+                  reject(error);
+                } else {
+                  axios({
+                    method: "POST",
+                    url: `${process.env.REACT_APP_BASE_URL_API}/certification`,
+                    data: { ...property, transactionHash },
+                    headers: {
+                      Authorization: `Bearer ${Cookie.getCookie(
+                        "accessToken"
+                      )}`,
+                    },
+                  }).then(() => resolve(transactionHash));
+                }
+              }
+            )
+            .catch((error) => {
+              reject(error);
+            });
+        });
       });
-  } catch (error) {
-    console.log(error);
-  }
+  });
 }
 
 // convert object utf8 to base64
 function objectToB64(property) {
-  return Base64.encode(JSON.stringify(property))
+  return Base64.encode(JSON.stringify(property));
 }
 
-// can using instance contract in store ??
 // get instance of smart contract in store
-const getInstanceContract = state => state.instanceContracts.realEstate;
+const getInstanceContract = (state) => state.instanceContracts.realEstate;
 
 function* createFlow(action) {
   try {
     const { property } = action;
-    // const realEstateContract = yield select(getInstanceContract);
-    yield call(createCertificate, property);
+    const realEstateContract = yield select(getInstanceContract);
+    const response = yield call(
+      createCertificate,
+      realEstateContract,
+      property
+    );
+    yield put({ type: CREATE_CERT_WAIT_BLOCKCHAIN_CONFIRM, payload: response });
   } catch (error) {
     yield put({ type: CREATE_ERROR, payload: error.message });
   }

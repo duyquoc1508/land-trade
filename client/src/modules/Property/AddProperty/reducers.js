@@ -1,8 +1,12 @@
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import {
   FILLING_FORM,
   CREATE_REQUESTING,
   CREATE_SUCCESS,
   CREATE_ERROR,
+  CREATE_CERT_WAIT_BLOCKCHAIN_CONFIRM,
 } from "./constants";
 
 const initialState = {
@@ -75,18 +79,33 @@ function createReducer(state = initialState, action) {
       return { ...state, loading: true };
     }
     case CREATE_SUCCESS:
+      toast.update(action.payload.txHash, {
+        render: "Tạo tài sản thành công!",
+        type: toast.TYPE.SUCCESS,
+        autoClose: 5000,
+        onClick: () => {
+          action.payload.history.push(`/property/${action.payload.txHash}`);
+        },
+      });
       return {
         success: true,
-        messages: "Đăng ký thành công!",
+        // messages: "Đăng ký thành công!",
         // data: action.payload.data,
-        loading: false
+        loading: false,
       };
+    case CREATE_CERT_WAIT_BLOCKCHAIN_CONFIRM:
+      toast("Đang tạo tài sản...", {
+        type: toast.TYPE.INFO,
+        toastId: action.payload,
+        autoClose: false,
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
     case CREATE_ERROR:
       return {
         success: false,
-        messages: "Đăng ký thất bại!",
+        // messages: "Đăng ký thất bại!",
         data: action.payload.data,
-        loading: false
+        loading: false,
       };
     default:
       return state;

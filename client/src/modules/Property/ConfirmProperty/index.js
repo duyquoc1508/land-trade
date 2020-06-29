@@ -1,10 +1,27 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import PropertyStandard from "../PropertyStandard";
-import { activateCertificateRequest } from "./action";
+import {
+  activateCertificateRequest,
+  activateCertificateSuccess,
+} from "./action";
 
 const ComfirmProperty = (props) => {
-  console.log(props);
+  useEffect(() => {
+    props.realEstateContract &&
+      props.realEstateContract.events
+        .Activate()
+        .on("data", (event) => {
+          console.log("ComfirmProperty -> event", event.returnValues);
+          props.activateCertSuccess({
+            history: props.history,
+            txHash: event.transactionHash,
+          });
+          // then push to screen this property
+        })
+        .on("error", console.error);
+  }, [props.realEstateContract]);
+
   return (
     <div className="mt-85 container">
       <PropertyStandard match={props.match} history={props.history} />
@@ -19,6 +36,7 @@ const ComfirmProperty = (props) => {
       >
         <button
           className="btn v4"
+          disabled={props.loading}
           onClick={() => props.activateCert(props.match.params.idInBlockchain)}
         >
           {/* <i className="ion-android-delete"></i>  */}
@@ -32,12 +50,17 @@ const ComfirmProperty = (props) => {
 const mapStateToProps = (state) => ({
   //   idInBlockchain:
   // state.propertyDetail && state.propertyDetail.data.idInBlockchain,
+  realEstateContract: state.instanceContracts.realEstate,
+  loading: state.confirmProperty.loading,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     activateCert: (idInBlockchain) => {
       dispatch(activateCertificateRequest(idInBlockchain));
+    },
+    activateCertSuccess: (data) => {
+      dispatch(activateCertificateSuccess(data));
     },
   };
 };
