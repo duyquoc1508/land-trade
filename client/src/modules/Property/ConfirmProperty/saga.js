@@ -1,60 +1,72 @@
-import { call, put, takeEvery } from "redux-saga/effects";
+import { call, put, takeEvery, select } from "redux-saga/effects";
 import {
   ACTIVATE_CERTIFICATE_REQUEST,
+  ACTIVATE_CERT_WAIT_BLOCKCHAIN_CONFIRM,
   ACTIVATE_CERTIFICATE_SUCCESS,
   ACTIVATE_CERTIFICATE_FAILURE,
 } from "./constants";
 import Web3 from "web3";
-import RealEstateContract from "../../../contracts/RealEstate.json";
-import { realEstateContractAddress } from "../../../../config/common-path";
+import getWeb3 from "../../../helper/getWeb3";
 
-const loadWeb3 = async () => {
-  if (window.ethereum) {
-    window.web3 = new Web3(window.ethereum);
-    await window.ethereum.enable();
-  } else if (window.web3) {
-    window.web3 = new Web3(window.web3.currentProvider);
-  } else {
-    window.alert(
-      "Non-Ethereum browser detected. You should consider trying MetaMask!"
-    );
-  }
-};
-
-async function activateCertificate(idCertificate) {
-  console.log(idCertificate);
-  try {
-    await loadWeb3();
-    const { web3 } = window;
-    const appContract = new web3.eth.Contract(
-      RealEstateContract.abi,
-      realEstateContractAddress
-    );
-    const coinbase = await web3.eth.getCoinbase();
-    if (!coinbase) {
-      window.alert("Please activate MetaMask first.");
-      return;
-    }
-    appContract.methods
-      .activate(idCertificate)
-      .send({ from: coinbase }, function (error, transactionHash) {
-        console.log(
-          "%c%s",
-          "color: green; font-weight: bold",
-          `TxHash: ${transactionHash}`
-        );
-        // handleCreateCert(property, transactionHash);
+// const loadWeb3 = async () => {
+//   if (window.ethereum) {
+//     window.web3 = new Web3(window.ethereum);
+//     await window.ethereum.enable();
+//   } else if (window.web3) {
+//     window.web3 = new Web3(window.web3.currentProvider);
+//   } else {
+//     window.alert(
+//       "Non-Ethereum browser detected. You should consider trying MetaMask!"
+//     );
+//   }
+// };
+function activateCertificate(realEstateContract, idCertificate) {
+  return new Promise((resolve, reject) => {
+    let web3 = "";
+    getWeb3()
+      .then((result) => {
+        web3 = result;
+        return web3.eth.getCoinbase();
+      })
+      .then((coinbase) => {
+        web3.eth.getTransactionCount(coinbase, (error, txCount) => {
+          if (error) {
+            reject(error);
+          }
+          realEstateContract.methods
+            .activate(idCertificate)
+            .send({ from: coinbase, nonce: txCount }, function (
+              error,
+              transactionHash
+            ) {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(transactionHash);
+              }
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        });
       });
-  } catch (error) {
-    console.log(error);
-  }
+  });
 }
+
+const getRealEstateContract = (state) => state.instanceContracts.realEstate;
 
 function* activateFlow(action) {
   try {
-    const response = yield call(activateCertificate, action.payload);
-    yield put({ type: ACTIVATE_CERTIFICATE_SUCCESS });
-    console.log(response);
+    const realEstateContract = yield select(getRealEstateContract);
+    const response = yield call(
+      activateCertificate,
+      realEstateContract,
+      action.payload
+    );
+    yield put({
+      type: ACTIVATE_CERT_WAIT_BLOCKCHAIN_CONFIRM,
+      payload: response,
+    });
   } catch (error) {
     yield put({ type: ACTIVATE_CERTIFICATE_FAILURE, payload: error.message });
   }
