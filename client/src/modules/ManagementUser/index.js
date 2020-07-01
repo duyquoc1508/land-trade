@@ -75,6 +75,21 @@ export default class ManagementUser extends Component {
     this.setState({ openAction: false });
   };
 
+  verifyAccount = async () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_BASE_URL_API}/users/verify-account?userId=${this.state.userSelected._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
+          },
+        }
+      )
+      .then(() => alert("done"))
+      .catch((error) => alert(error))
+      .finally(this.closePreview());
+  };
+
   render() {
     return (
       <div className="mt-100 container" style={{ maxWidth: "800px" }}>
@@ -97,15 +112,9 @@ export default class ManagementUser extends Component {
         <div>
           <Dialog
             open={this.state.openAction}
-            // onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            {/* <DialogTitle id="alert-dialog-title">
-              {"Use Google's location service?"}
-            </DialogTitle>
-            <DialogContent><DialogContent>
-              <DialogContentText id="alert-dialog-description"> */}
             <DialogContent>
               <div className="db-add-listing">
                 <div className="row">
@@ -270,8 +279,12 @@ export default class ManagementUser extends Component {
               <Button color="primary" onClick={() => this.closePreview()}>
                 Hủy bỏ
               </Button>
-              <Button color="primary" autoFocus>
-                Đăng ký
+              <Button
+                color="primary"
+                onClick={() => this.verifyAccount()}
+                autoFocus
+              >
+                Duyệt
               </Button>
             </DialogActions>
           </Dialog>

@@ -116,8 +116,9 @@ export async function deleteCertification(req, res, next) {
 
 export async function editCertification(req, res, next) {
   try {
-    var certification = await Certification.findOne({ transactionHash: req.params.txHash })
-      .lean();
+    var certification = await Certification.findOne({
+      transactionHash: req.params.txHash,
+    }).lean();
     console.log(req.params.txHash);
     const { publicAddress } = req.user;
     const { owners } = certification;
@@ -136,6 +137,7 @@ export async function editCertification(req, res, next) {
       price,
       galleries,
       utilities,
+      title,
     } = req.body;
     let query = {
       moreInfo: {
@@ -146,13 +148,15 @@ export async function editCertification(req, res, next) {
         price,
         galleries,
         utilities,
+        title,
       },
     };
     const a = await Certification.updateOne(
       { transactionHash: req.params.txHash },
-      query, { new: true }
-    )
-    console.log("editCertification -> a", a)
+      query,
+      { new: true }
+    );
+    console.log("editCertification -> a", a);
     return res.status(200).json({ statusCode: 200, data: certification });
   } catch (error) {
     next(error);

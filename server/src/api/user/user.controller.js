@@ -144,6 +144,24 @@ export async function verifyEmail(req, res, next) {
   }
 }
 
+// Verify account
+export async function verifyAccount(req, res, next) {
+  try {
+    const user = req.user;
+    if (user.role != "Notary") {
+      throw new ErrorHandler(401, "Authorization");
+    }
+    const userId = req.query.userId;
+    console.log(userId);
+    await User.findByIdAndUpdate(userId, { isVerifired: 2 }).lean();
+    return res
+      .status(200)
+      .json({ statusCode: "200", message: "Verify email successfully" });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // Search user with idNumber or publicAddress
 export async function search(req, res, next) {
   try {

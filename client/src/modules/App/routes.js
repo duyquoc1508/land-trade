@@ -18,12 +18,20 @@ import DownPaymentContract from "../Transaction/sections/DownPaymentContract";
 import TradeContract from "../Transaction/sections/TradeContract";
 import ManagementUser from "../ManagementUser";
 import VerifyAccount from "../ManagementUser/verifyAccount";
+import Notification from "../Notification";
 
 const routes = [
   {
     path: "/",
     exact: true,
     main: () => <HomePage />,
+  },
+  {
+    path: "/notification",
+    exact: true,
+    main: ({ match, history }) => (
+      <Notification match={match} history={history} />
+    ),
   },
   {
     path: "/listings",
@@ -97,6 +105,7 @@ const routes = [
     exact: true,
     main: () => <Role />,
   },
+
   {
     path: "/down-payment-contract",
     exact: false,

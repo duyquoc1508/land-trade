@@ -1,13 +1,21 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
-import { loadScript } from "../../../helper/utils";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Cookie from "../../../helper/cookie";
 import ImagePreview from "../../../components/ImagePreview/imagePreview";
-import PopupNotification from "../../../components/PopupNotification";
 import PropertyStandard from "../PropertyStandard";
+
+const utilities = [
+  "Bể bơi",
+  "Sân chơi thể thao",
+  "Khu BBQ",
+  "Sân tenis",
+  "Chỗ đậu xe ô tô",
+  "Ban công",
+  "Vườn cây cảnh",
+];
 
 export class EditProperty extends Component {
   constructor(props) {
@@ -22,10 +30,12 @@ export class EditProperty extends Component {
       numOfBedrooms: 0,
       numOfBathrooms: 0,
       utilities: [],
+      setCheckBox: [false, false, false, false, false, false, false],
     };
     // this.handleCheckbox = this.handleCheckbox.bind(this);
   }
   async componentDidMount() {
+    console.log("mount");
     let response = await axios({
       method: "get",
       url: `${process.env.REACT_APP_BASE_URL_API}/certification/${this.props.match.params.hash}`,
@@ -44,6 +54,9 @@ export class EditProperty extends Component {
     let previewImg = imgResBlob.map((item) =>
       Object.assign({}, { preview: URL.createObjectURL(item) })
     );
+    let setCheckBox = utilities.map((item) =>
+      property.moreInfo.utilities.includes(item)
+    );
     this.setState({
       title: property.moreInfo.title || "",
       price: property.moreInfo.price,
@@ -53,6 +66,8 @@ export class EditProperty extends Component {
       numOfBathrooms: property.moreInfo.numOfBathrooms,
       galleries: property.moreInfo.galleries,
       imageFiles: previewImg,
+      utilities: property.moreInfo.utilities,
+      setCheckBox: setCheckBox,
     });
   }
   handleSubmit = async (e) => {
@@ -65,27 +80,32 @@ export class EditProperty extends Component {
         Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
       },
     });
-    // if (response.status !== 200) {
-    //   this.props.history.push(`/listings`);
-    // } else {
-    //   this.props.history.push(`/listings`);
-    // }
+    if (response.status === 200) {
+      alert("Thành công!");
+      this.props.history.push(`/my-properties`);
+    } else {
+      alert("Thất bại! Vui lòng thử lại!");
+    }
   };
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
   handleCheckbox(event) {
+    let setCheckBox = this.state.setCheckBox;
+    let checkLabel = [];
     if (event.target.checked) {
-      this.setState({
-        utilities: [...this.state.utilities, event.target.name],
-      });
+      setCheckBox[utilities.indexOf(event.target.name)] = true;
+      checkLabel = [...this.state.utilities, event.target.name];
     } else {
-      this.setState({
-        utilities: this.state.utilities.filter(
-          (item) => item !== event.target.name
-        ),
-      });
+      setCheckBox[utilities.indexOf(event.target.name)] = false;
+      checkLabel = this.state.utilities.filter(
+        (item) => item !== event.target.name
+      );
     }
+    this.setState({
+      setCheckBox,
+      utilities: checkLabel,
+    });
   }
 
   handleOnDrop(e) {
@@ -116,6 +136,27 @@ export class EditProperty extends Component {
     alert("anh dang upload thanh cong!");
   }
 
+  renderCheckBox = () => {
+    let result = null;
+    result = utilities.map((util, index) => {
+      return (
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={(e) => this.handleCheckbox(e)}
+              name={util}
+              color="primary"
+              checked={this.state.setCheckBox[index]}
+            />
+          }
+          label={util}
+          key={index}
+        />
+      );
+    });
+    return result;
+  };
+
   render() {
     return (
       <Fragment>
@@ -124,7 +165,7 @@ export class EditProperty extends Component {
           history={this.props.history}
         />
         <div className="container">
-          <form onSubmit={this.handleSubmit}>
+          <form>
             <div className="row">
               <div className="col-md-12">
                 <div className="db-add-list-wrap">
@@ -245,83 +286,7 @@ export class EditProperty extends Component {
                 <div className="col-md-12">
                   <div className="form-group">
                     <div className="filter-checkbox">
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            // checked={this.state.checkedB}
-                            onChange={(e) => this.handleCheckbox(e)}
-                            name="Bể bơi"
-                            color="primary"
-                          />
-                        }
-                        label="Bể bơi"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            // checked={state.checkedB}
-                            onChange={(e) => this.handleCheckbox(e)}
-                            name="Sân chơi thể thao"
-                            color="primary"
-                          />
-                        }
-                        label="Sân chơi thể thao"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            // checked={state.checkedB}
-                            onChange={(e) => this.handleCheckbox(e)}
-                            name="Khu BBQ"
-                            color="primary"
-                          />
-                        }
-                        label="Khu BBQ"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            // checked={state.checkedB}
-                            onChange={(e) => this.handleCheckbox(e)}
-                            name="Sân tenis"
-                            color="primary"
-                          />
-                        }
-                        label="Sân tenis"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            // checked={state.checkedB}
-                            onChange={(e) => this.handleCheckbox(e)}
-                            name="Chỗ đậu xe ô tô"
-                            color="primary"
-                          />
-                        }
-                        label="Chỗ đậu xe ô tô"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            // checked={state.checkedB}
-                            onChange={(e) => this.handleCheckbox(e)}
-                            name="Ban công"
-                            color="primary"
-                          />
-                        }
-                        label="Ban công"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            // checked={state.checkedB}
-                            onChange={(e) => this.handleCheckbox(e)}
-                            name="Vườn cây cảnh"
-                            color="primary"
-                          />
-                        }
-                        label="Vườn cây cảnh"
-                      />
+                      {this.renderCheckBox()}
                     </div>
                   </div>
                 </div>
@@ -379,7 +344,10 @@ export class EditProperty extends Component {
                   <div className="db-add-listing">
                     <div className="row">
                       <div className="col-md-12 text-right sm-left">
-                        <button className="btn v3" type="submit">
+                        <button
+                          className="btn v3"
+                          onClick={(e) => this.handleSubmit(e)}
+                        >
                           Cập nhập
                         </button>
                       </div>

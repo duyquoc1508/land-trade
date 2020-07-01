@@ -8,9 +8,6 @@ const certificationSchema = new Schema(
         type: String, // multiple publicAddress of user
       },
     ],
-    title: {
-      type: String,
-    },
     notary: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
