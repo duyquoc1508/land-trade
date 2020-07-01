@@ -152,6 +152,7 @@ export async function editCertification(req, res, next) {
       price,
       galleries,
       utilities,
+      title,
     } = req.body;
     let query = {
       moreInfo: {
@@ -162,6 +163,7 @@ export async function editCertification(req, res, next) {
         price,
         galleries,
         utilities,
+        title,
       },
     };
     const a = await Certification.updateOne(
