@@ -1,4 +1,4 @@
-// State of transaction
+// State of transactionn in mongodb
 
 export const DEPOSIT_REQUEST = "DEPOSIT_REQUEST";
 export const DEPOSIT_CONFIRMED = "DEPOSIT_CONFIRMED";

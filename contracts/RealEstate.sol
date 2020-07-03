@@ -204,7 +204,7 @@ contract RealEstate {
     function transferOwnership(
         uint256 _idCertificate,
         address[] calldata _newOwners
-    ) external {
+    ) external onlyActivated(_idCertificate) {
         // first owner is representative of owners of certificate
         require(
             _newOwners.length > 0,

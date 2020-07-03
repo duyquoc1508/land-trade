@@ -116,12 +116,13 @@ contract Transaction {
 		uint256 _transferPrice,
 		uint256 _depositTime // days
 	) public payable {
-		require(RealEstate.getStateOfCert(_idCertificate) == 1, "Transaction(createTransaction): Require state of certificate is ACTIVATE");
+		require(RealEstate.getStateOfCert(_idCertificate) == 1, "CreateTransaction: Require state of certificate is ACTIVATE");
 	   // require(_buyers[0] == msg.sender, "Transaction: Require first buyer is msg.sender");
 		require(
 			msg.value >= _depositPrice,
-			"Transaction: You're not enough balance to deposit."
+			"CreateTransaction: Require value greater than deposit price"
 		);
+		require(_depositPrice <= _transferPrice, "CreateTransaction: Deposit price must be smaller than transfer price");
 		address[] memory owners = RealEstate.getOwnersOfCert(_idCertificate);
 		uint256 timeEnd = now + _depositTime * 24 * 60 * 60; // convert days to seconds
 		Transaction memory transaction = Transaction({
@@ -159,11 +160,11 @@ contract Transaction {
 		onlyState(_idTransaction, State.DEPOSIT_REQUEST)
 	{
 		Transaction memory transaction = idToTransaction[_idTransaction];
-		require(now <= transaction.timeEnd, "Transaction(acceptDeposit): Transaction has terminated");
+		require(now <= transaction.timeEnd, "AcceptTransaction: Transaction has expired");
 		address representativeOwners = transaction.sellers[0];
 		require(
 			(msg.sender == representativeOwners),
-			"Transaction(acceptDeposit): require representative of owner of certificate"
+			"AcceptTransaction: require representative of owner"
 		);
 		msg.sender.transfer(transaction.depositPrice);
 		idToState[_idTransaction] = State.DEPOSIT_SIGNED;
@@ -171,6 +172,74 @@ contract Transaction {
 		emit DepositSigned(_idTransaction);
 	}
 
+	/**
+	 * @notice Buyer cancel transaction
+	 * @dev Only transactions are subject to change (can modify state of transaction)
+     * if transaction not signed => refund deposit amount to buyers
+     * if transaction signed => buyer lost the deposit price
+	 */
+    function buyerCancelTransaction(uint256 _idTransaction) public allowModify(_idTransaction){
+        Transaction memory transaction = idToTransaction[_idTransaction];
+        require(msg.sender == transaction.buyers[0],"BuyerCancelTransaction: require representative buyers");
+        // if state of transaction DEPOSIT_REQUEST => cancel and recive deposit price
+        if(idToState[_idTransaction] == State.DEPOSIT_REQUEST){
+            msg.sender.transfer(transaction.depositPrice);
+            idToState[_idTransaction] = State.DEPOSIT_CANCELED_BY_BUYER;
+        }
+        else if(idToState[_idTransaction] == State.DEPOSIT_SIGNED){
+            idToState[_idTransaction] = State.DEPOSIT_BROKEN_BY_BUYER;
+        }
+        else if(idToState[_idTransaction] == State.TRANSFER_REQUEST){
+            msg.sender.transfer(transaction.transferPrice.sub(transaction.depositPrice).add(transaction.transferPrice.div(200)));
+            idToState[_idTransaction] = State.DEPOSIT_BROKEN_BY_BUYER;
+        }
+        RealEstate.setStateOfCertOutTransaction(transaction.idCertificate);
+		emit TransactionCanceled(_idTransaction, idToState[_idTransaction]);
+    }
+
+	/**
+	 * @notice Seller cancel transaction
+	 * @dev Only transactions are subject to change (can modify state of transaction)
+     * if transaction not signed => refund deposit amount to buyers
+     * if transaction signed => seller send compensation = 2 * deposit price to buyer
+	 */
+    function sellerCancelTransaction(uint256 _idTransaction) public payable allowModify(_idTransaction){
+        Transaction memory transaction = idToTransaction[_idTransaction];
+        require(msg.sender == transaction.sellers[0],"SellerCancelTransaction: require representative sellers");
+        // seller refuse DEPOSIT_REQUEST of buyer => buyers recive depositPrice previously transferred
+	    if(idToState[_idTransaction] == State.DEPOSIT_REQUEST){
+	        address payable buyer = address(uint160(transaction.buyers[0]));
+	        buyer.transfer(transaction.depositPrice);
+	        idToState[_idTransaction] = State.DEPOSIT_CANCELED_BY_SELLER;
+	    }
+		    // seller break transaction (deposit contract) => compensation for buyer
+	    else if(idToState[_idTransaction] == State.DEPOSIT_SIGNED){
+	        uint256 compensationAmount = transaction.depositPrice.mul(2);
+		require(
+			msg.value >= compensationAmount,
+			"SellerCancelTransaction: Value must be greater than 2 * deposit price"
+		    );
+	    	address payable buyer = address(uint160(transaction.buyers[0]));
+		    buyer.transfer(compensationAmount);
+		    idToState[_idTransaction] = State.DEPOSIT_BROKEN_BY_BUYER;
+	    }
+        // if buyer sended payment => refund payment + 0.5% tax and compensation amount
+        else if(idToState[_idTransaction] == State.TRANSFER_REQUEST){
+	        uint256 compensationAmount = transaction.depositPrice.mul(2);
+            uint256 transferAmount = transaction.transferPrice.sub(transaction.depositPrice);
+            uint256 totalAmount = transferAmount.add(compensationAmount).add(transaction.transferPrice.div(200));// value return to buyer
+		require(
+			msg.value >= compensationAmount,
+			"SellerCancelTransaction: Value must be greater than 2 * deposit price"
+		    );
+            require(address(this).balance >= totalAmount, "Balace contract address not enough");
+	    	address payable buyer = address(uint160(transaction.buyers[0]));
+		    buyer.transfer(totalAmount);
+		    idToState[_idTransaction] = State.TRANSFER_CANCELED_BY_SELLER;
+	    }
+        RealEstate.setStateOfCertOutTransaction(transaction.idCertificate);
+		emit TransactionCanceled(_idTransaction, idToState[_idTransaction]);
+    }
 
 	/**
 	 * @notice Cancel transaction
@@ -194,6 +263,10 @@ contract Transaction {
 			else if(idToState[_idTransaction] == State.DEPOSIT_SIGNED){
 			    idToState[_idTransaction] = State.DEPOSIT_BROKEN_BY_BUYER;
 			}
+            else if(idToState[_idTransaction] == State.TRANSFER_REQUEST){
+                msg.sender.transfer(transaction.transferPrice.sub(transaction.depositPrice).add(transaction.transferPrice.div(200)));
+                idToState[_idTransaction] = State.DEPOSIT_BROKEN_BY_BUYER;
+            }
 		} else if (msg.sender == transaction.sellers[0]) {
 		    // seller refuse DEPOSIT_REQUEST of buyer => buyers recive depositPrice previously transferred
 		    if(idToState[_idTransaction] == State.DEPOSIT_REQUEST){
@@ -206,7 +279,7 @@ contract Transaction {
 		        uint256 compensationAmount = transaction.depositPrice.mul(2);
 			require(
 				msg.value >= compensationAmount,
-				"Transaction(breakDeposit): you're not enough balance to break contract"
+				"CancelTransaction: Value must be greater compensation amount."
 			    );
 		    	address payable buyer = address(uint160(transaction.buyers[0]));
 			    buyer.transfer(compensationAmount);
@@ -215,17 +288,17 @@ contract Transaction {
             // if buyer sended payment => refund payment and compensation
             else if(idToState[_idTransaction] == State.TRANSFER_REQUEST){
 		        uint256 compensationAmount = transaction.depositPrice.mul(2);
-                uint256 totalAmount = transaction.transferPrice.add(compensationAmount);
+                uint256 totalAmount = transaction.transferPrice.add(compensationAmount).add(transaction.transferPrice.div(200));
 			require(
 				msg.value >= compensationAmount,
-				"Transaction(breakDeposit): you're not enough balance to break contract"
+				"CancelTransaction: Value must be greater than compensation amount."
 			    );
 		    	address payable buyer = address(uint160(transaction.buyers[0]));
 			    buyer.transfer(totalAmount);
 			    idToState[_idTransaction] = State.TRANSFER_CANCELED_BY_SELLER;
 		    }
 		} else {
-			revert("Transaction(cancelTransaction): You're not permission.");
+			revert("CancelTransaction: You're not permission.");
 		}
 		RealEstate.setStateOfCertOutTransaction(transaction.idCertificate);
 		emit TransactionCanceled(_idTransaction, idToState[_idTransaction]);
@@ -244,20 +317,20 @@ contract Transaction {
 		onlyState(_idTransaction, State.DEPOSIT_SIGNED)
 	{
 		Transaction memory transaction = idToTransaction[_idTransaction];
-		require(now <= transaction.timeEnd, "Transaction(payment): Transaction has terminated");
+		require(now <= transaction.timeEnd, "Payment: Transaction has expired.");
 		address representativeBuyer = transaction.buyers[0];
 		require(
 			msg.sender == representativeBuyer,
-			"Transaction(payment): only representative buyers"
+			"Payment: Only representative of buyers."
 		);
 		uint256 remainingAmount = transaction.transferPrice.sub(
 			transaction.depositPrice
 		);
-		uint256 registrationTax = transaction.transferPrice.div(200); // 0.05% tax
+		uint256 registrationTax = transaction.transferPrice.div(200); // 0.5% tax
 		uint256 totalAmount = remainingAmount.add(registrationTax);
 		require(
 			(msg.value >= totalAmount),
-			"Transaction(payment): You're not enough balance"
+			"Payment: Value must be greater than total amount"
 		);
 		idToState[_idTransaction] = State.TRANSFER_REQUEST;
         emit Payment(_idTransaction);
@@ -270,23 +343,32 @@ contract Transaction {
      * and transfer ownership of certificate to buyer
      */
 	function confirmTransaction(uint256 _idTransaction)
-		public
-// 		onlyState(_idTransaction, State.TRANSFER_REQUEST)
+		public payable
+		onlyState(_idTransaction, State.TRANSFER_REQUEST)
 	{
 		Transaction memory transaction = idToTransaction[_idTransaction];
-		require(now  <= transaction.timeEnd, "transaction(confirmTransaction): Transaction has terminated");
+		require(now  <= transaction.timeEnd, "ConfirmTransaction: Transaction has expired.");
 		address representativeSellers = transaction.sellers[0];
 		require(
 			msg.sender == representativeSellers,
-			"Transaction(sellerConfirmTransaction): require representative of sellers"
+			"ConfirmTransaction: Require representative of sellers."
 		);
 		uint256 personalIncomeTax = transaction.transferPrice.div(50); // 2% tax
-		uint256 valueAfterTax = transaction.transferPrice.sub(personalIncomeTax);
-		msg.sender.transfer(valueAfterTax);
+		uint256 remainingAmount = transaction.transferPrice.sub(transaction.depositPrice);
+		// remaining amount < personal tax => it must pay more.
+		if(remainingAmount < personalIncomeTax){
+			uint256 costsIncurred = personalIncomeTax - remainingAmount;
+			require(msg.value >= costsIncurred, "ConfirmTransaction: Value must be greater costs incurred.");
+		}
+		else{
+			uint256 valueAfterTax = remainingAmount - personalIncomeTax;
+			msg.sender.transfer(valueAfterTax);
+		}
 		RealEstate.transferOwnership(
 			transaction.idCertificate,
 			transaction.buyers
 		);
+        idToState[_idTransaction] = State.TRANSFER_SIGNED;
 		RealEstate.setStateOfCertOutTransaction(transaction.idCertificate);
         emit TransactionSuccess(_idTransaction);
 	}
@@ -324,104 +406,14 @@ contract Transaction {
     modifier onlyState(uint256 _idTransaction, State _state) {
         require(
             (idToState[_idTransaction] == _state),
-            "modifier: Require state"
+            "OnlyState: Require state."
         );
         _;
     }
 
     modifier allowModify(uint256 _idTransaction){
-        require((idToState[_idTransaction] == State.DEPOSIT_REQUEST || idToState[_idTransaction] == State.DEPOSIT_SIGNED || idToState[_idTransaction] == State.TRANSFER_REQUEST),"allowModify: Transaction cann't allow modifier");
+        require((idToState[_idTransaction] == State.DEPOSIT_REQUEST || idToState[_idTransaction] == State.DEPOSIT_SIGNED || idToState[_idTransaction] == State.TRANSFER_REQUEST),"AllowModify: Transaction can't allow modifier.");
         _;
     }
-
-    // 	function breakDeposit(Transaction memory _idTransaction)
-// 		public
-// 		payable
-// 		onlyState(_idTransaction, State.DEPOSIT_SIGNED)
-// 	{
-// 		Transaction memory transaction = idToTransaction[_idTransaction];
-// 		if (msg.sender == transaction.buyers[0]) {
-// 			idToState[_idTransaction] = State.DEPOSIT_BROKEN_BY_BUYER;
-// 		} else if (msg.sender == transaction.sellers[0]) {
-// 			uint256 compensationAmount = transaction.depositPrice.mul(2);
-// 			require(
-// 				msg.value >= compensationAmount,
-// 				"Transaction(breakDeposit): you're not enough balance to break contract"
-// 			);
-// 			address payable buyer = address(uint160(transaction.buyers[0]));
-// 			buyer.transfer(compensationAmount);
-// 			idToState[_idTransaction] = State.DEPOSIT_BROKEN_BY_BUYER;
-// 		} else {
-// 			revert("Transaction(breakDeposit): you're not permission.");
-// 		}
-// 		RealEstate.setStateOfCertOutTransaction(transaction.idCertificate);
-// 	}
-
-	//only buyer
-	/**
-	 * if transaction is SIGNED => cancel will be lost deposit amount
-	 * sele =>
-	 */
-
-	// function buyerCancelTransaction(uint256 _idTransaction) public{
-	//     Transaction memory transaction = idToTransaction[_idTransaction];
-	//     address representativeOwners = RealEstate.getRepresentativeOfOwners(transaction.idCertificate);
-	//     require((msg.sender == transaction.buyers[0]),"Transaction(buyerCancelTransaction): Require user created the transaction");
-	//     if(idToState[_idTransaction] == State.SIGNED){
-	//         address payable owner0 = address(uint160(representativeOwners));
-	//         owner0.transfer(transaction.depositPrice);
-	//     }else if(idToState[_idTransaction] == State.PENDING){
-	//         msg.sender.transfer(transaction.depositPrice);
-	//     }
-	//     else{
-	//         revert();
-	//     }
-	//     idToState[_idTransaction] = State.CANCEL;
-	// }
-
-	// // only seller
-	// /**
-	//  * if transaction have not signed yet => return balance to creater Transaction
-	//  * if transaction be signed => seller have to enough balance to break the contract x2 value depositPrice
-	//  */
-
-	// function sellerCancelTransaction(uint256 _idTransaction) payable public{
-	//     Transaction memory transaction = idToTransaction[_idTransaction];
-	//     address representativeOwners = RealEstate.getRepresentativeOfOwners(transaction.idCertificate);
-	//     address payable buyer0 = address(uint160(transaction.buyers[0]));
-	//     require((msg.sender == representativeOwners),"Transaction(sellerCancelTransaction): require representative of owner of certificate");
-	//     if(idToState[_idTransaction] == State.PENDING){
-	//         idToState[_idTransaction] = State.CANCEL;
-	//         buyer0.transfer(transaction.depositPrice);
-	//     }
-	//     else if(idToState[_idTransaction] == State.SIGNED){
-	//         require((msg.value >= transaction.depositPrice.mul(2)),"Transaction(sellerCancelTransaction): You're not enough balance to braek the contract");
-	//         buyer0.transfer(transaction.depositPrice.mul(2));
-	//     }
-	// }
-
-	// // TAX
-	// // buyer => thuế trước bạ 0.5% => registration tax
-	// // seller => thuế thu nhập cá nhân 2% => personal income tax
-
-	// // buyer send remaining amount to seller
-	// function buyerCompleteTransaction(uint256 _idTransaction) public payable onlyState(_idTransaction, State.SIGNED){
-	//     Transaction memory transaction = idToTransaction[_idTransaction];
-	//     uint256 remainingAmount = transaction.transferPrice.sub(transaction.depositPrice);
-	//     uint256 registrationTax = transaction.transferPrice.div(200); // 0.5% tax
-	//     uint256 totalAmount = remainingAmount.add(registrationTax);
-	//     require((msg.value >= totalAmount), "Transaction(buyerCompleteTransaction): You're not enough balance");
-	//     idToState[_idTransaction] = State.REQUEST_TRANSFER;
-	// }
-
-	// function sellerCompleteTransaction(uint256 _idTransaction) public onlyState(_idTransaction, State.REQUEST_TRANSFER){
-	//     Transaction memory transaction = idToTransaction[_idTransaction];
-	//     uint256 personalIncomeTax = transaction.transferPrice.div(50); // 2% tax
-	//     msg.sender.transfer(transaction.transferPrice.sub(personalIncomeTax));
-	//     idToState[_idTransaction] = State.TRANSFER_SIGNED;
-	//     RealEstate.transferOwnership(transaction.idCertificate, transaction.buyers);
-	//     RealEstate.setStateOfCertOutTransaction(transaction.idCertificate);
-	// }
-
 
 }
