@@ -6,16 +6,18 @@ import {
 } from "./constants";
 
 const initialState = {
-  data: null,
+  data: "",
+  property: "",
   loading: false,
   error: "",
-  property: null,
 };
 
 export default function transactionReducers(state = initialState, action) {
+  console.log(action);
   switch (action.type) {
     case FETCH_TRANSACTION_REQUEST:
       return {
+        ...state,
         loading: true,
       };
     case FETCH_TRANSACTION_SUCCESS:

@@ -6,6 +6,7 @@ import numberToString from "../../../utils/numberToString";
 import axios from "axios";
 import Loading from "../../../components/Loading/loading";
 import Cookie from "../../../helper/cookie";
+import { convertWeiToVND } from "../../../utils/convertCurrency";
 
 const DepositContract = (props) => {
   const [loading, setLoading] = useState(false);
@@ -15,7 +16,12 @@ const DepositContract = (props) => {
     props.property.properties.landLot.commonUseArea +
     props.property.properties.landLot.privateUseArea;
   const propertyAddress = props.property.properties.landLot.address;
-
+  const depositPrice = Math.floor(
+    convertWeiToVND(props.transaction.depositPrice)
+  );
+  const transferPrice = Math.floor(
+    convertWeiToVND(props.transaction.transferPrice)
+  );
   const previewContract = async () => {
     setLoading(true);
     // get all value of input and name
@@ -56,11 +62,11 @@ const DepositContract = (props) => {
   };
 
   const getParticipantsInfo = async (buyers, sellers) => {
-    const promises1 = buyers.map((buyer) =>
-      getUserProfile(buyer.publicAddress)
+    const promises1 = buyers.map((publicAddress) =>
+      getUserProfile(publicAddress)
     );
-    const promises2 = sellers.map((seller) =>
-      getUserProfile(seller.publicAddress)
+    const promises2 = sellers.map((publicAddress) =>
+      getUserProfile(publicAddress)
     );
     return await Promise.all([Promise.all(promises1), Promise.all(promises2)]);
   };
@@ -69,8 +75,8 @@ const DepositContract = (props) => {
   useEffect(() => {
     (async () => {
       const [buyersInfo, sellersInfo] = await getParticipantsInfo(
-        props.transaction.buyer,
-        props.transaction.seller
+        props.transaction.buyers,
+        props.transaction.sellers
       );
       setBuyers(buyersInfo);
       setSellers(sellersInfo);
@@ -546,9 +552,9 @@ const DepositContract = (props) => {
                                 type="text"
                                 disabled={true}
                                 className=""
-                                name="downPayment"
+                                name="depositPrice"
                                 defaultValue={formatCurrency(
-                                  props.transaction.downPayment.toString()
+                                  depositPrice.toString()
                                 )}
                               />
                               {"VNĐ"}
@@ -561,9 +567,7 @@ const DepositContract = (props) => {
                                 disabled={true}
                                 type="text"
                                 name="downPaymentInWord"
-                                defaultValue={numberToString(
-                                  props.transaction.downPayment
-                                )}
+                                defaultValue={numberToString(depositPrice)}
                               />
                               {" đồng."}
                             </td>
@@ -660,7 +664,7 @@ const DepositContract = (props) => {
                                 className=""
                                 name="transferPrice"
                                 defaultValue={formatCurrency(
-                                  props.transaction.transferPrice.toString()
+                                  transferPrice.toString()
                                 )}
                               />
                               {" VNĐ"}

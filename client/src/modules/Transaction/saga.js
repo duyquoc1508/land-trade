@@ -1,17 +1,45 @@
-import { takeEvery, call, put } from "redux-saga/effects";
+import { takeEvery, call, put, select } from "redux-saga/effects";
 import axios from "axios";
+import TransactionContract from "../../contracts/Transaction.json";
+import { transactionContractAddress } from "../../../config/common-path";
+import getWeb3 from "../../helper/getWeb3";
+
 import {
   FETCH_TRANSACTION_REQUEST,
   FETCH_TRANSACTION_SUCCESS,
   FETCH_TRANSACTION_FAILURE,
   FETCH_TRADING_PROPERTY_SUCCESS,
+  CANCEL_TRANSACTION_REQUEST,
+  CANCEL_TRANSACTION_WAIT_BLOCKCHAIN_CONFIRM,
+  CANCEL_TRANSACTION_SUCCESS,
+  CANCEL_TRANSACTION_FAILURE,
+  ACCEPT_TRANSACTION_REQUEST,
+  ACCEPT_TRANSACTION_WAIT_BLOCKCHAIN_CONFIRM,
+  ACCEPT_TRANSACTION_SUCCESS,
+  ACCEPT_TRANSACTION_FAILURE,
+  CONFIRM_TRANSACTION_REQUEST,
+  CONFIRM_TRANSACTION_WAIT_BLOCKCHAIN_CONFIRM,
+  CONFIRM_TRANSACTION_SUCCESS,
+  CONFIRM_TRANSACTION_FAILURE,
+  PAYMENT_REQUEST,
+  PAYMENT_REQUEST_WAIT_BLOCKCHAIN_CONFIRM,
+  PAYMENT_SUCCESS,
+  PAYMENT_FAILURE,
 } from "./constants";
 import Cookie from "../../helper/cookie";
 
-const fetchTransaction = async (idTransaction) => {
+// state of transaction in mongodb
+const TRANSACTION_STATE = {
+  DEPOSIT_REQUEST: "DEPOSIT_REQUEST",
+  DEPOSIT_CONFIRMED: "DEPOSIT_CONFIRMED",
+  PAYMENT_REQUEST: "PAYMENT_REQUEST",
+  PAYMENT_CONFIRMED: "PAYMENT_CONFIRMED",
+};
+
+const fetchTransaction = async (txHash) => {
   const response = await axios({
     method: "get",
-    url: `${process.env.REACT_APP_BASE_URL_API}/transaction/${idTransaction}`,
+    url: `${process.env.REACT_APP_BASE_URL_API}/transaction/${txHash}`,
     headers: {
       Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
     },
@@ -21,8 +49,8 @@ const fetchTransaction = async (idTransaction) => {
 
 const fetchPropertyTrading = async (idProperty) => {
   const response = await axios({
-    method: "get",
-    url: `${process.env.REACT_APP_BASE_URL_API}/certification/${idProperty}`,
+    method: "GET",
+    url: `${process.env.REACT_APP_BASE_URL_API}/certification/id-in-blockchain/${idProperty}`,
     headers: {
       Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
     },
@@ -41,8 +69,311 @@ function* fetchTransactionFlow(action) {
   }
 }
 
-function* fetchTransactionWatcher() {
-  yield takeEvery(FETCH_TRANSACTION_REQUEST, fetchTransactionFlow);
+// accept transaction (same sign the deposit contract)
+const acceptTransaction = async (transactionContract, idTransaction) => {
+  return new Promise((resolve, reject) => {
+    let web3 = "";
+    getWeb3()
+      .then((result) => {
+        web3 = result;
+        return web3.eth.getCoinbase();
+      })
+      .then((coinbase) => {
+        web3.eth.getTransactionCount(coinbase, (error, txCount) => {
+          if (error) {
+            reject(error);
+          }
+          transactionContract.methods
+            .acceptTransaction(idTransaction)
+            .send(
+              {
+                nonce: txCount,
+                from: coinbase,
+              },
+              function (error, transactionHash) {
+                if (error) {
+                  reject(error);
+                } else {
+                  resolve(transactionHash);
+                }
+              }
+            )
+            .catch((error) => {
+              reject(error);
+            });
+        });
+      });
+  });
+};
+
+// send remaining amount + 0.5% tax
+const payment = async (transactionContract, transaction) => {
+  return new Promise((resolve, reject) => {
+    let web3 = "";
+    getWeb3()
+      .then((result) => {
+        web3 = result;
+        return web3.eth.getCoinbase();
+      })
+      .then((coinbase) => {
+        web3.eth.getTransactionCount(coinbase, (error, txCount) => {
+          if (error) {
+            reject(error);
+          }
+          const remainingAmount = web3.utils
+            .toBN(transaction.transferPrice)
+            .sub(web3.utils.toBN(transaction.depositPrice));
+          const personalTax = web3.utils.toBN(
+            Math.ceil(transaction.transferPrice / 200)
+          ); // 0.5% tax
+          const totalValue = remainingAmount.add(personalTax);
+          transactionContract.methods
+            .payment(transaction.idInBlockchain)
+            .send(
+              {
+                nonce: txCount,
+                from: coinbase,
+                value: web3.utils.toWei(totalValue, "wei"), // include 0.5% tax
+              },
+              function (error, transactionHash) {
+                if (error) {
+                  reject(error);
+                } else {
+                  resolve(transactionHash);
+                }
+              }
+            )
+            .catch((error) => {
+              reject(error);
+            });
+        });
+      });
+  });
+};
+
+// receive eth and change transfer ownership. The amount received is deducted by 2% tax
+const confirmTransaction = async (transactionContract, transaction) => {
+  return new Promise((resolve, reject) => {
+    let web3 = "";
+    getWeb3()
+      .then((result) => {
+        web3 = result;
+        return web3.eth.getCoinbase();
+      })
+      .then((coinbase) => {
+        web3.eth.getTransactionCount(coinbase, (error, txCount) => {
+          if (error) {
+            reject(error);
+          }
+          const personalIncomeTax = web3.utils
+            .toBN(transaction.transferPrice)
+            .div(50); //2% tax
+          const remainingAmout = web3.utils
+            .toBN(transaction.transferPrice)
+            .sub(web3.utils.toBN(transaction.depositPrice));
+          let value = "0";
+          // If the remaining amount is less than the tax amount, the value must be submitted to pay tax
+          if (remainingAmout.lt(personalIncomeTax)) {
+            value = personalIncomeTax.sub(remainingAmout);
+          }
+          transactionContract.methods
+            .confirmTransaction(transaction.idInBlockchain)
+            .send(
+              {
+                nonce: txCount,
+                from: coinbase,
+                value: web3.utils.toWei(value, "wei"),
+              },
+              function (error, transactionHash) {
+                if (error) {
+                  reject(error);
+                } else {
+                  resolve(transactionHash);
+                }
+              }
+            )
+            .catch((error) => {
+              reject(error);
+            });
+        });
+      });
+  });
+};
+
+// get value to send depending on state of transaction
+const getValueDependingStateTransaction = (web3, transaction) => {
+  let value = "0";
+  switch (transaction.state) {
+    case TRANSACTION_STATE.DEPOSIT_REQUEST:
+      return value;
+    case TRANSACTION_STATE.DEPOSIT_CONFIRMED:
+    case TRANSACTION_STATE.PAYMENT_REQUEST:
+      value = web3.utils.toBN(transaction.depositPrice).mul(web3.utils.toBN(2)); // representative deposit contract = 2x deposit price
+      return value;
+    default:
+      throw new Error("State is not allowed cancel");
+  }
+};
+
+const cancelTransaction = (
+  transactionContract,
+  { transaction, publicAddress }
+) => {
+  // check state of transaction => allow cancel
+  // buyer cancel transaction with fee equal to 0 ETH
+  if (transaction.buyers.includes(publicAddress)) {
+    return new Promise((resolve, reject) => {
+      let web3 = "";
+      getWeb3()
+        .then((result) => {
+          web3 = result;
+          return web3.eth.getCoinbase();
+        })
+        .then((coinbase) => {
+          web3.eth.getTransactionCount(coinbase, (error, txCount) => {
+            if (error) {
+              reject(error);
+            }
+            transactionContract.methods
+              .buyerCancelTransaction(transaction.idInBlockchain)
+              .send(
+                {
+                  nonce: txCount,
+                  from: coinbase,
+                },
+                function (error, transactionHash) {
+                  if (error) {
+                    reject(error);
+                  } else {
+                    resolve(transactionHash);
+                  }
+                }
+              )
+              .catch((error) => {
+                reject(error);
+              });
+          });
+        });
+    });
+    // seller cancel transaction
+  } else if (transaction.sellers.includes(publicAddress)) {
+    return new Promise((resolve, reject) => {
+      let web3 = "";
+      getWeb3()
+        .then((result) => {
+          web3 = result;
+          return web3.eth.getCoinbase();
+        })
+        .then((coinbase) => {
+          web3.eth.getTransactionCount(coinbase, (error, txCount) => {
+            if (error) {
+              reject(error);
+            }
+            // get msg.value depending on current state of transaction
+            const value = getValueDependingStateTransaction(web3, transaction);
+            transactionContract.methods
+              .sellerCancelTransaction(transaction.idInBlockchain)
+              .send(
+                {
+                  nonce: txCount,
+                  from: coinbase,
+                  value: web3.utils.toWei(value, "wei"),
+                },
+                function (error, transactionHash) {
+                  if (error) {
+                    reject(error);
+                  } else {
+                    resolve(transactionHash);
+                  }
+                }
+              )
+              .catch((error) => {
+                reject(error);
+              });
+          });
+        });
+    });
+  } else {
+    throw new Error("User doesn't permission!");
+  }
+};
+
+const getTransactionContract = (state) => state.instanceContracts.transaction;
+
+function* cancelTransactionFlow(action) {
+  try {
+    const transactionContract = yield select(getTransactionContract);
+    const transactionHash = yield call(
+      cancelTransaction,
+      transactionContract,
+      action.payload
+    );
+    yield put({
+      type: CANCEL_TRANSACTION_WAIT_BLOCKCHAIN_CONFIRM,
+      payload: transactionHash,
+    });
+  } catch (error) {
+    yield put({ type: CANCEL_TRANSACTION_FAILURE, payload: error.message });
+  }
 }
 
-export default fetchTransactionWatcher;
+function* acceptTransactionFlow(action) {
+  try {
+    const transactionContract = yield select(getTransactionContract);
+    const transactionHash = yield call(
+      acceptTransaction,
+      transactionContract,
+      action.payload
+    );
+    yield put({
+      type: ACCEPT_TRANSACTION_WAIT_BLOCKCHAIN_CONFIRM,
+      payload: transactionHash,
+    });
+  } catch (error) {
+    yield put({ type: ACCEPT_TRANSACTION_FAILURE, payload: error.message });
+  }
+}
+
+function* paymentFlow(action) {
+  try {
+    const transactionContract = yield select(getTransactionContract);
+    const transactionHash = yield call(
+      payment,
+      transactionContract,
+      action.payload
+    );
+    yield put({
+      type: PAYMENT_REQUEST_WAIT_BLOCKCHAIN_CONFIRM,
+      payload: transactionHash,
+    });
+  } catch (error) {
+    yield put({ type: PAYMENT_FAILURE, payload: error.message });
+  }
+}
+
+function* confirmTransactionFlow(action) {
+  try {
+    const transactionContract = yield select(getTransactionContract);
+    const transactionHash = yield call(
+      confirmTransaction,
+      transactionContract,
+      action.payload
+    );
+    yield put({
+      type: CONFIRM_TRANSACTION_WAIT_BLOCKCHAIN_CONFIRM,
+      payload: transactionHash,
+    });
+  } catch (error) {
+    yield put({ type: CONFIRM_TRANSACTION_FAILURE, payload: error.message });
+  }
+}
+
+function* transactionWatcher() {
+  yield takeEvery(FETCH_TRANSACTION_REQUEST, fetchTransactionFlow);
+  yield takeEvery(CANCEL_TRANSACTION_REQUEST, cancelTransactionFlow);
+  yield takeEvery(ACCEPT_TRANSACTION_REQUEST, acceptTransactionFlow);
+  yield takeEvery(PAYMENT_REQUEST, paymentFlow);
+  yield takeEvery(CONFIRM_TRANSACTION_REQUEST, confirmTransactionFlow);
+}
+
+export default transactionWatcher;
