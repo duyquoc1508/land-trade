@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import MuiExpansionPanel from "@material-ui/core/ExpansionPanel";
 import MuiExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -16,7 +16,15 @@ import PayTaxes from "./sections/7_pay_taxes";
 import TaxesComfirm from "./sections/8_taxes_confirm";
 import Finished from "./sections/9_finished";
 
-import { fetchTransactionRequest } from "./action";
+import BuyerAcceptTransaction from "./buyer/acceptTransaction";
+import BuyerComfirmTransaction from "./buyer/confirmTransaction";
+import BuyerPayment from "./buyer/payment";
+
+import SellerAcceptTransaction from "./seller/acceptTransaction";
+import SellerComfirmTransaction from "./seller/confirmTransaction";
+import SellerPayment from "./seller/payment";
+
+import { fetchTransactionRequest, cancelTransactionRequest } from "./action";
 
 const ExpansionPanel = withStyles({
   root: {
@@ -60,14 +68,30 @@ const ExpansionPanelDetails = withStyles((theme) => ({
 }))(MuiExpansionPanelDetails);
 
 const CustomizedExpansionPanels = (props) => {
-  const [expanded, setExpanded] = React.useState(false);
-  const idTransaction = props.match.params.idTransaction;
+  const [expanded, setExpanded] = useState(false);
+  const PARTY_CONSTANT = {
+    BUYER: "BUYER",
+    SELLER: "SELLER",
+    OUT_TRANSACTION: "OUT_TRANSACTION",
+  };
+  const [party, setParty] = useState(PARTY_CONSTANT.OUT_TRANSACTION); // party: BUYER - SELLER - OUT_TRANSACTION
+  const txHash = props.match.params.txHash;
   useEffect(() => {
-    props.fetchTransaction(idTransaction);
+    props.fetchTransaction(txHash);
   }, []);
+
+  useEffect(() => {
+    if (props.user.publicAddress.includes(props.transaction.sellers)) {
+      setParty("SELLER");
+    } else if (props.user.publicAddress.includes(props.transaction.buyers)) {
+      setParty("BUYER");
+    }
+  });
+
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
+
   return (
     <div className="container mt-85 mb-100">
       <h3>Quá trình giao dịch tài sản</h3>
@@ -98,10 +122,17 @@ const CustomizedExpansionPanels = (props) => {
           aria-controls="panel2d-content"
           id="panel2d-header"
         >
-          <Typography>Tạo hợp đồng đặt cọc</Typography>
+          <Typography>Chấp nhận giao dịch (Kí hợp đồng đặt cọc)</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          {expanded === "panel2" && <DepositContract />}
+          {expanded === "panel2" &&
+            (party == PARTY_CONSTANT.SELLER ? (
+              <SellerAcceptTransaction />
+            ) : party == PARTY_CONSTANT.BUYER ? (
+              <BuyerAcceptTransaction />
+            ) : (
+              <DepositContract />
+            ))}
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
@@ -113,10 +144,17 @@ const CustomizedExpansionPanels = (props) => {
           aria-controls="panel3d-content"
           id="panel3d-header"
         >
-          <Typography>Đăng hợp đồng đặt cọc</Typography>
+          <Typography>Chuyển tiền còn lại</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <DepositPayment />
+          {expanded === "panel3" &&
+            (party == PARTY_CONSTANT.SELLER ? (
+              <SellerPayment />
+            ) : party == PARTY_CONSTANT.BUYER ? (
+              <BuyerPayment />
+            ) : (
+              <DepositContract />
+            ))}
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
@@ -128,13 +166,20 @@ const CustomizedExpansionPanels = (props) => {
           aria-controls="panel4d-content"
           id="panel4d-header"
         >
-          <Typography>Tạo hợp đồng chuyển nhượng</Typography>
+          <Typography>Kí hợp đồng chuyển nhượng</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          {expanded === "panel4" && <TransferContract />}
+          {expanded === "panel4" &&
+            (party == PARTY_CONSTANT.SELLER ? (
+              <SellerComfirmTransaction />
+            ) : party == PARTY_CONSTANT.BUYER ? (
+              <BuyerComfirmTransaction />
+            ) : (
+              <DepositContract />
+            ))}
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      <ExpansionPanel
+      {/* <ExpansionPanel
         square
         expanded={expanded === "panel5"}
         onChange={handleChange("panel5")}
@@ -193,7 +238,7 @@ const CustomizedExpansionPanels = (props) => {
         <ExpansionPanelDetails>
           <TaxesComfirm />
         </ExpansionPanelDetails>
-      </ExpansionPanel>
+      </ExpansionPanel> */}
       <ExpansionPanel
         disabled
         square
@@ -210,18 +255,39 @@ const CustomizedExpansionPanels = (props) => {
           <Finished />
         </ExpansionPanelDetails>
       </ExpansionPanel>
+      <div style={{ color: "red", fontWeight: "bold" }}>
+        {props.transaction.state}
+      </div>
+      <h3>{party}</h3>
+      {/* Dissable buttons for outsiders transactions */}
+      {party != PARTY_CONSTANT.OUT_TRANSACTION && (
+        <button
+          className="btn v3 float-right mt-5 "
+          onClick={() =>
+            props.cancelTransaction(props.transaction, props.user.publicAddress)
+          } // get sender
+        >
+          <i className="ion-android-cancel"></i> Hủy bỏ giao dịch
+        </button>
+      )}
     </div>
   );
 };
 
 const mapStateToProps = (state) => {
-  return {};
+  return {
+    transaction: state.transaction.data,
+    user: state.user.data,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchTransaction: (idTransaction) => {
       dispatch(fetchTransactionRequest(idTransaction));
+    },
+    cancelTransaction: (transaction, publicAddress) => {
+      dispatch(cancelTransactionRequest(transaction, publicAddress));
     },
   };
 };

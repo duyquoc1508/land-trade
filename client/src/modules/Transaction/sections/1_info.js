@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import Cookie from "../../../helper/cookie";
+import formatDate from "../../../utils/formatDate";
 
 const TransactionInfo = (props) => {
   // const [propetySale, setPropertySale] = useState("");
@@ -75,88 +76,6 @@ const TransactionInfo = (props) => {
 
       <div className="invoice-panel">
         <div className="act-title">
-          <h5>Giá trị giao dịch</h5>
-        </div>
-        <div className="invoice-body">
-          <div className="table-responsive">
-            <table className="invoice-table">
-              <tbody>
-                <tr className="bg-white">
-                  <td>#1 </td>
-                  <td>Tiền đặt cọc </td>
-                  <td>
-                    <time>Mar 21,2019</time>
-                  </td>
-                  <td>
-                    <span className="amount">
-                      {props.transaction.downPayment}
-                    </span>
-                    {" VND"}
-                  </td>
-                  <td>
-                    <a
-                      href="db-single-invoice.html"
-                      className="invoice-action"
-                      data-toggle="tooltip"
-                      title=""
-                      data-original-title="View Invoice"
-                    >
-                      {" "}
-                      <i className="ion-ios-eye-outline"></i>
-                    </a>
-                    <a
-                      href="#"
-                      className="invoice-action"
-                      data-toggle="tooltip"
-                      title=""
-                      data-original-title="Delete"
-                    >
-                      {" "}
-                      <i className="ion-android-delete"></i>
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#2 </td>
-                  <td>Tiền thanh toán</td>
-                  <td>
-                    <time>Mar 9, 2019</time>
-                  </td>
-                  <td>
-                    <span className="amount">{props.transaction.price}</span>
-                    {" VND"}
-                  </td>
-                  <td>
-                    <a
-                      href="db-single-invoice.html"
-                      className="invoice-action"
-                      data-toggle="tooltip"
-                      title=""
-                      data-original-title="View Invoice"
-                    >
-                      {" "}
-                      <i className="ion-ios-eye-outline"></i>
-                    </a>
-                    <a
-                      href="#"
-                      className="invoice-action"
-                      data-toggle="tooltip"
-                      title=""
-                      data-original-title="Delete"
-                    >
-                      {" "}
-                      <i className="ion-android-delete"></i>
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div className="invoice-panel">
-        <div className="act-title">
           <h5>Người tham gia</h5>
         </div>
         <div className="invoice-body">
@@ -164,10 +83,10 @@ const TransactionInfo = (props) => {
             <h5>Bên bán</h5>
             <table className="invoice-table">
               <tbody>
-                {props.transaction.seller.map((user, index) => (
+                {props.transaction.sellers.map((publicAddress, index) => (
                   <tr className="bg-white" key={index}>
                     <td>#{index + 1} </td>
-                    <td>{user.publicAddress} </td>
+                    <td>{publicAddress} </td>
                     <td>
                       <span className="">Người sang nhượng</span>{" "}
                     </td>
@@ -201,10 +120,10 @@ const TransactionInfo = (props) => {
             <h5>Bên mua</h5>
             <table className="invoice-table">
               <tbody>
-                {props.transaction.seller.map((user, index) => (
+                {props.transaction.buyers.map((publicAddress, index) => (
                   <tr className="bg-white" key={index}>
                     <td>#{index + 1} </td>
-                    <td>{user.publicAddress}</td>
+                    <td>{publicAddress}</td>
                     <td>
                       <span className="">Người nhận sang nhượng</span>{" "}
                     </td>
@@ -233,6 +152,172 @@ const TransactionInfo = (props) => {
                     </td>
                   </tr>
                 ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div className="invoice-panel">
+        <div className="act-title">
+          <h5>Giá trị giao dịch</h5>
+        </div>
+        <div className="invoice-body">
+          <div className="table-responsive">
+            <table className="invoice-table">
+              <tbody>
+                <tr className="bg-white">
+                  <td>#1 </td>
+                  <td>Tiền đặt cọc </td>
+                  <td>
+                    <time>Mar 21,2019</time>
+                  </td>
+                  <td>
+                    <span className="amount">
+                      {props.transaction.depositPrice}
+                    </span>
+                    {" VND"}
+                  </td>
+                  <td>
+                    <a
+                      href="db-single-invoice.html"
+                      className="invoice-action"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="View Invoice"
+                    >
+                      {" "}
+                      <i className="ion-ios-eye-outline"></i>
+                    </a>
+                    <a
+                      href="#"
+                      className="invoice-action"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="Delete"
+                    >
+                      {" "}
+                      <i className="ion-android-delete"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#2 </td>
+                  <td>Tiền thanh toán</td>
+                  <td>
+                    <time>Mar 9, 2019</time>
+                  </td>
+                  <td>
+                    <span className="amount">
+                      {props.transaction.transferPrice}
+                    </span>
+                    {" VND"}
+                  </td>
+                  <td>
+                    <a
+                      href="db-single-invoice.html"
+                      className="invoice-action"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="View Invoice"
+                    >
+                      {" "}
+                      <i className="ion-ios-eye-outline"></i>
+                    </a>
+                    <a
+                      href="#"
+                      className="invoice-action"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="Delete"
+                    >
+                      {" "}
+                      <i className="ion-android-delete"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div className="invoice-panel">
+        <div className="act-title">
+          <h5>Thời gian giao dich</h5>
+        </div>
+        <div className="invoice-body">
+          <div className="table-responsive">
+            <table className="invoice-table">
+              <tbody>
+                <tr className="bg-white">
+                  <td>#1 </td>
+                  <td>Ngày bắt đầu </td>
+                  <td>
+                    <time>Mar 21,2019</time>
+                  </td>
+                  <td>
+                    <span className="amount">
+                      {formatDate(props.transaction.timeStart)}
+                    </span>
+                  </td>
+                  <td>
+                    <a
+                      href="db-single-invoice.html"
+                      className="invoice-action"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="View Invoice"
+                    >
+                      {" "}
+                      <i className="ion-ios-eye-outline"></i>
+                    </a>
+                    <a
+                      href="#"
+                      className="invoice-action"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="Delete"
+                    >
+                      {" "}
+                      <i className="ion-android-delete"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#2 </td>
+                  <td>Ngày kết thúc</td>
+                  <td>
+                    <time>Mar 9, 2019</time>
+                  </td>
+                  <td>
+                    <span className="amount">
+                      {formatDate(props.transaction.timeEnd)}
+                    </span>
+                  </td>
+                  <td>
+                    <a
+                      href="db-single-invoice.html"
+                      className="invoice-action"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="View Invoice"
+                    >
+                      {" "}
+                      <i className="ion-ios-eye-outline"></i>
+                    </a>
+                    <a
+                      href="#"
+                      className="invoice-action"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="Delete"
+                    >
+                      {" "}
+                      <i className="ion-android-delete"></i>
+                    </a>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
