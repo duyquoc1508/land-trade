@@ -4,7 +4,6 @@ import { confirmTransactionRequest } from "./actions";
 
 const RenderModal = (props) => {
   const [display, setDisplay] = useState("inherit");
-  console.log("cos vaof ddaa");
   return (
     <div className="modal" style={{ display: display }}>
       <div className="modal-dialog modal-dialog-centered" role="document">
@@ -18,8 +17,8 @@ const RenderModal = (props) => {
               type="button"
               className="close"
               onClick={() => {
-                setDisplay("none");
-                props.callBackFromParent(false);
+                // setDisplay("none");
+                props.displayModal(false);
               }}
             >
               <span aria-hidden="true">&times;</span>
@@ -54,13 +53,20 @@ const RenderModal = (props) => {
               type="button"
               className="btn btn-secondary"
               onClick={() => {
-                setDisplay("none");
-                props.callBackFromParent(false);
+                // setDisplay("none");
+                props.displayModal(false);
               }}
             >
               Hủy bỏ
             </button>
-            <button type="button" className="btn btn-primary">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                setDisplay("none");
+                props.confirmTransaction(false);
+              }}
+            >
               Xác nhận
             </button>
           </div>
@@ -70,12 +76,16 @@ const RenderModal = (props) => {
   );
 };
 
-const ComfirmTransaction = (props) => {
+const ConfirmTransaction = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [stateModal, setStateModal] = useState(false);
   // using pass data from child component to parent component
-  const myCallback = (dataFromChild) => {
+  const displayModal = (dataFromChild) => {
     setShowModal(dataFromChild);
+  };
+
+  const confirmTransactionRequest = () => {
+    props.confirmTransactionRequest(props.transaction);
   };
   return (
     <div>
@@ -89,10 +99,14 @@ const ComfirmTransaction = (props) => {
       </button>
       {/**  Button trigger modal */}
       <button className="btn v3" onClick={() => setShowModal(true)}>
-        Launch demo modal
+        Xác nhận giao dịch popup
       </button>{" "}
       {showModal && (
-        <RenderModal show={showModal} callBackFromParent={myCallback} />
+        <RenderModal
+          show={showModal}
+          displayModal={displayModal}
+          confirmTransaction={confirmTransactionRequest}
+        />
       )}
     </div>
   );
@@ -114,4 +128,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComfirmTransaction);
+export default connect(mapStateToProps, mapDispatchToProps)(ConfirmTransaction);

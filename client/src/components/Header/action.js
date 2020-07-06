@@ -7,3 +7,7 @@ export function initSocket(socket) {
 export function refreshPage() {
   return { type: REFRESH_PAGE };
 }
+
+export function dispatchEventFromBlockchain(eventName, txHash) {
+  return { type: eventName, payload: txHash };
+}

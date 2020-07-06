@@ -16,6 +16,7 @@ import InitTransaction from "../InitTransaction";
 import NotFound from "../NotFound";
 import DownPaymentContract from "../Transaction/sections/DownPaymentContract";
 import TradeContract from "../Transaction/sections/TradeContract";
+import TransactionProcess from "../TransactionProcess";
 
 const routes = [
   {
@@ -104,6 +105,14 @@ const routes = [
     path: "/trade-contract",
     exact: false,
     main: () => <TradeContract />,
+  },
+
+  {
+    path: "/transaction-process/:transactionHash",
+    exact: false,
+    main: ({ match, history }) => (
+      <TransactionProcess match={match} history={history} />
+    ),
   },
   {
     path: "",

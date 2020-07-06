@@ -53,7 +53,7 @@ function activateCertificate(realEstateContract, idCertificate) {
   });
 }
 
-const getRealEstateContract = (state) => state.instanceContracts.realEstate;
+const getRealEstateContract = (state) => state.shared.realEstate;
 
 function* activateFlow(action) {
   try {

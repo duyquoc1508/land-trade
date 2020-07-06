@@ -69,7 +69,7 @@ const createTransaction = (transactionContract, data) => {
   });
 };
 
-const getTransactionContract = (state) => state.instanceContracts.transaction;
+const getTransactionContract = (state) => state.shared.transaction;
 
 // const emitEventInitTransition = (socket, participants) => {
 //   socket.emit("new-transaction", participants);

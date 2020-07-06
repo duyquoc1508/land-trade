@@ -182,7 +182,7 @@ const mapStateToProps = (state, ownProps) => {
     user: JSON.parse(localStorage.getItem("user")),
     idTransaction: state.initTransaction.data && state.initTransaction.data._id,
     loading: state.initTransaction.loading,
-    transactionContract: state.instanceContracts.transaction,
+    transactionContract: state.shared.transaction,
   };
 };
 

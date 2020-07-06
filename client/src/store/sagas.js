@@ -6,7 +6,7 @@ import listingSaleSaga from "../modules/Listings/sagas";
 import notificationsSaga from "../components/Header/Notifications/saga";
 import confirmProperty from "../modules/Property/ConfirmProperty/saga";
 import propertyStandard from "../modules/Property/PropertyStandard/saga";
-import instanceContracts from "../modules/InstanceContracts/saga";
+import shared from "../modules/Shared/saga";
 import propertySelling from "../modules/Property/PropertySelling/saga";
 import propertyActivated from "../modules/Property/PropertyActivated/saga";
 import initTransaction from "../modules/InitTransaction/saga";
@@ -22,7 +22,7 @@ function* rootSaga() {
     notificationsSaga(),
     confirmProperty(),
     propertyStandard(),
-    instanceContracts(),
+    shared(),
     propertySelling(),
     propertyActivated(),
     initTransaction(),

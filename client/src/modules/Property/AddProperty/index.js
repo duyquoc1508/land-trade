@@ -93,7 +93,7 @@ const mapStateToProps = (state) => ({
   form: state.form,
   login: state.login,
   loading: state.loading,
-  // realEstateContract: state.instanceContracts.realEstate
+  // realEstateContract: state.shared.realEstate
 });
 
 const mapDispatchToProps = (dispatch) => {

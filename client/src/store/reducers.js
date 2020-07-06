@@ -7,7 +7,7 @@ import myListing from "../modules/Property/ListProperties/reducers";
 import notifications from "../components/Header/Notifications/reducers";
 import confirmProperty from "../modules/Property/ConfirmProperty/reducers";
 import propertyStandard from "../modules/Property/PropertyStandard/reducers";
-import instanceContracts from "../modules/InstanceContracts/reducers";
+import shared from "../modules/Shared/reducers";
 import propertySelling from "../modules/Property/PropertySelling/reducers";
 import propertyActivated from "../modules/Property/PropertyActivated/reducers";
 import initTransaction from "../modules/InitTransaction/reducers";
@@ -24,7 +24,7 @@ const rootReducer = combineReducers({
   notifications,
   confirmProperty,
   propertyStandard,
-  instanceContracts,
+  shared,
   propertySelling,
   propertyActivated,
   initTransaction,
