@@ -39,9 +39,9 @@ const routes = [
     main: ({ match, history }) => <Listings match={match} history={history} />,
   },
   {
-    path: "/property",
+    path: "/property/:hash",
     exact: true,
-    main: () => <Property />,
+    main: ({ match, history }) => <Property match={match} history={history} />,
   },
   {
     path: "/add-property",
@@ -84,7 +84,9 @@ const routes = [
   {
     path: "/my-properties/",
     exact: true,
-    main: () => <TabListProperties />,
+    main: ({ match, history }) => (
+      <TabListProperties match={match} history={history} />
+    ),
   },
   {
     path: "/transaction/:txHash",

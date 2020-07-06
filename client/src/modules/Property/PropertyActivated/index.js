@@ -12,7 +12,10 @@ function PropertyActivated({ properties, activateSale }) {
           <div className="single-property-box">
             <div className="property-item">
               <a className="property-img" href="single-listing-two.html">
-                <img src="images/property/property_1.jpg" alt="#" />
+                <img
+                  src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${property.images[0]}`}
+                  alt="#"
+                />
               </a>
               <ul className="feature_text">
                 {/* <li className="feature_cb">
@@ -28,7 +31,7 @@ function PropertyActivated({ properties, activateSale }) {
                   </span>
                 </li>
               </ul>
-              <div className="property-author-wrap">
+              {/* <div className="property-author-wrap">
                 <a href="#" className="property-author">
                   <img src="images/agents/agent_min_1.jpg" alt="..." />
                   <span>Tony Stark</span>
@@ -74,7 +77,7 @@ function PropertyActivated({ properties, activateSale }) {
                   <a href="images/single-listing/property_view_6.jpg"></a>
                   <a href="images/single-listing/property_view_7.jpg"></a>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="property-title-box">
               <h4>
