@@ -3,11 +3,11 @@ import { loadScript } from "../../helper/utils";
 import { connect } from "react-redux";
 import Filter from "./sections/filter";
 import { requestFetch } from "./actions";
+import { Link } from "react-router-dom";
 
 class Listings extends Component {
   componentDidMount() {
     loadScript("js/plugin.js");
-    console.log("load main");
     loadScript("js/main.js");
     this.props.handleClick();
   }
@@ -17,18 +17,24 @@ class Listings extends Component {
       <div className="col-xl-4 col-md-6 col-sm-12" key={index}>
         <div className="single-property-box">
           <div className="property-item">
-            <a className="property-img" href="single-listing-two.html">
-              <img src="images/property/property_1.jpg" alt="#" />
-            </a>
-            <ul className="feature_text">
+            <Link
+              className="property-img"
+              to={`property/${item.transactionHash}`}
+            >
+              <img
+                src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${item.images[0]}`}
+                alt="#"
+              />
+            </Link>
+            {/* <ul className="feature_text">
               <li className="feature_cb">
                 <span> Featured</span>
               </li>
               <li className="feature_or">
                 <span>For Sale</span>
               </li>
-            </ul>
-            <div className="property-author-wrap">
+            </ul> */}
+            {/* <div className="property-author-wrap">
               <a href="#" className="property-author">
                 <img src="images/agents/agent_min_1.jpg" alt="..." />
                 <span>Tony Stark</span>
@@ -74,39 +80,41 @@ class Listings extends Component {
                 <a href="images/single-listing/property_view_6.jpg"></a>
                 <a href="images/single-listing/property_view_7.jpg"></a>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="property-title-box">
             <h4>
-              <a href="single-listing-one.html">Villa on Hartford</a>
+              <Link to={`property/${item.transactionHash}`}>
+                {item.moreInfo.title}
+              </Link>
             </h4>
             <div className="property-location">
               <i className="fa fa-map-marker-alt"></i>
-              <p>2854 Meadow View Drive, Hartford, USA</p>
+              <p>{item.properties.landLot.address}</p>
             </div>
             <div className="trend-open mt-10">
-              <p> 250.000.000 VND </p>
+              <p> {item.moreInfo.price} </p>
             </div>
             <ul className="property-feature">
               <li>
                 {" "}
                 <i className="fas fa-bed"></i>
-                <span>4 Bedrooms</span>
+                <span>{item.moreInfo.numOfBedrooms} phòng ngủ</span>
               </li>
               <li>
                 {" "}
                 <i className="fas fa-bath"></i>
-                <span>3 Bath</span>
+                <span>{item.moreInfo.numOfBathrooms} phòng vệ sinh</span>
               </li>
               <li>
                 {" "}
                 <i className="fas fa-arrows-alt"></i>
-                <span>2142 sq ft</span>
+                <span>{item.moreInfo.areaFloor} m2</span>
               </li>
               <li>
                 {" "}
                 <i className="fas fa-car"></i>
-                <span>2 Garage</span>
+                <span>{item.moreInfo.utilities.length} tiện ích</span>
               </li>
             </ul>
             <div className="trending-bottom" style={{ padding: "15px 0px" }}>
@@ -118,6 +126,11 @@ class Listings extends Component {
                       background: "#6449e7",
                       border: "1px solid transparent",
                     }}
+                    onClick={() =>
+                      this.props.history.push(
+                        `property/${item.transactionHash}`
+                      )
+                    }
                   >
                     <i class="ion-android-add-circle"></i> Xem chi tiết
                   </button>
@@ -127,6 +140,11 @@ class Listings extends Component {
                       background: "#6449e7",
                       border: "1px solid transparent",
                     }}
+                    onClick={() =>
+                      this.props.history.push(
+                        `create-transaction/${item.transactionHash}`
+                      )
+                    }
                   >
                     <i class="ion-android-add-circle"></i> Mua
                   </button>

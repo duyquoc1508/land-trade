@@ -30,7 +30,7 @@ export class EditProperty extends Component {
       numOfBedrooms: 0,
       numOfBathrooms: 0,
       utilities: [],
-      setCheckBox: [false, false, false, false, false, false, false],
+      setCheckBox: Array(7).fill(false),
     };
     // this.handleCheckbox = this.handleCheckbox.bind(this);
   }

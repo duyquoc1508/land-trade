@@ -58,7 +58,7 @@ routes.get("/me", authJwt, userController.getPersonalInfo);
  * Get user profile
  * GET api/v1/users/{{publicAddress}}
  */
-routes.get("/:publicAddress", authJwt, userController.getUserProfile);
+routes.get("/:publicAddress", userController.getUserProfile);
 
 /**
  * Create new user

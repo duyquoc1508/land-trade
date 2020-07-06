@@ -13,7 +13,7 @@ import PropertyActivated from "../PropertyActivated";
 import PropertySelling from "../PropertySelling";
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, history, ...other } = props;
 
   return (
     <Typography
@@ -83,7 +83,7 @@ function ScrollableTabsButtonAuto(props) {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <ListProperties list={props.myListing} />
+            <ListProperties list={props.myListing} history={props.history} />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <PropertyPending />
