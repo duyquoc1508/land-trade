@@ -15,7 +15,7 @@ const cancelStateDetails = {
   "7": "TRANSFER_CANCELED_BY_SELLER",
 };
 
-// handle transaction created (DEPOSIT_REQUEST)
+// handle transaction created (DEPOSIT_REQUEST) // caller by buyer
 export async function handleTransactionCreated(event) {
   try {
     const transaction = {
@@ -36,7 +36,7 @@ export async function handleTransactionCreated(event) {
       message: "Bạn nhận được một lời đề nghị mua nhà.",
     };
     // notification
-    const { sellers } = event.returnValues;
+    const { sellers, buyers } = event.returnValues;
     sellers.map((seller) => {
       data.userAddress = seller;
       return Notification.create(data);
@@ -54,7 +54,7 @@ export async function handleTransactionCreated(event) {
   }
 }
 
-// handle transaction accepted (DEPOSIT_CONFIRMED)
+// handle transaction accepted (DEPOSIT_CONFIRMED)  // called by seller
 export async function handleTransactionAccepted(event) {
   try {
     // update state of transaction
@@ -82,19 +82,24 @@ export async function handleTransactionAccepted(event) {
       return Notification.create(data);
     });
     // emit event DEPOSIT_CONFIRMED to buyers
-    transaction.buyers.forEach((seller) => {
+    transaction.buyers.forEach((buyer) => {
       socketService.emitEventToIndividualClient(
         socketEvent.DEPOSIT_CONFIRMED,
-        seller,
+        buyer,
         data
       );
     });
+    socketService.emitEventToIndividualClient(
+      socketEvent.TRANSACTION_CHANGE_STATE,
+      transaction.sellers[0], // send to sender
+      { event: socketEvent.DEPOSIT_CONFIRMED, txHash: event.transactionHash }
+    );
   } catch (error) {
     console.log(error);
   }
 }
 
-// handle buyer payment remaining amount to seller (PAYMENT_REQUEST)
+// handle buyer payment remaining amount to seller (PAYMENT_REQUEST)  // called by buyer
 export async function handleTransactionPayment(event) {
   try {
     const transaction = await Transaction.findOneAndUpdate(
@@ -121,13 +126,18 @@ export async function handleTransactionPayment(event) {
         data
       );
     });
+    socketService.emitEventToIndividualClient(
+      socketEvent.TRANSACTION_CHANGE_STATE,
+      transaction.buyers[0], // send to sender
+      { event: socketEvent.PAYMENT_REQUEST, txHash: event.transactionHash }
+    );
   } catch (error) {
     console.log(error);
   }
 }
 
-// handle transaction successfully (PAYMENT_CONFIRMED)
-export async function handleTransactionComfirmed(event) {
+// handle transaction successfully (PAYMENT_CONFIRMED)  // called buy seller
+export async function handleTransactionConfirmed(event) {
   try {
     // update state of transaction
     const transaction = await Transaction.findOneAndUpdate(
@@ -138,7 +148,6 @@ export async function handleTransactionComfirmed(event) {
       }
     );
     const { buyers, sellers } = transaction;
-    console.log("handleTransactionComfirmed -> transaction", transaction);
     // update state of certificate and change ownership
     const certificate = await Certification.findOneAndUpdate(
       { idInBlockchain: transaction.idProperty },
@@ -165,18 +174,23 @@ export async function handleTransactionComfirmed(event) {
       url: `/transaction/${transaction.transactionHash}`,
       message: "Bạn có một giao dịch đã được xác nhận.",
     };
-    transaction.buyers.map((buyer) => {
+    buyers.map((buyer) => {
       data.userAddress = buyer;
       return Notification.create(data);
     });
     // emit event PAYMENT_CONFIRMED for owners
-    transaction.buyers.forEach((buyer) => {
+    buyers.forEach((buyer) => {
       socketService.emitEventToIndividualClient(
         socketEvent.PAYMENT_CONFIRMED,
         buyer,
         data
       );
     });
+    socketService.emitEventToIndividualClient(
+      socketEvent.TRANSACTION_CHANGE_STATE,
+      transaction.sellers[0], // send to sender
+      { event: socketEvent.PAYMENT_CONFIRMED, txHash: event.transactionHash }
+    );
   } catch (error) {
     console.log(error);
   }
@@ -202,6 +216,42 @@ export async function handleTransactionCanceled(event) {
       { idInBlockchain: transaction.idProperty },
       { state: 2 }
     );
+    const data = {
+      url: `/transaction/${transaction.transactionHash}`,
+      message: "Bạn có một giao dịch bị hủy.",
+    };
+    // if transaction canceled by buyer
+    if (cancelStateDetails[event.returnValues.state].includes("BY_BUYER")) {
+      transaction.sellers.forEach((seller) => {
+        socketService.emitEventToIndividualClient(
+          socketEvent.TRANSACTION_CANCELED,
+          seller,
+          data
+        );
+      });
+      socketService.emitEventToIndividualClient(
+        socketEvent.TRANSACTION_CHANGE_STATE,
+        transaction.buyers[0], // send to sender
+        {
+          event: socketEvent.TRANSACTION_CANCELED,
+          txHash: event.transactionHash,
+        }
+      );
+    } else {
+      // transaction canceled buy seller
+      transaction.buyers.forEach((buyer) => {
+        socketService.emitEventToIndividualClient(
+          socketEvent.PAYMENT_CONFIRMED,
+          buyer,
+          data
+        );
+      });
+      socketService.emitEventToIndividualClient(
+        socketEvent.TRANSACTION_CHANGE_STATE,
+        transaction.sellers[0], // send to sender
+        { event: socketEvent.PAYMENT_CONFIRMED, txHash: event.transactionHash }
+      );
+    }
   } catch (error) {
     console.log(error);
   }
