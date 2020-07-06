@@ -9,7 +9,7 @@ const instanceContract = new web3.eth.Contract(
   transactionContractAddress
 );
 
-// listen all event emited from RealEstate contract
+// listen all event emitted from RealEstate contract
 export function transactionListener() {
   instanceContract.events
     .allEvents()
@@ -32,9 +32,9 @@ async function handleEvent(event) {
     // buyer send remaining amount to seller
     case TransactionEvent.PAYMENT:
       return helper.handleTransactionPayment(event);
-    // seller recived fund and transfer ownership
+    // seller received fund and transfer ownership
     case TransactionEvent.TRANSACTION_SUCCESS:
-      return helper.handleTransactionComfirmed(event);
+      return helper.handleTransactionConfirmed(event);
     // cancel transaction
     case TransactionEvent.TRANSACTION_CANCELED:
       return helper.handleTransactionCanceled(event);
