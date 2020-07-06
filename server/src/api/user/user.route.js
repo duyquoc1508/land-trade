@@ -37,6 +37,12 @@ routes.get("/send", authJwt, userController.send);
 routes.get("/verify", userController.verifyEmail);
 
 /**
+ * Verify email
+ * GET api/vi/users/verify?token={{accessToken}}
+ */
+routes.get("/verify-account", authJwt, userController.verifyAccount);
+
+/**
  * Get user with idNumber and publicAddress
  * GET api/v1/users/search?idNumber={{idNumber}}
  */
@@ -52,7 +58,7 @@ routes.get("/me", authJwt, userController.getPersonalInfo);
  * Get user profile
  * GET api/v1/users/{{publicAddress}}
  */
-routes.get("/:publicAddress", authJwt, userController.getUserProfile);
+routes.get("/:publicAddress", userController.getUserProfile);
 
 /**
  * Create new user

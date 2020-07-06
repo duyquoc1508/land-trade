@@ -4,16 +4,25 @@ export const userSchema = {
   create: Joi.object().keys({
     publicAddress: Joi.string()
       .required()
-      .pattern(new RegExp("^(0x){1}[0-9a-fA-F]{40}$"))
+      .pattern(new RegExp("^(0x){1}[0-9a-fA-F]{40}$")),
   }),
 
   update: Joi.object().keys({
     fullName: Joi.string(),
     email: Joi.string().email(),
     idNumber: Joi.string().alphanum(),
-    phoneNumber: Joi.number().integer(),
-    avatar: Joi.string()
-  })
+    phoneNumber: Joi.string(),
+    avatar: Joi.string(),
+    homeLand: Joi.string(),
+    birthday: Joi.string(),
+    permanentResidence: Joi.string(),
+    ethnic: Joi.string(),
+    religion: Joi.string(),
+    deformity: Joi.string(),
+    dateIdNumber: Joi.string(),
+    placeIdNumber: Joi.string(),
+    imageIdNumber: Joi.array().items(Joi.string())
+  }),
 };
 
 // /**

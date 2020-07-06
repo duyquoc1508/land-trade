@@ -10,10 +10,10 @@ import { requestFetch } from "./actions";
 import ListProperties from "./list";
 import PropertyPending from "../PropertyPending";
 import PropertyActivated from "../PropertyActivated";
-import PropertySelling from "../PropertySelling"
+import PropertySelling from "../PropertySelling";
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, history, ...other } = props;
 
   return (
     <Typography
@@ -60,45 +60,40 @@ function ScrollableTabsButtonAuto(props) {
   let listSale = props.myListing.filter((property) => property.state === 2);
   return (
     <div className="container mt-75 mb-100">
-      <div className="row">
-        <div className="col-md-2"></div>
-        <div className="col-md-8">
-          <div className="recent-activity my-listing">
-            <div className="act-title">
-              <h5>Danh sách tài sản</h5>
-            </div>
-            <div className={classes.root}>
-              <AppBar
-                position="static"
-                style={{ boxShadow: "none" }}
-                color="inherit"
-              >
-                <Tabs
-                  value={value}
-                  onChange={handleChange}
-                  indicatorColor="primary"
-                  textColor="primary"
-                >
-                  <Tab label="Chờ duyệt " {...a11yProps(0)} />
-                  <Tab label="Đã duyệt " {...a11yProps(1)} />
-                  <Tab label="Đang bán " {...a11yProps(2)} />
-                  <Tab label="Tất cả " {...a11yProps(3)} />
-                </Tabs>
-              </AppBar>
-              <TabPanel value={value} index={0}>
-                <PropertyPending />
-              </TabPanel>
-              <TabPanel value={value} index={1}>
-                <PropertyActivated />
-              </TabPanel>
-              <TabPanel value={value} index={2}>
-                <PropertySelling />
-              </TabPanel>
-              <TabPanel value={value} index={3}>
-                <ListProperties list={props.myListing} />
-              </TabPanel>
-            </div>
-          </div>
+      <div className="recent-activity my-listing">
+        <div className="act-title">
+          <h5>Danh sách tài sản</h5>
+        </div>
+        <div className={classes.root}>
+          <AppBar
+            position="static"
+            style={{ boxShadow: "none" }}
+            color="inherit"
+          >
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              indicatorColor="primary"
+              textColor="primary"
+            >
+              <Tab label="Tất cả " {...a11yProps(0)} />
+              <Tab label="Chờ duyệt " {...a11yProps(1)} />
+              <Tab label="Đã duyệt " {...a11yProps(2)} />
+              <Tab label="Đang bán " {...a11yProps(3)} />
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0}>
+            <ListProperties list={props.myListing} history={props.history} />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <PropertyPending />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <PropertyActivated />
+          </TabPanel>
+          <TabPanel value={value} index={3}>
+            <PropertySelling />
+          </TabPanel>
         </div>
       </div>
     </div>

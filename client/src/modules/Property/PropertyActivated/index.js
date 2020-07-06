@@ -6,82 +6,152 @@ import { activateSaleRequest } from "./action";
 function PropertyActivated({ properties, activateSale }) {
   const history = useHistory();
   return (
-    <div className="viewd-item-wrap">
+    <div className="viewd-item-wrap row">
       {properties.map((property, index) => (
-        <div className={`most-viewed-item`} key={index}>
-          <div className="most-viewed-img">
-            <a >
-              <img
-                src={`${process.env.REACT_APP_BASE_URL}/images/property/property_1.jpg`}
-                alt="..."
-              />
-            </a>
-            <ul className="feature_text">
-              <li className="feature_cb">Đã duyệt</li>
-            </ul>
-          </div>
-          <div className="most-viewed-detail">
-            <h3>
-              {/* <Link to={`/user/my-properties/${property.transactionHash}`}> */}
-              {property.transactionHash.substr(0, 21) +
-                "..." +
-                property.transactionHash.substr(50)}
-              {/* </Link> */}
-            </h3>
-            <p className="list-address">
-              <i className="fas fa-map-marker-alt"></i>
-              {property.properties.landLot.address}
-            </p>
-            <div className="trend-open">
-              <p>
-                <span className="per_sale">starts from</span>$25000
-              </p>
-            </div>
-            <div className="ratings">
-              <i className="ion-ios-star"></i>
-              <i className="ion-ios-star"></i>
-              <i className="ion-ios-star"></i>
-              <i className="ion-ios-star"></i>
-              <i className="ion-ios-star-half"></i>
-            </div>
-            {/* <div className="views">
-                Views : <span>{property.transactionHash.length}</span>
+        <div className="col-xl-4 col-md-6 col-sm-12" key={index}>
+          <div className="single-property-box">
+            <div className="property-item">
+              <a className="property-img" href="single-listing-two.html">
+                <img
+                  src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${property.images[0]}`}
+                  alt="#"
+                />
+              </a>
+              <ul className="feature_text">
+                {/* <li className="feature_cb">
+                  <span> Featured</span>
+                </li> */}
+                <li className="feature_or">
+                  <span>
+                    {property.state == 0
+                      ? "Chờ duyệt"
+                      : property == 1
+                      ? "Đã duyệt"
+                      : "Đang bán"}
+                  </span>
+                </li>
+              </ul>
+              {/* <div className="property-author-wrap">
+                <a href="#" className="property-author">
+                  <img src="images/agents/agent_min_1.jpg" alt="..." />
+                  <span>Tony Stark</span>
+                </a>
+                <ul className="save-btn">
+                  <li
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title=""
+                    data-original-title="Photos"
+                  >
+                    <a href=".html" className="btn-gallery">
+                      <i className="lnr lnr-camera"></i>
+                    </a>
+                  </li>
+                  <li
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title=""
+                    data-original-title="Bookmark"
+                  >
+                    <a href="#">
+                      <i className="lnr lnr-heart"></i>
+                    </a>
+                  </li>
+                  <li
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title=""
+                    data-original-title="Add to Compare"
+                  >
+                    <a href="#">
+                      <i className="fas fa-arrows-alt-h"></i>
+                    </a>
+                  </li>
+                </ul>
+                <div className="hidden photo-gallery">
+                  <a href="images/single-listing/property_view_1.jpg"></a>
+                  <a href="images/single-listing/property_view_2.jpg"></a>
+                  <a href="images/single-listing/property_view_3.jpg"></a>
+                  <a href="images/single-listing/property_view_4.jpg"></a>
+                  <a href="images/single-listing/property_view_5.jpg"></a>
+                  <a href="images/single-listing/property_view_6.jpg"></a>
+                  <a href="images/single-listing/property_view_7.jpg"></a>
+                </div>
               </div> */}
-          </div>
-          <div className="listing-button">
-            <button
-              className="btn v3"
-              onClick={() =>
-                history.push(
-                  `property/${property.transactionHash}`
-                )
-              }
-            >
-              <i className="ion-edit"></i> Chi tiết
-            </button>
-            <button
-              className="btn v4 ml-2"
-              onClick={() =>
-                history.push(
-                  `my-property/edit/${property.transactionHash}`
-                )
-              }
-            >
-              <i className="ion-android-add-circle"></i> Thêm thông tin
-            </button>
-            <button
-              className="btn v4 ml-2"
-              onClick={() =>
-                activateSale(property._id)
-              }
-            >
-              <i className="ion-android-add-circle"></i> Bán
-            </button>
+            </div>
+            <div className="property-title-box">
+              <h4>
+                <a href="single-listing-one.html">{property.moreInfo.title}</a>
+              </h4>
+              <div className="property-location">
+                <i className="fa fa-map-marker-alt"></i>
+                <p>{property.properties.landLot.address}</p>
+              </div>
+              <div className="trend-open mt-10">
+                <p> {property.moreInfo.price} VND </p>
+              </div>
+              <ul className="property-feature">
+                <li>
+                  {" "}
+                  <i className="fas fa-bed"></i>
+                  <span>{property.moreInfo.numOfBedrooms} phòng ngủ</span>
+                </li>
+                <li>
+                  {" "}
+                  <i className="fas fa-bath"></i>
+                  <span> {property.moreInfo.numOfBathrooms} phòng tắm</span>
+                </li>
+                <li>
+                  {" "}
+                  <i className="fas fa-arrows-alt"></i>
+                  <span>
+                    {property.moreInfo.areaFloor} m<super>2</super>
+                  </span>
+                </li>
+                <li>
+                  {" "}
+                  <i className="fas fa-car"></i>
+                  <span>{property.moreInfo.utilities.length} tiện ích</span>
+                </li>
+              </ul>
+              <div className="trending-bottom" style={{ padding: "15px 0px" }}>
+                <div className="trend-right float-right">
+                  <div className="trend-open">
+                    <button
+                      className="btn v4 ml-2"
+                      style={{
+                        background: "#6449e7",
+                        border: "1px solid transparent",
+                      }}
+                      onClick={() =>
+                        history.push(`property/${property.transactionHash}`)
+                      }
+                    >
+                      <i className="ion-edit"></i> Chi tiết
+                    </button>
+
+                    <button
+                      className="btn v4 ml-2"
+                      style={{
+                        background: "#6449e7",
+                        border: "1px solid transparent",
+                      }}
+                      onClick={() =>
+                        history.push(
+                          `my-property/edit/${property.transactionHash}`
+                        )
+                      }
+                    >
+                      <i className="ion-android-add-circle"></i> Thêm thông tin
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      ))
-      }
-    </div >
+      ))}
+    </div>
   );
 }
 
@@ -96,9 +166,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     activateSale: (idCertificate) => {
-      dispatch(activateSaleRequest(idCertificate))
-    }
-  }
-}
+      dispatch(activateSaleRequest(idCertificate));
+    },
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertyActivated);

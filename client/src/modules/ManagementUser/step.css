@@ -1,0 +1,171 @@
+.steps {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 20px;
+  margin: 0px;
+  list-style: none;
+  font-family: sans-serif;
+}
+.steps li {
+  -ms-flex-preferred-size: 0;
+  flex-basis: 0;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  max-width: 100%;
+  padding: 0px 20px;
+  position: relative;
+}
+.steps li div {
+  position: relative;
+  padding: 1px 0px;
+  background: #cccccc;
+  box-sizing: border-box;
+  transform: scale(0.999999);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.steps li div span {
+  display: block;
+  transition: all 0.3s ease;
+}
+.steps li div span:nth-child(1) {
+  position: absolute;
+  left: 100%;
+  top: 0px;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-left: 20px solid #cccccc;
+}
+.steps li div span:nth-child(2) {
+  position: absolute;
+  right: 100%;
+  top: 0px;
+  border-bottom: 20px solid transparent;
+  border-right: 20px solid #cccccc;
+}
+.steps li div span:nth-child(3) {
+  position: absolute;
+  right: 100%;
+  bottom: 0px;
+  border-top: 20px solid transparent;
+  border-right: 20px solid #cccccc;
+}
+.steps li div span:nth-child(4) {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  height: 12px;
+  width: 12px;
+  margin-top: -6px;
+  border-radius: 100%;
+  background: transparent;
+  z-index: 2;
+  border: 1px solid #cccccc;
+}
+.steps li div span:nth-child(5) {
+  position: absolute;
+  left: 100%;
+  top: 1px;
+  border-top: 19px solid transparent;
+  border-bottom: 19px solid transparent;
+  border-left: 19px solid white;
+}
+.steps li div span:nth-child(6) {
+  position: absolute;
+  right: 100%;
+  top: 1px;
+  border-bottom: 19px solid transparent;
+  border-right: 19px solid white;
+  margin-right: -1px;
+}
+.steps li div span:nth-child(7) {
+  position: absolute;
+  right: 100%;
+  bottom: 1px;
+  border-top: 19px solid transparent;
+  border-right: 19px solid white;
+  margin-right: -1px;
+}
+.steps li div span:nth-child(8) {
+  display: block;
+  padding: 0px 40px;
+  position: relative;
+  height: 38px;
+  line-height: 38px;
+  background: white;
+  color: black;
+}
+.steps li:hover div {
+  background: #ddd;
+}
+.steps li:hover div span:nth-child(1) {
+  border-left-color: #ddd;
+}
+.steps li:hover div span:nth-child(2),
+.steps li:hover div span:nth-child(3) {
+  border-right-color: #ddd;
+}
+.steps li:hover div span:nth-child(4) {
+  background: white;
+  border-color: #ddd;
+}
+.steps li:hover div span:nth-child(5) {
+  border-left-color: #ddd;
+}
+.steps li:hover div span:nth-child(6),
+.steps li:hover div span:nth-child(7) {
+  border-right-color: #ddd;
+}
+.steps li:hover div span:nth-child(8) {
+  background: #ddd;
+  color: black;
+}
+.steps li.active div {
+  background: #2fbe6e;
+}
+.steps li.active div span:nth-child(1) {
+  border-left-color: #2fbe6e;
+}
+.steps li.active div span:nth-child(2),
+.steps li.active div span:nth-child(3) {
+  border-right-color: #2fbe6e;
+}
+.steps li.active div span:nth-child(4) {
+  background: white;
+  border-color: #2fbe6e;
+}
+.steps li.active div span:nth-child(5) {
+  border-left-color: #2fbe6e;
+}
+.steps li.active div span:nth-child(6),
+.steps li.active div span:nth-child(7) {
+  border-right-color: #2fbe6e;
+}
+.steps li.active div span:nth-child(8) {
+  background: #2fbe6e;
+  color: white;
+}
+.steps li:first-child {
+  padding-left: 0px;
+}
+.steps li:first-child div {
+  padding-left: 1px;
+}
+.steps li:first-child div span:nth-child(2),
+.steps li:first-child div span:nth-child(3),
+.steps li:first-child div span:nth-child(6),
+.steps li:first-child div span:nth-child(7) {
+  display: none;
+}
+.steps li:last-child {
+  padding-right: 0px;
+}
+.steps li:last-child div {
+  padding-right: 1px;
+}
+.steps li:last-child div span:nth-child(1),
+.steps li:last-child div span:nth-child(5) {
+  display: none;
+}

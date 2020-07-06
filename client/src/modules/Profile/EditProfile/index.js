@@ -30,6 +30,14 @@ class EditProfile extends Component {
     const user = this.props.user;
     this.props.change("fullName", user.fullName || "");
     this.props.change("idNumber", user.idNumber || "");
+    // this.props.change("homeLand", user.homeLand || "");
+    // this.props.change("birthday", user.birthday || "");
+    // this.props.change("permanentResidence", user.permanentResidence || "");
+    // this.props.change("ethnic", user.ethnic || "");
+    // this.props.change("religion", user.religion || "");
+    // this.props.change("deformity", user.deformity || "");
+    // this.props.change("dateIdNumber", user.dateIdNumber || "");
+    // this.props.change("placeIdNumber", user.placeIdNumber || "");
     this.props.change("phoneNumber", user.phoneNumber || "");
     this.props.change("email", user.email || "");
   }
@@ -85,6 +93,102 @@ class EditProfile extends Component {
                             <Field
                               component="input"
                               name="idNumber"
+                              type="text"
+                              className="form-control filter-input"
+                              placeholder="Nhập số CMND căn cước"
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-12">
+                          <div className="form-group">
+                            <label>Sinh ngày</label>
+                            <Field
+                              component="input"
+                              name="birthday"
+                              type="text"
+                              className="form-control filter-input"
+                              placeholder="Nhập số CMND căn cước"
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-12">
+                          <div className="form-group">
+                            <label>Nguyên quán</label>
+                            <Field
+                              component="input"
+                              name="homeLand"
+                              type="text"
+                              className="form-control filter-input"
+                              placeholder="Nhập số CMND căn cước"
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-12">
+                          <div className="form-group">
+                            <label>Nơi ĐKHK thường trú</label>
+                            <Field
+                              component="input"
+                              name="permanentResidence"
+                              type="text"
+                              className="form-control filter-input"
+                              placeholder="Nhập số CMND căn cước"
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="form-group">
+                            <label>Dân tộc</label>
+                            <Field
+                              component="input"
+                              name="ethnic"
+                              type="text"
+                              className="form-control filter-input"
+                              placeholder="Nhập số CMND căn cước"
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="form-group">
+                            <label>Tôn giáo</label>
+                            <Field
+                              component="input"
+                              name="religion"
+                              type="text"
+                              className="form-control filter-input"
+                              placeholder="Nhập số CMND căn cước"
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-12">
+                          <div className="form-group">
+                            <label>Dấu vết riêng và dị hình</label>
+                            <Field
+                              component="input"
+                              name="deformity"
+                              type="text"
+                              className="form-control filter-input"
+                              placeholder="Nhập số CMND căn cước"
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="form-group">
+                            <label>Ngày cấp</label>
+                            <Field
+                              component="input"
+                              name="dateIdNumber"
+                              type="text"
+                              className="form-control filter-input"
+                              placeholder="Nhập số CMND căn cước"
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="form-group">
+                            <label>Nơi cấp</label>
+                            <Field
+                              component="input"
+                              name="placeIdNumber"
                               type="text"
                               className="form-control filter-input"
                               placeholder="Nhập số CMND căn cước"

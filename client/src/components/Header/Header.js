@@ -41,6 +41,12 @@ const menus = [
     exact: false,
     role: "Notary",
   },
+  {
+    name: "Quản lý người dùng",
+    to: "/management-user",
+    exact: false,
+    role: "Notary",
+  },
 ];
 
 const MenuLink = ({ label, to, activeOnlyWhenExact }) => {
@@ -238,13 +244,15 @@ class Menu extends Component {
                         </Link>
                       </div>
                       {user && user.role == "owner" ? (
-                        <div className="account-dropdown__item">
-                          <Link
-                            to={"/my-properties"}
-                            onClick={this.changeToggleAuth}
-                          >
-                            Tài sản của tôi
-                          </Link>
+                        <div>
+                          <div className="account-dropdown__item">
+                            <Link
+                              to={"/my-properties"}
+                              onClick={this.changeToggleAuth}
+                            >
+                              Tài sản của tôi
+                            </Link>
+                          </div>
                         </div>
                       ) : (
                         ""
@@ -279,7 +287,7 @@ class Menu extends Component {
     var result = null;
     if (menus.length > 0) {
       result = menus.map((menu, index) => {
-        if (menu.role == "all" || menu.role == user.role) {
+        if (menu.role == "all" || (user && menu.role == user.role)) {
           return (
             <MenuLink
               key={index}

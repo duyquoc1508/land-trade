@@ -1,4 +1,4 @@
-img {
+.image-container > img {
   width: 320px;
   height: 240px;
 }
@@ -40,4 +40,12 @@ img {
 .upload-container {
   cursor: pointer;
   height: 300px;
+}
+
+ol.carousel-indicators.list-gallery-thumb {
+  padding: 10px;
+}
+
+.list-details-tab .nav-item {
+  padding: 20px 0;
 }
