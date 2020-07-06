@@ -21,7 +21,7 @@ const upload = multer({
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "src/public/uploads/contract/");
+    cb(null, "src/public/uploads/CMND/");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -44,13 +44,9 @@ routes.post(
   uploadController.uploadMultipleImages
 );
 
-/**
- * upload file (contract)
- * POST api/v1/upload/contract
- */
 routes.post(
-  "/contract",
-  uploadFile.single("file"),
+  "/idNumber",
+  upload.array("images", 2),
   uploadController.uploadFile
 );
 

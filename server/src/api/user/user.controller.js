@@ -81,7 +81,7 @@ export async function updateUserProfile(req, res, next) {
     const newUser = req.body;
     // send emal verify if user update new email
     if (req.body.email) {
-      newUser["isVerifired"] = false;
+      newUser["isVerifired"] = 0;
     }
     const user = await User.findByIdAndUpdate(req.user._id, newUser, {
       new: true,
@@ -136,6 +136,24 @@ export async function verifyEmail(req, res, next) {
     const token = req.query.token;
     const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     await User.findByIdAndUpdate(user._id, { isVerifired: true }).lean();
+    return res
+      .status(200)
+      .json({ statusCode: "200", message: "Verify email successfully" });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Verify account
+export async function verifyAccount(req, res, next) {
+  try {
+    const user = req.user;
+    if (user.role != "Notary") {
+      throw new ErrorHandler(401, "Authorization");
+    }
+    const userId = req.query.userId;
+    console.log(userId);
+    await User.findByIdAndUpdate(userId, { isVerifired: 2 }).lean();
     return res
       .status(200)
       .json({ statusCode: "200", message: "Verify email successfully" });

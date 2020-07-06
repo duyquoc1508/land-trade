@@ -17,6 +17,9 @@ import NotFound from "../NotFound";
 import DownPaymentContract from "../Transaction/sections/DownPaymentContract";
 import TradeContract from "../Transaction/sections/TradeContract";
 import TransactionProcess from "../TransactionProcess";
+import ManagementUser from "../ManagementUser";
+import VerifyAccount from "../ManagementUser/verifyAccount";
+import Notification from "../Notification";
 
 const routes = [
   {
@@ -25,14 +28,21 @@ const routes = [
     main: () => <HomePage />,
   },
   {
+    path: "/notification",
+    exact: true,
+    main: ({ match, history }) => (
+      <Notification match={match} history={history} />
+    ),
+  },
+  {
     path: "/listings",
     exact: true,
     main: ({ match, history }) => <Listings match={match} history={history} />,
   },
   {
-    path: "/property",
+    path: "/property/:hash",
     exact: true,
-    main: () => <Property />,
+    main: ({ match, history }) => <Property match={match} history={history} />,
   },
   {
     path: "/add-property",
@@ -75,7 +85,9 @@ const routes = [
   {
     path: "/my-properties/",
     exact: true,
-    main: () => <TabListProperties />,
+    main: ({ match, history }) => (
+      <TabListProperties match={match} history={history} />
+    ),
   },
   {
     path: "/transaction/:txHash",
@@ -96,6 +108,7 @@ const routes = [
     exact: true,
     main: () => <Role />,
   },
+
   {
     path: "/down-payment-contract",
     exact: false,
@@ -112,6 +125,18 @@ const routes = [
     exact: false,
     main: ({ match, history }) => (
       <TransactionProcess match={match} history={history} />
+    ),
+  },
+  {
+    path: "/management-user",
+    exact: false,
+    main: () => <ManagementUser />,
+  },
+  {
+    path: "/verify-account",
+    exact: false,
+    main: ({ match, history }) => (
+      <VerifyAccount match={match} history={history} />
     ),
   },
   {

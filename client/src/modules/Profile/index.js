@@ -42,6 +42,19 @@ class Profile extends Component {
                           {user.idNumber || "Vui lòng cập nhập thông tin"}
                         </li>
                         <li>
+                          <span>Ngày sinh:</span>
+                          {user.birthday || "Vui lòng cập nhập thông tin"}
+                        </li>
+                        <li>
+                          <span>Nguyên quán:</span>
+                          {user.homeLand || "Vui lòng cập nhập thông tin"}
+                        </li>
+                        <li>
+                          <span>Nơi ĐKHK thường trú:</span>
+                          {user.permanentResidence ||
+                            "Vui lòng cập nhập thông tin"}
+                        </li>
+                        <li>
                           <span>Số điện thoại:</span>
                           {user.phoneNumber || "Vui lòng cập nhập thông tin"}
                         </li>
