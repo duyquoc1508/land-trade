@@ -50,7 +50,7 @@ const ComfirmProperty = (props) => {
 const mapStateToProps = (state) => ({
   //   idInBlockchain:
   // state.propertyDetail && state.propertyDetail.data.idInBlockchain,
-  realEstateContract: state.instanceContracts.realEstate,
+  realEstateContract: state.shared.realEstate,
   loading: state.confirmProperty.loading,
 });
 

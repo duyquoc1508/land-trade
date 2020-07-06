@@ -16,6 +16,7 @@ import InitTransaction from "../InitTransaction";
 import NotFound from "../NotFound";
 import DownPaymentContract from "../Transaction/sections/DownPaymentContract";
 import TradeContract from "../Transaction/sections/TradeContract";
+import TransactionProcess from "../TransactionProcess";
 import ManagementUser from "../ManagementUser";
 import VerifyAccount from "../ManagementUser/verifyAccount";
 import Notification from "../Notification";
@@ -117,6 +118,14 @@ const routes = [
     path: "/trade-contract",
     exact: false,
     main: () => <TradeContract />,
+  },
+
+  {
+    path: "/transaction-process/:transactionHash",
+    exact: false,
+    main: ({ match, history }) => (
+      <TransactionProcess match={match} history={history} />
+    ),
   },
   {
     path: "/management-user",

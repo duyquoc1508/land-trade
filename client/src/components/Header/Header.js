@@ -4,11 +4,11 @@ import ButtonLogin from "../../modules/Login";
 import { connect } from "react-redux";
 import Cookie from "../../helper/cookie";
 import Notifications from "./Notifications";
-import PopupNotification from "../PopupNotification";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import io from "socket.io-client";
-import { initSocket, refreshPage } from "./action";
+import { initSocket, refreshPage, dispatchEventFromBlockchain } from "./action";
+import formatCurrency from "../../utils/formatCurrency";
 
 const menus = [
   {
@@ -77,7 +77,7 @@ class Menu extends Component {
     };
   }
 
-  // handler refresh header => reconect socket
+  // handler refresh header => reconnect socket
   componentDidMount() {
     const accessToken = Cookie.getCookie("accessToken");
     if (accessToken) {
@@ -89,7 +89,7 @@ class Menu extends Component {
   }
 
   // listener event from server
-  componentDidUpdate(preProps, preState) {
+  componentDidUpdate = async (preProps, preState) => {
     // logout after 1 day
     let expiredTime = Cookie.getCookie("expiredToken");
     if (expiredTime) {
@@ -110,64 +110,36 @@ class Menu extends Component {
     // handle event socket
     if (this.props.socket && this.props.socket !== preProps.socket) {
       const { history } = this.props;
-      this.props.socket.on("new-certification", (data) => {
-        toast.info(`${data.message}`, {
-          position: toast.POSITION.BOTTOM_RIGHT,
-          autoClose: false,
-          onClick: () => history.push(data.url),
+      const socketEventToAction = {
+        new_certification: "",
+        new_transaction: "",
+        deposit_confirmed: "ACCEPT_TRANSACTION_SUCCESS",
+        payment_request: "PAYMENT_SUCCESS",
+        payment_confirmed: "CONFIRM_TRANSACTION_SUCCESS",
+        transaction_canceled: "CANCEL_TRANSACTION_SUCCESS",
+      };
+
+      // listener socket event info
+      Object.keys(socketEventToAction).map((eventName) => {
+        // emit event to
+        this.props.socket.on(eventName, (data) => {
+          toast.info(`${data.message}`, {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: false,
+            onClick: () => history.push(data.url),
+          });
         });
       });
-
-      // listen event transaction
-      this.props.socket.on("new-transaction", (data) => {
-        toast.info(`${data.message}`, {
-          position: toast.POSITION.BOTTOM_RIGHT,
-          autoClose: false,
-          onClick: () => history.push(data.url),
-        });
-      });
-
-      this.props.socket.on("new_transaction", (data) => {
-        toast.info(`${data.message}`, {
-          position: toast.POSITION.BOTTOM_RIGHT,
-          autoClose: false,
-          onClick: () => history.push(data.url),
-        });
-      });
-
-      this.props.socket.on("deposit_confirmed", (data) => {
-        toast.info(`${data.message}`, {
-          position: toast.POSITION.BOTTOM_RIGHT,
-          autoClose: false,
-          onClick: () => history.push(data.url),
-        });
-      });
-
-      this.props.socket.on("payment_request", (data) => {
-        toast.info(`${data.message}`, {
-          position: toast.POSITION.BOTTOM_RIGHT,
-          autoClose: false,
-          onClick: () => history.push(data.url),
-        });
-      });
-
-      this.props.socket.on("payment_confirmed", (data) => {
-        toast.info(`${data.message}`, {
-          position: toast.POSITION.BOTTOM_RIGHT,
-          autoClose: false,
-          onClick: () => history.push(data.url),
-        });
-      });
-
-      this.props.socket.on("transaction_canceled", (data) => {
-        toast.info(`${data.message}`, {
-          position: toast.POSITION.BOTTOM_RIGHT,
-          autoClose: false,
-          onClick: () => history.push(data.url),
-        });
+      this.props.socket.on("transaction_change_state", (data) => {
+        setTimeout(() => {
+          this.props.dispatchEventFromBlockchain(
+            socketEventToAction[data.event],
+            data.txHash
+          );
+        }, 1000);
       });
     }
-  }
+  };
 
   changeToggleAuth = () => {
     if (!this.state.toggleAuthStatus) {
@@ -254,6 +226,16 @@ class Menu extends Component {
                   <div className={this.state.toggleAuth}>
                     <div className="account-dropdown__body">
                       <div className="account-dropdown__item">
+                        <a type="button">
+                          {formatCurrency(
+                            Math.floor(
+                              this.props.balance * this.props.ethToVndPrice
+                            )
+                          )}{" "}
+                          VND
+                        </a>
+                      </div>
+                      <div className="account-dropdown__item">
                         <Link
                           to={"/user/profile"}
                           onClick={this.changeToggleAuth}
@@ -326,6 +308,8 @@ const mapStateToProps = (state) => {
     checkAuth: state.login.accessToken,
     user: state.user.data,
     socket: state.header.socket,
+    balance: state.shared.accountBalance,
+    ethToVndPrice: state.shared.ethToVndPrice,
   };
 };
 
@@ -333,6 +317,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     initSocket: (socket) => dispatch(initSocket(socket)),
     refreshPage: () => dispatch(refreshPage()),
+    dispatchEventFromBlockchain: (eventName, txHash) =>
+      dispatch(dispatchEventFromBlockchain(eventName, txHash)),
   };
 };
 

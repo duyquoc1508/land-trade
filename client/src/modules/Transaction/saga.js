@@ -1,7 +1,5 @@
-import { takeEvery, call, put, select } from "redux-saga/effects";
+import { takeEvery, call, put, select, all } from "redux-saga/effects";
 import axios from "axios";
-import TransactionContract from "../../contracts/Transaction.json";
-import { transactionContractAddress } from "../../../config/common-path";
 import getWeb3 from "../../helper/getWeb3";
 
 import {
@@ -11,19 +9,15 @@ import {
   FETCH_TRADING_PROPERTY_SUCCESS,
   CANCEL_TRANSACTION_REQUEST,
   CANCEL_TRANSACTION_WAIT_BLOCKCHAIN_CONFIRM,
-  CANCEL_TRANSACTION_SUCCESS,
   CANCEL_TRANSACTION_FAILURE,
   ACCEPT_TRANSACTION_REQUEST,
   ACCEPT_TRANSACTION_WAIT_BLOCKCHAIN_CONFIRM,
-  ACCEPT_TRANSACTION_SUCCESS,
   ACCEPT_TRANSACTION_FAILURE,
   CONFIRM_TRANSACTION_REQUEST,
   CONFIRM_TRANSACTION_WAIT_BLOCKCHAIN_CONFIRM,
-  CONFIRM_TRANSACTION_SUCCESS,
   CONFIRM_TRANSACTION_FAILURE,
   PAYMENT_REQUEST,
-  PAYMENT_REQUEST_WAIT_BLOCKCHAIN_CONFIRM,
-  PAYMENT_SUCCESS,
+  PAYMENT_WAIT_BLOCKCHAIN_CONFIRM,
   PAYMENT_FAILURE,
 } from "./constants";
 import Cookie from "../../helper/cookie";
@@ -167,14 +161,14 @@ const confirmTransaction = async (transactionContract, transaction) => {
           }
           const personalIncomeTax = web3.utils
             .toBN(transaction.transferPrice)
-            .div(50); //2% tax
-          const remainingAmout = web3.utils
+            .div(web3.utils.toBN(50)); //2% tax
+          const remainingAmount = web3.utils
             .toBN(transaction.transferPrice)
             .sub(web3.utils.toBN(transaction.depositPrice));
           let value = "0";
           // If the remaining amount is less than the tax amount, the value must be submitted to pay tax
-          if (remainingAmout.lt(personalIncomeTax)) {
-            value = personalIncomeTax.sub(remainingAmout);
+          if (remainingAmount.lt(personalIncomeTax)) {
+            value = personalIncomeTax.sub(remainingAmount);
           }
           transactionContract.methods
             .confirmTransaction(transaction.idInBlockchain)
@@ -298,7 +292,7 @@ const cancelTransaction = (
   }
 };
 
-const getTransactionContract = (state) => state.instanceContracts.transaction;
+const getTransactionContract = (state) => state.shared.transaction;
 
 function* cancelTransactionFlow(action) {
   try {
@@ -343,7 +337,7 @@ function* paymentFlow(action) {
       action.payload
     );
     yield put({
-      type: PAYMENT_REQUEST_WAIT_BLOCKCHAIN_CONFIRM,
+      type: PAYMENT_WAIT_BLOCKCHAIN_CONFIRM,
       payload: transactionHash,
     });
   } catch (error) {
@@ -369,11 +363,13 @@ function* confirmTransactionFlow(action) {
 }
 
 function* transactionWatcher() {
-  yield takeEvery(FETCH_TRANSACTION_REQUEST, fetchTransactionFlow);
-  yield takeEvery(CANCEL_TRANSACTION_REQUEST, cancelTransactionFlow);
-  yield takeEvery(ACCEPT_TRANSACTION_REQUEST, acceptTransactionFlow);
-  yield takeEvery(PAYMENT_REQUEST, paymentFlow);
-  yield takeEvery(CONFIRM_TRANSACTION_REQUEST, confirmTransactionFlow);
+  yield all([
+    takeEvery(FETCH_TRANSACTION_REQUEST, fetchTransactionFlow),
+    takeEvery(CANCEL_TRANSACTION_REQUEST, cancelTransactionFlow),
+    takeEvery(ACCEPT_TRANSACTION_REQUEST, acceptTransactionFlow),
+    takeEvery(PAYMENT_REQUEST, paymentFlow),
+    takeEvery(CONFIRM_TRANSACTION_REQUEST, confirmTransactionFlow),
+  ]);
 }
 
 export default transactionWatcher;

@@ -13,18 +13,25 @@ import DepositConfirm from "./sections/4_deposit_confirm";
 import TransferContract from "./sections/5_transfer_contract";
 import PaymentConfirm from "./sections/6_payment_confirm";
 import PayTaxes from "./sections/7_pay_taxes";
-import TaxesComfirm from "./sections/8_taxes_confirm";
+import TaxesConfirm from "./sections/8_taxes_confirm";
 import Finished from "./sections/9_finished";
 
 import BuyerAcceptTransaction from "./buyer/acceptTransaction";
-import BuyerComfirmTransaction from "./buyer/confirmTransaction";
+import BuyerConfirmTransaction from "./buyer/confirmTransaction";
 import BuyerPayment from "./buyer/payment";
 
 import SellerAcceptTransaction from "./seller/acceptTransaction";
-import SellerComfirmTransaction from "./seller/confirmTransaction";
+import SellerConfirmTransaction from "./seller/confirmTransaction";
 import SellerPayment from "./seller/payment";
 
-import { fetchTransactionRequest, cancelTransactionRequest } from "./action";
+import {
+  fetchTransactionRequest,
+  cancelTransactionRequest,
+  acceptTransactionSuccess,
+  paymentTransactionSuccess,
+  confirmTransactionSuccess,
+  cancelTransactionSuccess,
+} from "./action";
 
 const ExpansionPanel = withStyles({
   root: {
@@ -87,6 +94,40 @@ const CustomizedExpansionPanels = (props) => {
       setParty("BUYER");
     }
   });
+
+  // useEffect(() => {
+  //   // listen event TransactionCreated from blockchain and emit event INIT_TRANSACTION_SUCCESS
+  //   if (props.transactionContract) {
+  //     console.log(props.transactionContract);
+  //     props.transactionContract.events
+  //       .DepositSigned()
+  //       .on("data", (event) => {
+  //         props.acceptTransactionSuccess(event.transactionHash);
+  //       })
+  //       .on("error", console.error);
+
+  //     props.transactionContract.events
+  //       .Payment()
+  //       .on("data", (event) => {
+  //         props.paymentSuccess(event.transactionHash);
+  //       })
+  //       .on("error", console.error);
+
+  //     props.transactionContract.events
+  //       .TransactionSuccess()
+  //       .on("data", (event) => {
+  //         props.confirmTransactionSuccess(event.transactionHash);
+  //       })
+  //       .on("error", console.error);
+
+  //     props.transactionContract.events
+  //       .TransactionCanceled()
+  //       .on("data", (event) => {
+  //         props.cancelTransactionSuccess(event.transactionHash);
+  //       })
+  //       .on("error", console.error);
+  //   }
+  // }, [props.transactionContract]);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -171,9 +212,9 @@ const CustomizedExpansionPanels = (props) => {
         <ExpansionPanelDetails>
           {expanded === "panel4" &&
             (party == PARTY_CONSTANT.SELLER ? (
-              <SellerComfirmTransaction />
+              <SellerConfirmTransaction />
             ) : party == PARTY_CONSTANT.BUYER ? (
-              <BuyerComfirmTransaction />
+              <BuyerConfirmTransaction />
             ) : (
               <DepositContract />
             ))}
@@ -236,7 +277,7 @@ const CustomizedExpansionPanels = (props) => {
           <Typography>Xác nhận đóng thuế</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <TaxesComfirm />
+          <TaxesConfirm />
         </ExpansionPanelDetails>
       </ExpansionPanel> */}
       <ExpansionPanel
@@ -278,6 +319,7 @@ const mapStateToProps = (state) => {
   return {
     transaction: state.transaction.data,
     user: state.user.data,
+    transactionContract: state.shared.transaction,
   };
 };
 
@@ -288,6 +330,18 @@ const mapDispatchToProps = (dispatch) => {
     },
     cancelTransaction: (transaction, publicAddress) => {
       dispatch(cancelTransactionRequest(transaction, publicAddress));
+    },
+    acceptTransactionSuccess: (txHash) => {
+      dispatch(acceptTransactionSuccess(txHash));
+    },
+    paymentTransactionSuccess: (txHash) => {
+      dispatch(paymentTransactionSuccess(txHash));
+    },
+    confirmTransactionSuccess: (txHash) => {
+      dispatch(confirmTransactionSuccess(txHash));
+    },
+    cancelTransactionSuccess: (txHash) => {
+      dispatch(cancelTransactionSuccess(txHash));
     },
   };
 };

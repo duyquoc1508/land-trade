@@ -1,5 +1,8 @@
+import React from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ToastLoading from "../../components/ToastCustom/ToastLoading";
+import ToastSuccess from "../../components/ToastCustom/ToastSuccess";
 import {
   INIT_TRANSACTION_REQUEST,
   INIT_TRANSACTION_SUCCESS,
@@ -21,8 +24,7 @@ export default function initTransactionReducer(state = initialState, action) {
         loading: true,
       };
     case INIT_TRANSACTION_WAIT_BLOCKCHAIN_CONFIRM:
-      toast("Đang khởi tạo giao dịch...", {
-        type: toast.TYPE.INFO,
+      toast(<ToastLoading message={"Đang khởi tạo giao dịch..."} />, {
         toastId: action.payload,
         autoClose: false,
         position: toast.POSITION.BOTTOM_RIGHT,
@@ -30,7 +32,7 @@ export default function initTransactionReducer(state = initialState, action) {
       return { ...state, loading: true };
     case INIT_TRANSACTION_SUCCESS:
       toast.update(action.payload.txHash, {
-        render: "Khởi tạo giao dịch thành công.",
+        render: <ToastSuccess message={"Khởi tạo giao dịch thành công!"} />,
         type: toast.TYPE.SUCCESS,
         autoClose: 5000,
         onClick: () => {

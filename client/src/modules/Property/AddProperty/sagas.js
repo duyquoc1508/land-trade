@@ -60,7 +60,7 @@ function objectToB64(property) {
 }
 
 // get instance of smart contract in store
-const getInstanceContract = (state) => state.instanceContracts.realEstate;
+const getInstanceContract = (state) => state.shared.realEstate;
 
 function* createFlow(action) {
   try {
