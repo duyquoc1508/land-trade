@@ -209,7 +209,7 @@ export async function getAllPropertiesOfUser(req, res, next) {
     const listProperties = await User.findById(req.user._id)
       .populate({
         path: "properties",
-        match: { isComfirmed: true },
+        match: { isConfirmed: true },
       })
       .select("properties -_id");
     // if (listProperties.properties.length === 0)

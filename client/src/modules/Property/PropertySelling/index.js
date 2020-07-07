@@ -12,12 +12,12 @@ function PropertySelling({ properties, cancelSale }) {
         <div className="col-xl-4 col-md-6 col-sm-12" key={index}>
           <div className="single-property-box">
             <div className="property-item">
-              <a className="property-img" href="single-listing-two.html">
+              <Link to={`property-standard/${property.transactionHash}`}>
                 <img
                   src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${property.images[0]}`}
                   alt="#"
                 />
-              </a>
+              </Link>
               <ul className="feature_text">
                 {/* <li className="feature_cb">
                   <span> Featured</span>
@@ -26,7 +26,7 @@ function PropertySelling({ properties, cancelSale }) {
                   <span>
                     {property.state == 0
                       ? "Chờ duyệt"
-                      : property == 1
+                      : property.state == 1
                       ? "Đã duyệt"
                       : "Đang bán"}
                   </span>
@@ -82,7 +82,9 @@ function PropertySelling({ properties, cancelSale }) {
             </div>
             <div className="property-title-box">
               <h4>
-                <a href="single-listing-one.html">{property.moreInfo.title}</a>
+                <Link to={`property/${property.transactionHash}`}>
+                  {property.moreInfo.title}
+                </Link>
               </h4>
               <div className="property-location">
                 <i className="fa fa-map-marker-alt"></i>

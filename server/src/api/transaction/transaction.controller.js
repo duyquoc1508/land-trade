@@ -51,6 +51,31 @@ export async function createTransaction(req, res, next) {
   }
 }
 
+export async function getMyTransactions(req, res, next) {
+  try {
+    let transactionP1 = Transaction.find({
+      $in: {
+        buyers: req.user.publicAddress,
+      },
+    });
+    let transactionP2 = Transaction.find({
+      $in: {
+        sellers: req.user.publicAddress,
+      },
+    });
+
+    let [transactionBuy, transactionSale] = await Promise.all([
+      transactionP1,
+      transactionP2,
+    ]);
+    return res
+      .status(200)
+      .json({ statusCode: 200, data: { transactionBuy, transactionSale } });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function getTransaction(req, res, next) {
   try {
     const transaction = await Transaction.findOne({

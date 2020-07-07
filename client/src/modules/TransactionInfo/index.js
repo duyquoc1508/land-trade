@@ -52,22 +52,80 @@ function TransactionInfo(props) {
   }, [props.transaction]);
 
   return (
-    <div className="card" style={{ overflowY: "auto", maxHeight: "300px" }}>
+    <div className="card">
       <div className="card-body">
-        <h5>Tài sản giao dịch tại</h5>
-        {/** get house address if exists || get land lot address */}
-        <p>{address}</p>
-        <h5>Bên bán</h5>
-        <h3 style={{ color: "red" }}>Đã có data bên bán và bên mua</h3>
-        <h5>Bên mua</h5>
-        <h5>Giá trị đặt cọc</h5>
-        <p>{convertWeiToVND(props.transaction.depositPrice)}</p>
-        <h5>Giá trị giao dịch</h5>
-        <p>{convertWeiToVND(props.transaction.transferPrice)}</p>
-        <h5>Ngày bắt đầu giao dịch</h5>
-        <p>{formatDate(props.transaction.timeStart)}</p>
-        <h5>Ngày kết thúc giao dịch</h5>
-        <p>{formatDate(props.transaction.timeEnd)}</p>
+        <div className="row">
+          <div className="agent-details col-6">
+            <h5>Tài sản giao dịch</h5>
+            <ul className="address-list">
+              <li>
+                <span>Địa điểm:</span>
+                {address}
+              </li>
+              <li>
+                <span>Giá trị đặt cọc:</span>
+                {convertWeiToVND(props.transaction.depositPrice)}
+              </li>
+              <li>
+                <span>Giá trị giao dịch:</span>
+                {convertWeiToVND(props.transaction.transferPrice)}
+              </li>
+            </ul>
+          </div>
+          <div className="agent-details col-6">
+            <h5>Thời gian giao dịch</h5>
+            <ul className="address-list">
+              <li>
+                <span>Ngày bắt đầu:</span>
+                {formatDate(props.transaction.timeStart)}
+              </li>
+              <li>
+                <span>Ngày kết thúc:</span>
+                {formatDate(props.transaction.timeEnd)}
+              </li>
+            </ul>
+          </div>
+
+          <hr />
+          <div className="agent-details col-6">
+            <h5>Bên chuyển nhượng</h5>
+            {sellers.map((item, index) => (
+              <ul className="address-list" key={index}>
+                <li>
+                  <span>Họ tên:</span>
+                  {item.fullName}
+                </li>
+                <li>
+                  <span>Số CMND:</span>
+                  {item.idNumber}
+                </li>
+                <li>
+                  <span>Email:</span>
+                  {item.email}
+                </li>
+              </ul>
+            ))}
+          </div>
+          <div className="agent-details col-6">
+            <h5>Bên nhận chuyển nhượng</h5>
+            {buyers.map((item, index) => (
+              <ul className="address-list" key={index}>
+                <li>
+                  <span>Họ tên:</span>
+                  {item.fullName}
+                </li>
+                <li>
+                  <span>Số CMND:</span>
+                  {item.idNumber}
+                </li>
+                <li>
+                  <span>Email:</span>
+                  {item.email}
+                </li>
+              </ul>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -8,18 +8,18 @@ import TabListProperties from "../Property/ListProperties/tab";
 import EditProperty from "../Property/EditProperty";
 import Profile from "../Profile";
 import EditProfile from "../Profile/EditProfile";
-import Transaction from "../Transaction";
 import Role from "../Role";
 import PropertyStandard from "../Property/PropertyStandard";
-import ComfirmProperty from "../Property/ConfirmProperty";
+import ConfirmProperty from "../Property/ConfirmProperty";
 import InitTransaction from "../InitTransaction";
 import NotFound from "../NotFound";
 import DownPaymentContract from "../Transaction/sections/DownPaymentContract";
 import TradeContract from "../Transaction/sections/TradeContract";
-import TransactionProcess from "../TransactionProcess";
+import Transaction from "../Transaction";
 import ManagementUser from "../ManagementUser";
 import VerifyAccount from "../ManagementUser/verifyAccount";
 import Notification from "../Notification";
+import MyTransactions from "../MyTransactions";
 
 const routes = [
   {
@@ -40,6 +40,13 @@ const routes = [
     main: ({ match, history }) => <Listings match={match} history={history} />,
   },
   {
+    path: "/my-transactions",
+    exact: true,
+    main: ({ match, history }) => (
+      <MyTransactions match={match} history={history} />
+    ),
+  },
+  {
     path: "/property/:hash",
     exact: true,
     main: ({ match, history }) => <Property match={match} history={history} />,
@@ -50,7 +57,7 @@ const routes = [
     main: ({ history }) => <AddProperty history={history} />,
   },
   {
-    path: "/property/:hash",
+    path: "/property-standard/:hash",
     exact: true,
     main: ({ match, history }) => (
       <PropertyStandard match={match} history={history} />
@@ -67,7 +74,7 @@ const routes = [
     path: "/my-property/confirm/:hash/:idInBlockchain",
     exact: true,
     main: ({ match, history }) => (
-      <ComfirmProperty match={match} history={history} />
+      <ConfirmProperty match={match} history={history} />
     ),
   },
   {
@@ -89,13 +96,13 @@ const routes = [
       <TabListProperties match={match} history={history} />
     ),
   },
-  {
-    path: "/transaction/:txHash",
-    exact: true,
-    main: ({ match, history }) => (
-      <Transaction match={match} history={history} />
-    ),
-  },
+  // {
+  //   path: "/transaction/:txHash",
+  //   exact: true,
+  //   main: ({ match, history }) => (
+  //     <Transaction match={match} history={history} />
+  //   ),
+  // },
   {
     path: "/create-transaction/:transactionHash",
     exact: true,
@@ -119,12 +126,11 @@ const routes = [
     exact: false,
     main: () => <TradeContract />,
   },
-
   {
-    path: "/transaction-process/:transactionHash",
+    path: "/transaction/:transactionHash",
     exact: false,
     main: ({ match, history }) => (
-      <TransactionProcess match={match} history={history} />
+      <Transaction match={match} history={history} />
     ),
   },
   {

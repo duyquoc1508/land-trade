@@ -6,12 +6,14 @@ import formatDate from "../../utils/formatDate";
 import TransactionInfo from "../TransactionInfo";
 
 import BuyerAcceptTransaction from "../Transaction/buyer/acceptTransaction";
-import BuyerComfirmTransaction from "../Transaction/buyer/confirmTransaction";
+import BuyerConfirmTransaction from "../Transaction/buyer/confirmTransaction";
 import BuyerPayment from "../Transaction/buyer/payment";
 
 import SellerAcceptTransaction from "../Transaction/seller/acceptTransaction";
-import SellerComfirmTransaction from "../Transaction/seller/confirmTransaction";
+import SellerConfirmTransaction from "../Transaction/seller/confirmTransaction";
 import SellerPayment from "../Transaction/seller/payment";
+
+import InitTransaction from "../InitTransaction";
 
 const TransactionProcess = (props) => {
   // State of transaction
@@ -74,7 +76,7 @@ const TransactionProcess = (props) => {
   return (
     <div className="ml-4 mr-4 mt-75">
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <div className="container py-2">
             <h4 className="">Quy trình giao dịch</h4>
             {/* timeline item 1 */}
@@ -108,7 +110,7 @@ const TransactionProcess = (props) => {
                 <div className="row">
                   <div className="col">&nbsp;</div>
                 </div>
-                <h3 className=" text-success">Yêu cầu đặc cọc</h3>
+                <h5 className=" text-success">Yêu cầu đặc cọc</h5>
               </div>
             </div>
             {/*/row*/}
@@ -148,7 +150,7 @@ const TransactionProcess = (props) => {
                 <div className="row">
                   <div className="col">&nbsp;</div>
                 </div>
-                <h3 className="text-success">Chấp nhận</h3>
+                <h5 className="text-success">Chấp nhận</h5>
               </div>
             </div>
             {/*/row*/}
@@ -199,11 +201,11 @@ const TransactionProcess = (props) => {
                 <div className="row">
                   <div className="col">&nbsp;</div>
                 </div>
-                <h3
+                <h5
                   className={currentSteps >= 2 ? "text-success" : "text-muted"}
                 >
                   Thanh toán
-                </h3>
+                </h5>
               </div>
             </div>
             {/*/row*/}
@@ -253,11 +255,11 @@ const TransactionProcess = (props) => {
                 <div className="row">
                   <div className="col">&nbsp;</div>
                 </div>
-                <h3
+                <h5
                   className={currentSteps >= 3 ? "text-success" : "text-muted"}
                 >
                   Xác nhận
-                </h3>
+                </h5>
               </div>
             </div>
             <div className="row">
@@ -280,35 +282,28 @@ const TransactionProcess = (props) => {
           </div>
         </div>
         {/** right collumn */}
-        <div className="col-md-8">
-          {/**Transaction info */}
-          <div className="col-md-12">
-            <div className="container py-2">
-              <h4 className="">Tổng quan</h4>
-              <TransactionInfo />
-              <hr />
-            </div>
-          </div>
+        <div className="col-md-9">
           {/** step in process */}
-          <div className="col-md-12">
-            <div className="container py-2">
-              <h4 className="">{stepsToName[steps]}</h4>
-              <h5 className="" style={{ color: "red" }}>
-                {" "}
-                {props.transaction.state}
-              </h5>
-              {party === PARTY_CONSTANT.SELLER
-                ? (steps === 2 && <SellerAcceptTransaction />) ||
-                  (steps === 3 && <SellerPayment />) ||
-                  (steps === 4 && <SellerComfirmTransaction />)
-                : party === PARTY_CONSTANT.BUYER
-                ? (steps === 2 && <BuyerAcceptTransaction />) ||
-                  (steps === 3 && <BuyerPayment />) ||
-                  (steps === 4 && <BuyerComfirmTransaction />)
-                : (steps === 2 && <BuyerAcceptTransaction />) ||
-                  (steps === 3 && <SellerPayment />) ||
-                  (steps === 4 && <BuyerComfirmTransaction />)}
-            </div>
+          <div className="container py-2">
+            {/* <h4 className="">{stepsToName[steps]}</h4>
+            <h5 className="" style={{ color: "red" }}>
+              {" "}
+              {props.transaction.state}
+            </h5> */}
+            {party === PARTY_CONSTANT.SELLER
+              ? (steps === 1 && <InitTransaction />) ||
+                (steps === 2 && <SellerAcceptTransaction />) ||
+                (steps === 3 && <SellerPayment />) ||
+                (steps === 4 && <SellerConfirmTransaction />)
+              : party === PARTY_CONSTANT.BUYER
+              ? (steps === 1 && <BuyerAcceptTransaction />) ||
+                (steps === 2 && <BuyerAcceptTransaction />) ||
+                (steps === 3 && <BuyerPayment />) ||
+                (steps === 4 && <BuyerConfirmTransaction />)
+              : (steps === 1 && <BuyerAcceptTransaction />) ||
+                (steps === 2 && <BuyerAcceptTransaction />) ||
+                (steps === 3 && <SellerPayment />) ||
+                (steps === 4 && <BuyerConfirmTransaction />)}
           </div>
         </div>
       </div>
@@ -318,16 +313,31 @@ const TransactionProcess = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    property: state.transaction.property,
     transaction: state.transaction.data,
     user: state.user.data,
+    transactionContract: state.shared.transaction,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchTransaction: (transactionHash) => {
-      dispatch(fetchTransactionRequest(transactionHash));
+    fetchTransaction: (idTransaction) => {
+      dispatch(fetchTransactionRequest(idTransaction));
+    },
+    cancelTransaction: (transaction, publicAddress) => {
+      dispatch(cancelTransactionRequest(transaction, publicAddress));
+    },
+    acceptTransactionSuccess: (txHash) => {
+      dispatch(acceptTransactionSuccess(txHash));
+    },
+    paymentTransactionSuccess: (txHash) => {
+      dispatch(paymentTransactionSuccess(txHash));
+    },
+    confirmTransactionSuccess: (txHash) => {
+      dispatch(confirmTransactionSuccess(txHash));
+    },
+    cancelTransactionSuccess: (txHash) => {
+      dispatch(cancelTransactionSuccess(txHash));
     },
   };
 };
