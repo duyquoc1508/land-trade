@@ -18,7 +18,7 @@ class Index extends Component {
           {/*add <Header/> to Route for access history, location, match from <Header/> */}
           <Route component={Header} />
           {this.showContentMenus(routes)}
-          <FixedNotification />
+          {/* <FixedNotification /> */}
         </Router>
       </Provider>
     );

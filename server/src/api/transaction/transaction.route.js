@@ -11,6 +11,12 @@ const routes = Router();
 routes.post("/", authJwt, transactionController.createTransaction);
 
 /**
+ * get my transaction
+ * get api/v1/transaction
+ */
+routes.get("/", authJwt, transactionController.getMyTransactions);
+
+/**
  * Get info transaction
  * POST api/v1/transactionHash
  */

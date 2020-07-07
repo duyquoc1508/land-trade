@@ -6,13 +6,16 @@ import formatCurrency from "../../utils/formatCurrency";
 import { convertVNDtoETH } from "../../utils/convertCurrency";
 import axios from "axios";
 import Cookie from "../../helper/cookie";
+import { Link } from "react-router-dom";
+import Steps from "./steps";
 
-function InitTransaction(props) {
+function Init(props) {
   const [depositPrice, setDepositPrice] = useState("");
   const [transferPrice, setTransferPrice] = useState("");
-  const [buyer, setBuyer] = useState([props.user.publicAddress]);
   const [depositTime, setDepositTime] = useState(60);
   const [saleItem, setSaleItem] = useState(props.saleItem);
+  const [buyers, setBuyers] = useState([]);
+  const [sellers, setSellers] = useState([]);
 
   useEffect(() => {
     // listen event TransactionCreated from blockchain and emit event INIT_TRANSACTION_SUCCESS
@@ -50,125 +53,251 @@ function InitTransaction(props) {
     }
   }, []);
 
-  return (
+  useEffect(() => {
+    if (saleItem) {
+      setTransferPrice(formatCurrency(saleItem.moreInfo.price));
+      setDepositPrice(formatCurrency(saleItem.moreInfo.price * 0.3));
+      (async () => {
+        const [buyersInfo, sellersInfo] = await getParticipantsInfo(
+          [props.user["publicAddress"]],
+          saleItem.owners
+        );
+        setBuyers(buyersInfo);
+        setSellers(sellersInfo);
+      })();
+    }
+  }, [saleItem]);
+
+  // get all user infor from publicAddress
+  const getUserProfile = async (publicAddress) => {
+    const response = await axios({
+      method: "GET",
+      url: `${process.env.REACT_APP_BASE_URL_API}/users/${publicAddress}`,
+      headers: {
+        Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
+      },
+    });
+    return response.data.data;
+  };
+
+  const getParticipantsInfo = async (buyers, sellers) => {
+    const promises1 = buyers.map((publicAddress) =>
+      getUserProfile(publicAddress)
+    );
+    const promises2 = sellers.map((publicAddress) =>
+      getUserProfile(publicAddress)
+    );
+    return Promise.all([Promise.all(promises1), Promise.all(promises2)]);
+  };
+
+  return !saleItem ? (
+    ""
+  ) : (
     <div className="container mt-75">
-      <h3>Khởi tạo giao dịch</h3>
-      <h6>Tài sản</h6>
-      <CardProperty />
-      Mã tài sản: {saleItem && saleItem.transactionHash}
-      <h6>Bên bán</h6>
-      <div>
-        {saleItem &&
-          saleItem.owners &&
-          saleItem.owners.map((owner, index) => <p key={index}>{owner}</p>)}
-      </div>
-      <h6>Bên mua</h6>
-      <div>
-        <div>
-          {buyer.map((owner, index) => (
-            <p key={index}>{owner}</p>
-          ))}
+      <div className="row">
+        <div className="col-md-4">
+          <Steps />
         </div>
-      </div>
-      <div className="form-group">
-        <h6>Số tiền đặt cọc</h6>
-        <div className="row">
-          <div className="input-group col-6">
-            <input
-              name="depositPrice"
-              component="input"
-              type="text"
-              className="form-control filter-input"
-              placeholder="Số tiền đặt cọc"
-              value={depositPrice}
-              onChange={(e) => {
-                setDepositPrice(formatCurrency(e.target.value));
-              }}
-            />
-            <div className="input-group-append">
-              <span className="input-group-text"> VND </span>
+        <div className="col-md-8">
+          <h6>Tài sản</h6>
+          <div className="row">
+            <div className="col-md-6 col-sm-12">
+              <div className="single-property-box">
+                {/* <div className="property-item">
+                  <Link
+                    className="property-img"
+                    to={`property/${saleItem.transactionHash}`}
+                  >
+                    <img
+                      src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${saleItem.images[0]}`}
+                      alt="#"
+                    />
+                  </Link>
+                </div> */}
+                <div className="property-title-box">
+                  <h4>
+                    <Link to={`property/${saleItem.transactionHash}`}>
+                      {saleItem.moreInfo.title}
+                    </Link>
+                  </h4>
+                  <div className="property-location">
+                    <i className="fa fa-map-marker-alt"></i>
+                    <p>{saleItem.properties.landLot.address}</p>
+                  </div>
+                  <div className="trend-open mt-10">
+                    <p> {saleItem.moreInfo.price} </p>
+                  </div>
+                  <ul className="property-feature">
+                    <li>
+                      {" "}
+                      <i className="fas fa-bed"></i>
+                      <span>{saleItem.moreInfo.numOfBedrooms} phòng ngủ</span>
+                    </li>
+                    <li>
+                      {" "}
+                      <i className="fas fa-bath"></i>
+                      <span>
+                        {saleItem.moreInfo.numOfBathrooms} phòng vệ sinh
+                      </span>
+                    </li>
+                    <li>
+                      {" "}
+                      <i className="fas fa-arrows-alt"></i>
+                      <span>{saleItem.moreInfo.areaFloor} m2</span>
+                    </li>
+                    <li>
+                      {" "}
+                      <i className="fas fa-car"></i>
+                      <span>{saleItem.moreInfo.utilities.length} tiện ích</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6 col-sm-12">
+              <div className="form-group">
+                <h6>Số tiền đặt cọc</h6>
+                <div className="row">
+                  <div className="input-group">
+                    <input
+                      name="depositPrice"
+                      component="input"
+                      type="text"
+                      className="form-control filter-input"
+                      placeholder="Số tiền đặt cọc"
+                      value={depositPrice}
+                      onChange={(e) => {
+                        setDepositPrice(formatCurrency(e.target.value));
+                      }}
+                    />
+                    <div className="input-group-append">
+                      <span className="input-group-text"> VND </span>
+                    </div>
+                  </div>
+                </div>
+                <p>
+                  {convertVNDtoETH(depositPrice)}
+                  {" ETH"}
+                </p>
+              </div>
+              <div className="form-group">
+                <h6>Giá mua</h6>
+                <div className="row">
+                  <div className="input-group">
+                    <input
+                      name="price"
+                      component="input"
+                      type="text"
+                      className="form-control filter-input"
+                      placeholder="Giá mua"
+                      value={transferPrice}
+                      onChange={(e) => {
+                        setTransferPrice(formatCurrency(e.target.value));
+                      }}
+                    />
+                    <div className="input-group-append">
+                      <span className="input-group-text"> VND </span>
+                    </div>
+                  </div>
+                </div>
+                <p>
+                  {convertVNDtoETH(transferPrice)}
+                  {" ETH"}
+                </p>
+              </div>
+              <div className="form-group">
+                <h6>Thời gian đặt cọc</h6>
+                <div className="row">
+                  <div className="input-group">
+                    <input
+                      name="price"
+                      component="input"
+                      type="text"
+                      className="form-control filter-input"
+                      placeholder="Giá mua"
+                      value={depositTime}
+                      onChange={(e) => {
+                        setDepositTime(e.target.value);
+                      }}
+                    />
+                    <div className="input-group-append">
+                      <span className="input-group-text"> Ngày </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="input-group col-6">
-            <div>
-              {" =>"} {convertVNDtoETH(depositPrice)}
-              {" ETH"}
+          Mã tài sản: {saleItem && saleItem.transactionHash}
+          <h6>Bên bán</h6>
+          <div>
+            {sellers.map((owner, index) => (
+              <div className="agent-details" key={index}>
+                <ul className="address-list">
+                  <li>
+                    <span>Họ tên :</span>
+                    {owner.fullName}
+                  </li>
+                  <li>
+                    <span>Email:</span>
+                    {owner.email}
+                  </li>
+                  <li>
+                    <span>SDT:</span>
+                    {owner.phoneNumber}
+                  </li>
+                </ul>
+              </div>
+            ))}
+          </div>
+          <br />
+          <h6>Bên mua</h6>
+          <div>
+            <div className="agent-details">
+              <ul className="address-list">
+                <li>
+                  <span>Họ tên :</span>
+                  {props.user.fullName}
+                </li>
+                <li>
+                  <span>Email:</span>
+                  {props.user.email}
+                </li>
+                <li>
+                  <span>SDT:</span>
+                  {props.user.phoneNumber}
+                </li>
+              </ul>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="form-group">
-        <h6>Giá mua</h6>
-        <div className="row">
-          <div className="input-group col-6">
-            <input
-              name="price"
-              component="input"
-              type="text"
-              className="form-control filter-input"
-              placeholder="Giá mua"
-              value={transferPrice}
-              onChange={(e) => {
-                setTransferPrice(formatCurrency(e.target.value));
-              }}
-            />
-            <div className="input-group-append">
-              <span className="input-group-text"> VND </span>
-            </div>
+          {/* notice */}
+          <div style={{ color: "red", fontWeight: "bold" }}>
+            Khi bạn xác nhận tạo giao dịch này, tài khoản của bạn sẽ bị trừ đi{" "}
+            {convertVNDtoETH(depositPrice)}
+            ETH. Bạn có thể hủy giao dịch và nhận lại tiền bất cứ khi nào người
+            bán chưa chấp nhận giao dịch.
           </div>
-          <div className="input-group col-6">
-            <div>
-              {" =>"} {convertVNDtoETH(transferPrice)}
-              {" ETH"}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="form-group">
-        <h6>Thời gian đặt cọc</h6>
-        <div className="input-group">
-          <input
-            name="price"
-            component="input"
-            type="text"
-            className="form-control filter-input"
-            placeholder="Giá mua"
-            value={depositTime}
-            onChange={(e) => {
-              setDepositTime(e.target.value);
+          <button
+            disabled={props.loading}
+            className="btn v3"
+            onClick={() => {
+              if (confirm("Bạn chắc chắn muốn tạo giao dịch?"))
+                props.initTransactionRequest({
+                  history: props.history,
+                  data: {
+                    buyer: buyers.map((item) => item.publicAddress),
+                    idPropertyInBlockchain: saleItem.idInBlockchain,
+                    depositPrice: depositPrice,
+                    transferPrice: transferPrice,
+                    depositTime: depositTime,
+                  },
+                });
             }}
-          />
-          <div className="input-group-append">
-            <span className="input-group-text"> Ngày </span>
-          </div>
+          >
+            Tạo giao dịch
+          </button>
         </div>
       </div>
-      {/* notice */}
-      <div style={{ color: "red", fontWeight: "bold" }}>
-        Khi bạn xác nhận tạo giao dịch này, tài khoản của bạn sẽ bị trừ đi{" "}
-        {convertVNDtoETH(depositPrice)}
-        ETH. Bạn có thể hủy giao dịch và nhận lại tiền bất cứ khi nào người bán
-        chưa chấp nhận giao dịch.
-      </div>
-      <button
-        disabled={props.loading}
-        className="btn v3"
-        onClick={() => {
-          if (confirm("Bạn chắc chắn muốn tạo giao dịch?"))
-            props.initTransactionRequest({
-              history: props.history,
-              data: {
-                buyer,
-                idPropertyInBlockchain: saleItem.idInBlockchain,
-                depositPrice: depositPrice,
-                transferPrice: transferPrice,
-                depositTime: depositTime,
-              },
-            });
-        }}
-      >
-        Tạo giao dịch
-      </button>
     </div>
   );
 }
@@ -197,4 +326,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(InitTransaction);
+export default connect(mapStateToProps, mapDispatchToProps)(Init);

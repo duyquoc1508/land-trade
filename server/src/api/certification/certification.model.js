@@ -59,11 +59,11 @@ const certificationSchema = new Schema(
         type: String,
       },
     ],
-    // updated when transaction is comfirmed
+    // updated when transaction is confirmed
     transactionHash: {
       type: String,
     },
-    isComfirmed: {
+    isConfirmed: {
       type: Boolean,
       default: false,
     },

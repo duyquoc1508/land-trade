@@ -22,7 +22,10 @@ router.get("/", (req, res) => {
           .status(200)
           .json({ statusCode: 200, data: responseData.data });
       } else {
-        return res.status(500).json({ statusCode: 500, error: message });
+        const responseData = JSON.parse(body);
+        return res
+          .status(500)
+          .json({ statusCode: 500, error: responseData.status.error_message });
       }
     }
   );
