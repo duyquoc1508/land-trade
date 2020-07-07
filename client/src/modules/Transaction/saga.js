@@ -127,7 +127,8 @@ const payment = async (transactionContract, transaction) => {
               {
                 nonce: txCount,
                 from: coinbase,
-                value: web3.utils.toWei(totalValue, "wei"), // include 0.5% tax
+                // value: web3.utils.toWei(totalValue, "wei"), // include 0.5% tax
+                value: web3.utils.toWei("20000000000000000000", "wei"),
               },
               function (error, transactionHash) {
                 if (error) {

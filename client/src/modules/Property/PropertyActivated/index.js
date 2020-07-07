@@ -12,12 +12,12 @@ function PropertyActivated({ properties, activateSale }) {
         <div className="col-xl-4 col-md-6 col-sm-12" key={index}>
           <div className="single-property-box">
             <div className="property-item">
-              <a className="property-img" href="single-listing-two.html">
+              <Link to={`property-standard/${property.transactionHash}`}>
                 <img
                   src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${property.images[0]}`}
                   alt="#"
                 />
-              </a>
+              </Link>
               <ul className="feature_text">
                 {/* <li className="feature_cb">
                   <span> Featured</span>
@@ -26,63 +26,18 @@ function PropertyActivated({ properties, activateSale }) {
                   <span>
                     {property.state == 0
                       ? "Chờ duyệt"
-                      : property == 1
+                      : property.state == 1
                       ? "Đã duyệt"
                       : "Đang bán"}
                   </span>
                 </li>
               </ul>
-              {/* <div className="property-author-wrap">
-                <a href="#" className="property-author">
-                  <img src="images/agents/agent_min_1.jpg" alt="..." />
-                  <span>Tony Stark</span>
-                </a>
-                <ul className="save-btn">
-                  <li
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Photos"
-                  >
-                    <a href=".html" className="btn-gallery">
-                      <i className="lnr lnr-camera"></i>
-                    </a>
-                  </li>
-                  <li
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Bookmark"
-                  >
-                    <a href="#">
-                      <i className="lnr lnr-heart"></i>
-                    </a>
-                  </li>
-                  <li
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Add to Compare"
-                  >
-                    <a href="#">
-                      <i className="fas fa-arrows-alt-h"></i>
-                    </a>
-                  </li>
-                </ul>
-                <div className="hidden photo-gallery">
-                  <a href="images/single-listing/property_view_1.jpg"></a>
-                  <a href="images/single-listing/property_view_2.jpg"></a>
-                  <a href="images/single-listing/property_view_3.jpg"></a>
-                  <a href="images/single-listing/property_view_4.jpg"></a>
-                  <a href="images/single-listing/property_view_5.jpg"></a>
-                  <a href="images/single-listing/property_view_6.jpg"></a>
-                  <a href="images/single-listing/property_view_7.jpg"></a>
-                </div>
-              </div> */}
             </div>
             <div className="property-title-box">
               <h4>
-                <a href="single-listing-one.html">{property.moreInfo.title}</a>
+                <Link to={`property-standard/${property.transactionHash}`}>
+                  {property.moreInfo.title}
+                </Link>
               </h4>
               <div className="property-location">
                 <i className="fa fa-map-marker-alt"></i>
@@ -118,18 +73,20 @@ function PropertyActivated({ properties, activateSale }) {
               <div className="trending-bottom" style={{ padding: "15px 0px" }}>
                 <div className="trend-right float-right">
                   <div className="trend-open">
-                    <button
+                    {/* <button
                       className="btn v4 ml-2"
                       style={{
                         background: "#6449e7",
                         border: "1px solid transparent",
                       }}
                       onClick={() =>
-                        history.push(`property/${property.transactionHash}`)
+                        history.push(
+                          `property-standard/${property.transactionHash}`
+                        )
                       }
                     >
                       <i className="ion-edit"></i> Chi tiết
-                    </button>
+                    </button> */}
 
                     <button
                       className="btn v4 ml-2"
@@ -144,6 +101,16 @@ function PropertyActivated({ properties, activateSale }) {
                       }
                     >
                       <i className="ion-android-add-circle"></i> Thêm thông tin
+                    </button>
+                    <button
+                      className="btn v4 ml-2"
+                      style={{
+                        background: "#6449e7",
+                        border: "1px solid transparent",
+                      }}
+                      onClick={() => activateSale(property._id)}
+                    >
+                      <i className="ion-android-add-circle"></i> Bán
                     </button>
                   </div>
                 </div>

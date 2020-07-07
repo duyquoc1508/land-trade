@@ -253,6 +253,14 @@ class Menu extends Component {
                               Tài sản của tôi
                             </Link>
                           </div>
+                          <div className="account-dropdown__item">
+                            <Link
+                              to={"/my-transactions"}
+                              onClick={this.changeToggleAuth}
+                            >
+                              Giao dịch của tôi
+                            </Link>
+                          </div>
                         </div>
                       ) : (
                         ""
