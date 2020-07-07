@@ -61,6 +61,12 @@ routes.get("/me", authJwt, userController.getPersonalInfo);
 routes.get("/:publicAddress", userController.getUserProfile);
 
 /**
+ * Get user profile
+ * GET api/v1/users/{{publicAddress}}
+ */
+routes.get("/", userController.getUserProfile);
+
+/**
  * Create new user
  * POST api/v1/users
  */

@@ -6,11 +6,11 @@ import formatDate from "../../utils/formatDate";
 import TransactionInfo from "../TransactionInfo";
 
 import BuyerAcceptTransaction from "../Transaction/buyer/acceptTransaction";
-import BuyerComfirmTransaction from "../Transaction/buyer/confirmTransaction";
+import BuyerConfirmTransaction from "../Transaction/buyer/confirmTransaction";
 import BuyerPayment from "../Transaction/buyer/payment";
 
 import SellerAcceptTransaction from "../Transaction/seller/acceptTransaction";
-import SellerComfirmTransaction from "../Transaction/seller/confirmTransaction";
+import SellerConfirmTransaction from "../Transaction/seller/confirmTransaction";
 import SellerPayment from "../Transaction/seller/payment";
 
 const TransactionProcess = (props) => {
@@ -300,14 +300,14 @@ const TransactionProcess = (props) => {
               {party === PARTY_CONSTANT.SELLER
                 ? (steps === 2 && <SellerAcceptTransaction />) ||
                   (steps === 3 && <SellerPayment />) ||
-                  (steps === 4 && <SellerComfirmTransaction />)
+                  (steps === 4 && <SellerConfirmTransaction />)
                 : party === PARTY_CONSTANT.BUYER
                 ? (steps === 2 && <BuyerAcceptTransaction />) ||
                   (steps === 3 && <BuyerPayment />) ||
-                  (steps === 4 && <BuyerComfirmTransaction />)
+                  (steps === 4 && <BuyerConfirmTransaction />)
                 : (steps === 2 && <BuyerAcceptTransaction />) ||
                   (steps === 3 && <SellerPayment />) ||
-                  (steps === 4 && <BuyerComfirmTransaction />)}
+                  (steps === 4 && <BuyerConfirmTransaction />)}
             </div>
           </div>
         </div>

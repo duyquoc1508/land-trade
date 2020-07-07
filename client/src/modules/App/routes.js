@@ -11,7 +11,7 @@ import EditProfile from "../Profile/EditProfile";
 import Transaction from "../Transaction";
 import Role from "../Role";
 import PropertyStandard from "../Property/PropertyStandard";
-import ComfirmProperty from "../Property/ConfirmProperty";
+import ConfirmProperty from "../Property/ConfirmProperty";
 import InitTransaction from "../InitTransaction";
 import NotFound from "../NotFound";
 import DownPaymentContract from "../Transaction/sections/DownPaymentContract";
@@ -67,7 +67,7 @@ const routes = [
     path: "/my-property/confirm/:hash/:idInBlockchain",
     exact: true,
     main: ({ match, history }) => (
-      <ComfirmProperty match={match} history={history} />
+      <ConfirmProperty match={match} history={history} />
     ),
   },
   {

@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
+import formatCurrency from "../../../utils/formatCurrency";
 
 function PropertyPending({ properties }) {
   const history = useHistory();
@@ -88,7 +89,7 @@ function PropertyPending({ properties }) {
                 <p>{property.properties.landLot.address}</p>
               </div>
               <div className="trend-open mt-10">
-                <p> {property.moreInfo.price} VND </p>
+                <p> {formatCurrency(property.moreInfo.price)} VND </p>
               </div>
               <ul className="property-feature">
                 <li>

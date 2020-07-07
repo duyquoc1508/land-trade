@@ -81,7 +81,7 @@ export async function updateUserProfile(req, res, next) {
     const newUser = req.body;
     // send emal verify if user update new email
     if (req.body.email) {
-      newUser["isVerifired"] = 0;
+      newUser["isVerified"] = 0;
     }
     const user = await User.findByIdAndUpdate(req.user._id, newUser, {
       new: true,
@@ -99,7 +99,7 @@ export async function send(req, res, next) {
   try {
     const user = await User.findOne({
       _id: req.user._id,
-      isVerifired: false,
+      isVerified: false,
     }).lean();
     if (!user) {
       throw new ErrorHandler(404, "User not found");
@@ -135,7 +135,7 @@ export async function verifyEmail(req, res, next) {
   try {
     const token = req.query.token;
     const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    await User.findByIdAndUpdate(user._id, { isVerifired: true }).lean();
+    await User.findByIdAndUpdate(user._id, { isVerified: true }).lean();
     return res
       .status(200)
       .json({ statusCode: "200", message: "Verify email successfully" });
@@ -153,7 +153,7 @@ export async function verifyAccount(req, res, next) {
     }
     const userId = req.query.userId;
     console.log(userId);
-    await User.findByIdAndUpdate(userId, { isVerifired: 2 }).lean();
+    await User.findByIdAndUpdate(userId, { isVerified: 2 }).lean();
     return res
       .status(200)
       .json({ statusCode: "200", message: "Verify email successfully" });
@@ -183,7 +183,15 @@ export async function search(req, res, next) {
 // Search user with idNumber or publicAddress
 export async function getAllUser(req, res, next) {
   try {
-    const listUser = await User.find({}).lean();
+    const { verified } = req.query;
+    let listUser = [];
+    // get user verified
+    if (verified == 2) {
+      listUser = await User.find({ isVerified: verified }).lean();
+    } else {
+      listUser = await User.find({}).lean();
+    }
+    if (!listUser) return new ErrorHandler(404, "No user found!");
     return res.status(200).json({ statusCode: 200, data: listUser });
   } catch (error) {
     next(error);
@@ -209,7 +217,7 @@ export async function getAllPropertiesOfUser(req, res, next) {
     const listProperties = await User.findById(req.user._id)
       .populate({
         path: "properties",
-        match: { isComfirmed: true },
+        match: { isConfirmed: true },
       })
       .select("properties -_id");
     // if (listProperties.properties.length === 0)

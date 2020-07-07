@@ -30,9 +30,9 @@ class EditProfile extends Component {
     const user = this.props.user;
     this.props.change("fullName", user.fullName || "");
     this.props.change("idNumber", user.idNumber || "");
-    // this.props.change("homeLand", user.homeLand || "");
-    // this.props.change("birthday", user.birthday || "");
-    // this.props.change("permanentResidence", user.permanentResidence || "");
+    this.props.change("homeLand", user.homeLand || "");
+    this.props.change("birthday", user.birthday || "");
+    this.props.change("permanentResidence", user.permanentResidence || "");
     // this.props.change("ethnic", user.ethnic || "");
     // this.props.change("religion", user.religion || "");
     // this.props.change("deformity", user.deformity || "");
@@ -49,7 +49,7 @@ class EditProfile extends Component {
           <div className="col-md-8">
             <div className="db-add-list-wrap">
               <div className="act-title">
-                <h5>Chỉnh sửa Trang cá nhân :</h5>
+                <h5>Thông tin cá nhân:</h5>
               </div>
               <div className="db-add-listing">
                 <div className="row">
@@ -135,7 +135,7 @@ class EditProfile extends Component {
                             />
                           </div>
                         </div>
-                        <div className="col-md-6">
+                        {/* <div className="col-md-6">
                           <div className="form-group">
                             <label>Dân tộc</label>
                             <Field
@@ -194,7 +194,7 @@ class EditProfile extends Component {
                               placeholder="Nhập số CMND căn cước"
                             />
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-md-12">
                           <div className="form-group">
                             <label>Số điện thoại</label>

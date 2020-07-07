@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import formatCurrency from "../../../utils/formatCurrency";
 
 class ListProperties extends Component {
   render() {
@@ -89,7 +90,7 @@ class ListProperties extends Component {
                   <p>{property.properties.landLot.address}</p>
                 </div>
                 <div className="trend-open mt-10">
-                  <p> {property.moreInfo.price} VND </p>
+                  <p> {formatCurrency(property.moreInfo.price)} VND </p>
                 </div>
                 <ul className="property-feature">
                   <li>

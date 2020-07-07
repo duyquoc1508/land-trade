@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { loadScript } from "../../helper/utils";
 import axios from "axios";
 import NotFound from "../NotFound";
+import formatCurrency from "../../utils/formatCurrency";
 
 class Property extends Component {
   constructor(props) {
@@ -141,19 +142,22 @@ class Property extends Component {
                         <h4>Thông tin chi tiết</h4>
                         <ul className="property-info">
                           <li>
-                            Diện tích mặt sàn :{" "}
+                            Diện tích mặt sàn:{" "}
                             <span>{property.moreInfo.areaFloor}</span>
                           </li>
                           <li>
-                            Số phòng ngủ :{" "}
+                            Số phòng ngủ:{" "}
                             <span>{property.moreInfo.numOfBedrooms}</span>
                           </li>
                           <li>
-                            Số phòng tắm :{" "}
+                            Số phòng tắm:{" "}
                             <span>{property.moreInfo.numOfBathrooms}</span>
                           </li>
                           <li>
-                            Giá tiền : <span>{property.moreInfo.price}</span>
+                            Giá tiền:{" "}
+                            <span>
+                              {formatCurrency(property.moreInfo.price)}
+                            </span>
                           </li>
                         </ul>
                       </div>
@@ -204,15 +208,15 @@ class Property extends Component {
                       <ul className="address-list" style={{ margin: 0 }}>
                         <li>
                           <span>Số tiền :</span>
-                          {property.moreInfo.price}
+                          {formatCurrency(property.moreInfo.price)}
                         </li>
                         <li>
                           <span>Thuế:</span>
-                          {property.moreInfo.price * 0.005}
+                          {formatCurrency(property.moreInfo.price * 0.005)}
                         </li>
                         <li>
                           <span>Tổng số tiền:</span>
-                          {property.moreInfo.price * 1.05}
+                          {formatCurrency(property.moreInfo.price * 1.05)}
                         </li>
                         <div className="mortgage-btn">
                           <button

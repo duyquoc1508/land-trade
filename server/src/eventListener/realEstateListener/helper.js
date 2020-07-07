@@ -5,7 +5,7 @@ import { socketService } from "../../index";
 // Listen to the newly created certificate event then update in mongodb database
 export async function updateCertStatus(event) {
   const update = {
-    isComfirmed: true,
+    isConfirmed: true,
     idInBlockchain: event.returnValues.idCertificate,
   };
   const query = {

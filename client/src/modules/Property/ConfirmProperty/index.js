@@ -5,14 +5,15 @@ import {
   activateCertificateRequest,
   activateCertificateSuccess,
 } from "./action";
+import NotFound from "../../NotFound/index";
 
-const ComfirmProperty = (props) => {
+const ConfirmProperty = (props) => {
   useEffect(() => {
     props.realEstateContract &&
       props.realEstateContract.events
         .Activate()
         .on("data", (event) => {
-          console.log("ComfirmProperty -> event", event.returnValues);
+          console.log("ConfirmProperty -> event", event.returnValues);
           props.activateCertSuccess({
             history: props.history,
             txHash: event.transactionHash,
@@ -65,4 +66,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComfirmProperty);
+export default connect(mapStateToProps, mapDispatchToProps)(ConfirmProperty);
