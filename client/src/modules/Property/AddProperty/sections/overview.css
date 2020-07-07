@@ -13,3 +13,8 @@
   font-weight: bold;
   margin-left: 50px;
 }
+
+li p {
+  display: inline-block;
+  font-style: normal;
+}

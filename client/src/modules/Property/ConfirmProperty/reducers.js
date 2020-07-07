@@ -1,3 +1,4 @@
+import React from "react";
 import {
   ACTIVATE_CERTIFICATE_REQUEST,
   ACTIVATE_CERT_WAIT_BLOCKCHAIN_CONFIRM,
@@ -6,6 +7,8 @@ import {
 } from "./constants";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ToastLoading from "../../../components/ToastCustom/ToastLoading";
+import ToastSuccess from "../../../components/ToastCustom/ToastSuccess";
 
 const initialState = {
   loading: false,
@@ -17,8 +20,7 @@ export default function propertyPendingReducer(state = initialState, action) {
     case ACTIVATE_CERTIFICATE_REQUEST:
       return { ...state, loading: true };
     case ACTIVATE_CERT_WAIT_BLOCKCHAIN_CONFIRM:
-      toast("Đang xác nhận tài sản...", {
-        type: toast.TYPE.INFO,
+      toast(<ToastLoading message={"Đang xác nhận tài sản..."} />, {
         toastId: action.payload,
         autoClose: false,
         position: toast.POSITION.BOTTOM_RIGHT,
@@ -26,7 +28,9 @@ export default function propertyPendingReducer(state = initialState, action) {
       return { ...state, loading: true };
     case ACTIVATE_CERTIFICATE_SUCCESS:
       toast.update(action.payload.txHash, {
-        render: "Xác nhận tài sản tài sản thành công!",
+        render: (
+          <ToastSuccess message={"Xác nhận tài sản tài sản thành công!"} />
+        ),
         type: toast.TYPE.SUCCESS,
         autoClose: 5000,
         onClick: () => {

@@ -1,10 +1,45 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import "./overview.css";
+import axios from "axios";
 
 export class Overview extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      owners: [],
+    };
+  }
+
+  // componentDidUpdate() {
+  //   if (this.owners) {
+  //     (async () => {
+  //       const p1 = this.owners.map((publicAddress) =>
+  //         axios.get(`${process.env.REACT_APP_BASE_URL_API}/${publicAddress}`)
+  //       );
+  //       const ps1 = await Promise.all(p1);
+  //       console.log(ps1);
+  //     })();
+  //   }
+  // }
+
+  componentDidMount() {
+    (async () => {
+      const p1 = this.props.overview.owners.map((publicAddress) =>
+        axios.get(
+          `${process.env.REACT_APP_BASE_URL_API}/users/${publicAddress}`
+        )
+      );
+      const ps1 = await Promise.all(p1);
+      const ownersInfo = ps1.map((item) => item.data.data);
+      console.log("Overview -> componentDidMount -> userInfo", ownersInfo);
+      this.setState({ owners: ownersInfo });
+    })();
+  }
+
   render() {
-    let { owners, properties, images } = this.props.overview;
+    console.log(this.state.owners);
+    const { owners, properties, images } = this.props.overview;
     return (
       <div className="row">
         <div className="col-sm-6">
@@ -21,9 +56,10 @@ export class Overview extends Component {
             <li className="ow-li-lv1">
               1. Chủ sở hữu:
               <ol type="a">
-                {owners.map((user, index) => (
+                {this.state.owners.map((user, index) => (
                   <li className="ow-li-lv2" key={index}>
-                    <span> {user} </span>
+                    <span>Ông (Bà):</span>&nbsp;
+                    <span className="ml-0"> {user.fullName} </span>
                   </li>
                 ))}
               </ol>
@@ -62,54 +98,62 @@ export class Overview extends Component {
             <li className="ow-li-lv1">
               3. Nhà ở:
               {!properties.house ? (
-                " -/-"
+                <p>" -/-"</p>
               ) : (
-                  <ol type="a">
-                    <li className="ow-li-lv2">
-                      <span>a) Loại nhà ở:</span> {properties.house.houseType}
-                    </li>
-                    <li className="ow-li-lv2">
-                      <span>b) Địa chỉ:</span> {properties.house.address}
-                    </li>
-                    <li className="ow-li-lv2">
-                      <span>c) Diện tích xây dựng:</span>{" "}
-                      {properties.house.constructionArea}
-                    </li>
-                    <li className="ow-li-lv2">
-                      <span>d) Diện tích sàn:</span> {properties.house.floorArea}
-                    </li>
-                    <li className="ow-li-lv2">
-                      <span>e) Cấp (Hạng):</span> {properties.house.level}
-                    </li>
-                    <li className="ow-li-lv2">
-                      <span>f) Hình thức sở hữu:</span>{" "}
-                      {properties.house.formOfOwn}
-                    </li>
-                    <li className="ow-li-lv2">
-                      <span>g) Thời gian sử dụng:</span>{" "}
-                      {properties.house.timeOfOwn}
-                    </li>
-                  </ol>
-                )}
+                <ol type="a">
+                  <li className="ow-li-lv2">
+                    <span>a) Loại nhà ở:</span> {properties.house.houseType}
+                  </li>
+                  <li className="ow-li-lv2">
+                    <span>b) Địa chỉ:</span> {properties.house.address}
+                  </li>
+                  <li className="ow-li-lv2">
+                    <span>c) Diện tích xây dựng:</span>{" "}
+                    {properties.house.constructionArea}
+                  </li>
+                  <li className="ow-li-lv2">
+                    <span>d) Diện tích sàn:</span> {properties.house.floorArea}
+                  </li>
+                  <li className="ow-li-lv2">
+                    <span>e) Cấp (Hạng):</span> {properties.house.level}
+                  </li>
+                  <li className="ow-li-lv2">
+                    <span>f) Hình thức sở hữu:</span>{" "}
+                    {properties.house.formOfOwn}
+                  </li>
+                  <li className="ow-li-lv2">
+                    <span>g) Thời gian sử dụng:</span>{" "}
+                    {properties.house.timeOfOwn}
+                  </li>
+                </ol>
+              )}
             </li>
             <li className="ow-li-lv1">
               4. Công trình xây dựng khác:{" "}
-              {!properties.otherConstruction
-                ? " -/-"
-                : properties.otherConstruction}
+              <p>
+                {" "}
+                {!properties.otherConstruction
+                  ? " -/-"
+                  : properties.otherConstruction}
+              </p>
             </li>
             <li className="ow-li-lv1">
               5. Rừng sản xuất là rừng trồng:{" "}
-              {!properties.prodForestIsArtificial
-                ? " -/-"
-                : properties.prodForestIsArtificial}
+              <p>
+                {!properties.prodForestIsArtificial
+                  ? " -/-"
+                  : properties.prodForestIsArtificial}
+              </p>
             </li>
             <li className="ow-li-lv1">
               6. Cây lâu năm:{" "}
-              {!properties.perennialTree ? " -/-" : properties.perennialTree}
+              <p>
+                {!properties.perennialTree ? " -/-" : properties.perennialTree}
+              </p>
             </li>
             <li className="ow-li-lv1">
-              7. Ghi chú: {!properties.notice ? " -/-" : properties.notice}
+              7. Ghi chú:{" "}
+              <p>{!properties.notice ? " -/-" : properties.notice}</p>
             </li>
           </ol>
         </div>

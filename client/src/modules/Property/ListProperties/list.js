@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import formatCurrency from "../../../utils/formatCurrency";
 import { Link } from "react-router-dom";
 
 class ListProperties extends Component {
@@ -46,7 +47,7 @@ class ListProperties extends Component {
                   <p>{property.properties.landLot.address}</p>
                 </div>
                 <div className="trend-open mt-10">
-                  <p> {property.moreInfo.price} VND </p>
+                  <p> {formatCurrency(property.moreInfo.price)} VND </p>
                 </div>
                 <ul className="property-feature">
                   <li>

@@ -2,9 +2,17 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 class index extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {}
   render() {
     let { user } = this.props;
-    return user && user.isVerifired == 0 && user.role != "Notary" ? (
+    return this.props.history.location.pathname ===
+      "/verify-account" ? null : user &&
+      user.isVerified == 0 &&
+      user.role != "Notary" ? (
       <div
         style={{
           position: "fixed",
@@ -20,7 +28,7 @@ class index extends Component {
       >
         Vui lòng xác thực tài khoản <a href="/verify-account">tại đây</a>
       </div>
-    ) : user.isVerifired == 1 && user.role != "Notary" ? (
+    ) : user.isVerified == 1 && user.role != "Notary" ? (
       <div
         style={{
           position: "fixed",

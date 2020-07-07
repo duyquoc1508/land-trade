@@ -37,17 +37,15 @@ export default class Notification extends Component {
               {this.state.data.length > 0 &&
                 this.state.data.map((notification, index) => (
                   <div className="au-message__item unread" key={index}>
-                    <div className="au-message__item-inner">
+                    <div
+                      className="au-message__item-inner"
+                      onClick={() => this.props.history.push(notification.url)}
+                    >
                       <div className="au-message__item-text">
-                        <div
-                          className="text"
-                          onClick={() => history.push(notification.url)}
-                        >
-                          <h5 className="name">Sarah Conor</h5>
-                          <p>
-                            <p>{notification.message}</p>
-                          </p>
-                        </div>
+                        <h5 className="name">Sarah Conor</h5>
+                        <p>
+                          <p>{notification.message}</p>
+                        </p>
                       </div>
                       <div className="au-message__item-time">
                         <span>{formatDate(notification.createdAt)}</span>
