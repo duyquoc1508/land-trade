@@ -3,6 +3,7 @@ import { loadScript } from "../../helper/utils";
 import axios from "axios";
 import NotFound from "../NotFound";
 import formatCurrency from "../../utils/formatCurrency";
+import { connect } from "react-redux";
 
 class Property extends Component {
   constructor(props) {
@@ -44,6 +45,7 @@ class Property extends Component {
                 {property.moreInfo.galleries.map((item, index) => (
                   <div
                     className={`carousel-item ${index == 1 ? "active" : ""}`}
+                    key={index}
                   >
                     <img
                       className="d-block w-100"
@@ -221,13 +223,16 @@ class Property extends Component {
                         </li>
                         <div className="mortgage-btn">
                           <button
+                            disabled={property.owners.includes(
+                              this.props.user.publicAddress
+                            )}
                             onClick={() =>
                               this.props.history.push(
                                 `/create-transaction/${property.transactionHash}`
                               )
                             }
                           >
-                            Mua
+                            Đặt cọc ngay
                           </button>
                         </div>
                       </ul>
@@ -289,4 +294,10 @@ class Property extends Component {
   }
 }
 
-export default Property;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user.data,
+  };
+};
+
+export default connect(mapStateToProps, null)(Property);

@@ -2,24 +2,10 @@ import { call, put, takeEvery, select } from "redux-saga/effects";
 import {
   ACTIVATE_CERTIFICATE_REQUEST,
   ACTIVATE_CERT_WAIT_BLOCKCHAIN_CONFIRM,
-  ACTIVATE_CERTIFICATE_SUCCESS,
   ACTIVATE_CERTIFICATE_FAILURE,
 } from "./constants";
-import Web3 from "web3";
 import getWeb3 from "../../../helper/getWeb3";
 
-// const loadWeb3 = async () => {
-//   if (window.ethereum) {
-//     window.web3 = new Web3(window.ethereum);
-//     await window.ethereum.enable();
-//   } else if (window.web3) {
-//     window.web3 = new Web3(window.web3.currentProvider);
-//   } else {
-//     window.alert(
-//       "Non-Ethereum browser detected. You should consider trying MetaMask!"
-//     );
-//   }
-// };
 function activateCertificate(realEstateContract, idCertificate) {
   return new Promise((resolve, reject) => {
     let web3 = "";

@@ -4,30 +4,30 @@ import axios from "axios";
 import { Form, Field, reduxForm } from "redux-form";
 import DropZoneField from "../../../../components/DropzoneField/dropzoneField";
 
-const imageIsRequired = value => (!value ? "Required" : undefined);
+const imageIsRequired = (value) => (!value ? "Required" : undefined);
 
 class UploadForm extends Component {
   state = { imageFiles: [] };
 
-  handleFormSubmit = formProps => {
+  handleFormSubmit = (formProps) => {
     console.log(formProps);
   };
 
   handleOnDrop = async (newImageFiles, onChange) => {
     const fd = new FormData();
 
-    newImageFiles.forEach(item => {
+    newImageFiles.forEach((item) => {
       fd.append("images", item);
     });
     let result = await axios.post(
       `${process.env.REACT_APP_BASE_URL_API}/upload/image`,
       fd
     );
-    let listImages = newImageFiles.map(imageFile => {
+    let listImages = newImageFiles.map((imageFile) => {
       return {
         name: imageFile.name,
         size: imageFile.size,
-        preview: URL.createObjectURL(imageFile)
+        preview: URL.createObjectURL(imageFile),
       };
     });
 
@@ -39,7 +39,7 @@ class UploadForm extends Component {
   render = () => (
     <div className="">
       <h4>
-        <i className="lnr lnr-picture"></i> Gallery :
+        <i className="lnr lnr-picture"></i> Sơ đồ thử đất :
       </h4>
       <button
         type="button"
@@ -47,7 +47,7 @@ class UploadForm extends Component {
         disabled={this.props.pristine || this.props.submitting}
         onClick={this.resetForm}
       >
-        Clear
+        Xóa
       </button>
       <hr />
       <Form onSubmit={this.props.handleSubmit(this.handleFormSubmit)}>
@@ -67,7 +67,7 @@ class UploadForm extends Component {
 
 UploadForm = reduxForm({
   // a unique name for the form
-  form: "upload"
+  form: "upload",
 })(UploadForm);
 
 export default UploadForm;

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { loadScript } from "../../helper/utils";
 import { connect } from "react-redux";
-import Filter from "./sections/filter";
+// import Filter from "./sections/filter";
 import { requestFetch } from "./actions";
 import { Link } from "react-router-dom";
 import formatCurrency from "../../utils/formatCurrency";
@@ -114,7 +114,13 @@ class Listings extends Component {
       <div>
         <div className="filter-wrapper section-padding">
           <div className="container">
+            {/* {this.props.listingSale.length === 0 ? (
+              <h3 className="post-title text-center">
+                Không có tài sản nào đang bán
+              </h3>
+            ) : ( */}
             <div className="row">{this.renderItem()}</div>
+            {/* )} */}
           </div>
         </div>
       </div>

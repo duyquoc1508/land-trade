@@ -53,8 +53,7 @@ export class CMND extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // alert(this.imageName)
-      let response = await axios({
+      await axios({
         method: "put",
         url: `${process.env.REACT_APP_BASE_URL_API}/users`,
         data: { imageIdNumber: this.state.imageName },
@@ -62,7 +61,6 @@ export class CMND extends Component {
           Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
         },
       });
-      // alert(JSON.stringify(response))
       window.location.href = `/verify-account?step=${this.nextStep()}`;
     } catch (error) {
       alert(error);
@@ -140,7 +138,7 @@ export class CMND extends Component {
                               )}
                             </div>
                             {this.state.imageFiles &&
-                            this.state.imageFiles.length == 0 ? (
+                            this.state.imageFiles.length === 0 ? (
                               <div className="add-listing__input-file-box">
                                 <input
                                   name="images"

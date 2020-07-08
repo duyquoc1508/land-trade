@@ -1,16 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-// import Button from "@material-ui/core/Button";
-// import Snackbar from "@material-ui/core/Snackbar";
-// import Alert from "@material-ui/lab/Alert";
-// import { makeStyles } from "@material-ui/core/styles";
 
 import { loadScript } from "../../../helper/utils";
 import * as actions from "./actions";
 import RealEstateContract from "../../../contracts/RealEstate.json";
-import Web3 from "web3";
 import { realEstateContractAddress } from "../../../../config/common-path";
-import getWeb3 from "../../../helper/getWeb3";
 
 import Tab from "./sections/tab";
 
@@ -30,22 +24,20 @@ class AddProperty extends Component {
   };
 
   listenEventFromBlockchain = async () => {
-    const web3 = await getWeb3();
-    const realEstateContract = new web3.eth.Contract(
-      RealEstateContract.abi,
-      realEstateContractAddress
-    );
-    realEstateContract.events
-      .NewCertificate()
-      .on("data", (event) => {
-        console.log("index -> componentDidMount -> result", event.returnValues);
-        this.props.createSuccess({
-          history: this.props.history,
-          txHash: event.transactionHash,
-        });
-        // then push to screen this property
-      })
-      .on("error", console.error);
+    this.props.realEstateContract &&
+      this.props.realEstateContract.events
+        .NewCertificate()
+        .on("data", (event) => {
+          setTimeout(() => {
+            this.props.createSuccess({
+              history: this.props.history,
+              txHash: event.transactionHash,
+            });
+          }, 500);
+
+          // then push to screen this property
+        })
+        .on("error", console.error);
   };
 
   handleClose() {
@@ -64,24 +56,6 @@ class AddProperty extends Component {
             createSubmit={createSubmit}
             handleCreate={this.props.addProperty.success}
           />
-          {/* {this.props.addProperty.success ? (
-            <Snackbar
-              open={this.state.open}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              onClose={this.handleClose}
-              // message={this.props.addProperty.messages}
-              autoHideDuration={2000}
-            >
-              <Alert onClose={this.handleClose} severity="success">
-                {this.props.addProperty.messages}
-              </Alert>
-            </Snackbar>
-          ) : (
-            ""
-          )} */}
         </div>
       </div>
     );
@@ -93,7 +67,7 @@ const mapStateToProps = (state) => ({
   form: state.form,
   login: state.login,
   loading: state.loading,
-  // realEstateContract: state.shared.realEstate
+  realEstateContract: state.shared.realEstate,
 });
 
 const mapDispatchToProps = (dispatch) => {

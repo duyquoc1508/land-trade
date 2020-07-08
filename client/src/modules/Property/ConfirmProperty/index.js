@@ -13,12 +13,11 @@ const ConfirmProperty = (props) => {
       props.realEstateContract.events
         .Activate()
         .on("data", (event) => {
-          console.log("ConfirmProperty -> event", event.returnValues);
+          props.history.push(`/property-standard/${props.match.params.hash}`);
           props.activateCertSuccess({
             history: props.history,
             txHash: event.transactionHash,
           });
-          // then push to screen this property
         })
         .on("error", console.error);
   }, [props.realEstateContract]);

@@ -33,6 +33,7 @@ class HouseForm extends Component {
                   this.setState({ houseType: this.houseType[e.target.value] })
                 }
               >
+                <option></option>
                 <option value="Nhà ở riêng lẻ">Nhà ở riêng lẻ</option>
                 <option value="Nhà chung cư">Nhà chung cư</option>
               </Field>
@@ -55,9 +56,7 @@ class HouseForm extends Component {
           {this.state.houseType ? (
             <div className="col-md-6">
               <div className="form-group">
-                <label>
-                  Diện tích xây dựng
-                </label>
+                <label>Diện tích xây dựng</label>
                 <div className="input-group">
                   <Field
                     name="constructionArea"
@@ -68,7 +67,10 @@ class HouseForm extends Component {
                     disabled={this.houseType[this.state.houseType]}
                   />
                   <div className="input-group-append">
-                    <span className="input-group-text"> m<sup>2</sup> </span>
+                    <span className="input-group-text">
+                      {" "}
+                      m<sup>2</sup>{" "}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -77,9 +79,7 @@ class HouseForm extends Component {
 
           <div className="col-md-6">
             <div className="form-group">
-              <label>
-                Diện tích sàn
-              </label>
+              <label>Diện tích sàn</label>
               <div className="input-group">
                 <Field
                   name="floorArea"
@@ -89,7 +89,10 @@ class HouseForm extends Component {
                   placeholder="Diện tích sàn"
                 />
                 <div className="input-group-append">
-                  <span className="input-group-text"> m<sup>2</sup> </span>
+                  <span className="input-group-text">
+                    {" "}
+                    m<sup>2</sup>{" "}
+                  </span>
                 </div>
               </div>
             </div>

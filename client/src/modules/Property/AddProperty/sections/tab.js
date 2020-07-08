@@ -49,7 +49,7 @@ function getSteps() {
     "Rừng sản xuất là rừng trồng",
     "Cây lâu năm",
     "Ghi chú",
-    "Thêm hình ảnh",
+    "Sơ đồ thửa đất",
   ];
 }
 
@@ -135,7 +135,7 @@ const tab = function HorizontalNonLinearStepper(props) {
     handleReset();
   };
 
-  const { handleCreate } = props;
+  // const { handleCreate } = props;
 
   return (
     <div className={classes.root}>
@@ -163,18 +163,15 @@ const tab = function HorizontalNonLinearStepper(props) {
           <div>
             <Overview />
             <hr />
-            <Button onClick={handleReset}>Reset</Button>
-            {!handleCreate ? (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSubmit}
-              >
-                {"Đăng Ký"}
-              </Button>
-            ) : (
-              ""
-            )}
+            <Button onClick={handleReset}>Đặt lại</Button>
+            <Button
+              disabled={props.loading}
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+            >
+              {"Đăng Ký"}
+            </Button>
           </div>
         ) : (
           <div>
@@ -222,6 +219,7 @@ const tab = function HorizontalNonLinearStepper(props) {
 const mapStateToProps = (state) => ({
   addProperty: state.addProperty,
   form: state.form,
+  loading: state.addProperty.loading,
 });
 
 const mapDispatchToProps = (dispatch) => {

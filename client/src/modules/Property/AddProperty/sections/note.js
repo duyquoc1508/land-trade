@@ -21,6 +21,7 @@ class NoteForm extends Component {
                   className="form-control"
                   rows="4"
                   placeholder=""
+                  autoFocus={true}
                 />
               </div>
             </div>
@@ -33,7 +34,7 @@ class NoteForm extends Component {
 
 NoteForm = reduxForm({
   // a unique name for the form
-  form: "note"
+  form: "note",
 })(NoteForm);
 
 export default NoteForm;

@@ -62,7 +62,7 @@ const DialogActions = withStyles((theme) => ({
 const CancelTransaction = (props) => {
   const [open, setOpen] = React.useState(false);
   const [compensation, setCompensation] = React.useState(0);
-  const [recived, setRecived] = React.useState(0);
+  const [received, setReceived] = React.useState(0);
   const [tax, setTax] = React.useState(0);
 
   const handleClickOpen = () => {
@@ -71,57 +71,54 @@ const CancelTransaction = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
-  {
-    /* {const transactionState = [
-                    "DEPOSIT_REQUEST",
-                    "DEPOSIT_CONFIRMED",
-                    "PAYMENT_REQUEST",
-                    "PAYMENT_CONFIRMED",
-                    "CANCELED",
-                    ];
 
-                    const cancellationStatus = [
-                    "DEPOSIT_CANCELED_BY_BUYER",
-                    "DEPOSIT_CANCELED_BY_SELLER",
-                    "DEPOSIT_BROKEN_BY_SELLER",
-                    "DEPOSIT_BROKEN_BY_BUYER",
-                    "TRANSFER_CANCELED_BY_SELLER",
-                    ];} */
-  }
+  const TRANSACTION_STATE = {
+    DEPOSIT_REQUEST: "DEPOSIT_REQUEST",
+    DEPOSIT_CONFIRMED: "DEPOSIT_CONFIRMED",
+    PAYMENT_REQUEST: "PAYMENT_REQUEST",
+    PAYMENT_CONFIRMED: "PAYMENT_CONFIRMED",
+    CANCELED: "CANCELED",
+  };
+
+  const PARTY = {
+    BUYER: "BUYER",
+    SELLER: "SELLER",
+  };
+
   useEffect(() => {
-    if (props.party == "BUYER") {
-      if (props.transaction.state == "DEPOSIT_REQUEST") {
+    if (props.party === PARTY.BUYER) {
+      if (props.transaction.state === TRANSACTION_STATE.DEPOSIT_REQUEST) {
         setCompensation(0);
-        setRecived(props.transaction.depositPrice);
+        setReceived(props.transaction.depositPrice);
         setTax(0);
       }
-      if (props.transaction.state == "DEPOSIT_CONFIRMED") {
+      if (props.transaction.state === TRANSACTION_STATE.DEPOSIT_CONFIRMED) {
         setCompensation(0);
-        setRecived(0);
+        setReceived(0);
         setTax(0);
       }
-      if (props.transaction.state == "PAYMENT_REQUEST") {
+      if (props.transaction.state === TRANSACTION_STATE.PAYMENT_REQUEST) {
         setCompensation(0);
-        setRecived(
+        setReceived(
           props.transaction.transferPrice - props.transaction.depositPrice
         );
         setTax(props.transaction.transferPrice * 0.005);
       }
     }
-    if (props.party == "SELLER") {
+    if (props.party === PARTY.SELLER) {
       // if (props.transaction.state == "DEPOSIT_REQUEST") {
       //   setCompensation(0);
-      //   setRecived(0);
+      //   setReceived(0);
       //   setTax(0);
       // }
-      if (props.transaction.state == "DEPOSIT_CONFIRMED") {
+      if (props.transaction.state === TRANSACTION_STATE.DEPOSIT_CONFIRMED) {
         setCompensation(2 * props.transaction.depositPrice);
-        setRecived(0);
+        setReceived(0);
         setTax(0);
       }
-      if (props.transaction.state == "PAYMENT_REQUEST") {
+      if (props.transaction.state === TRANSACTION_STATE.PAYMENT_REQUEST) {
         setCompensation(2 * props.transaction.depositPrice);
-        setRecived(0);
+        setReceived(0);
         setTax(0);
       }
     }
@@ -154,7 +151,7 @@ const CancelTransaction = (props) => {
               </li>
               <li>
                 <span>Số tiền nhận lại:</span>
-                {formatCurrency(convertWeiToVND(recived))} VNĐ
+                {formatCurrency(convertWeiToVND(received))} VNĐ
               </li>
               <li>
                 <span>Tiền thuế:</span>

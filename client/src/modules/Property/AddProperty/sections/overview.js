@@ -7,21 +7,9 @@ export class Overview extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      owners: [],
+      owners: [], // map public address to profile
     };
   }
-
-  // componentDidUpdate() {
-  //   if (this.owners) {
-  //     (async () => {
-  //       const p1 = this.owners.map((publicAddress) =>
-  //         axios.get(`${process.env.REACT_APP_BASE_URL_API}/${publicAddress}`)
-  //       );
-  //       const ps1 = await Promise.all(p1);
-  //       console.log(ps1);
-  //     })();
-  //   }
-  // }
 
   componentDidMount() {
     (async () => {
@@ -32,26 +20,32 @@ export class Overview extends Component {
       );
       const ps1 = await Promise.all(p1);
       const ownersInfo = ps1.map((item) => item.data.data);
-      console.log("Overview -> componentDidMount -> userInfo", ownersInfo);
-      this.setState({ owners: ownersInfo });
+      this.setState({ owners: ownersInfo }); // map publicAddress to user profile
     })();
   }
 
   render() {
     console.log(this.state.owners);
-    const { owners, properties, images } = this.props.overview;
+    const { properties, images } = this.props.overview;
     return (
-      <div className="row">
+      <div className="row mt-20">
         <div className="col-sm-6">
-          {images.map((img, index) => (
-            <img
-              src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${img}`}
-              style={{ maxHeight: "100%" }}
-              key={index}
-            />
-          ))}
+          <h5>Sơ đồ thửa đất</h5>
+          <div className="card">
+            <div className="card-body">
+              {images.map((img, index) => (
+                <img
+                  alt=""
+                  src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${img}`}
+                  style={{ maxHeight: "100%" }}
+                  key={index}
+                />
+              ))}
+            </div>
+          </div>
         </div>
         <div className="col-sm-6">
+          <h5>Thông tin tài sản</h5>
           <ol>
             <li className="ow-li-lv1">
               1. Chủ sở hữu:
@@ -98,7 +92,7 @@ export class Overview extends Component {
             <li className="ow-li-lv1">
               3. Nhà ở:
               {!properties.house ? (
-                <p>" -/-"</p>
+                <p>-/-</p>
               ) : (
                 <ol type="a">
                   <li className="ow-li-lv2">

@@ -5,7 +5,10 @@ import { activateSaleRequest } from "./action";
 
 function PropertyActivated({ properties, activateSale }) {
   const history = useHistory();
-  return (
+
+  return properties.length === 0 ? (
+    <h3 className="post-title text-center">Chưa có tài sản nào đã duyệt</h3>
+  ) : (
     <div className="viewd-item-wrap row">
       {properties.map((property, index) => (
         <div className="col-xl-4 col-md-6 col-sm-12" key={index}>

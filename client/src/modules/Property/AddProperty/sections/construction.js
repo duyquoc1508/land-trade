@@ -33,6 +33,7 @@ class ConstructionForm extends Component {
                   className="form-control"
                   rows="4"
                   placeholder=""
+                  autoFocus={true}
                 />
               </div>
             </div>
@@ -45,7 +46,7 @@ class ConstructionForm extends Component {
 
 ConstructionForm = reduxForm({
   // a unique name for the form
-  form: "construction"
+  form: "construction",
 })(ConstructionForm);
 
 export default ConstructionForm;
