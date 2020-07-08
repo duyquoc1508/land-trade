@@ -4,6 +4,9 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ToastSuccess from "../../components/ToastCustom/ToastSuccess";
 
 import axios from "axios";
 import Cookie from "../../helper/cookie";
@@ -50,13 +53,13 @@ export default class ManagementUser extends Component {
           },
         }
       );
-      const owners = response.data.data;
+      const owners = response.data.data.filter((user) => user.isVerified === 1);
 
       this.setState({
         data: owners.map((owner) => ({
           idNumber: owner.idNumber,
           fullname: owner.fullName,
-          state: owner.isVerifired,
+          state: owner.isVerified,
           ...owner,
         })),
         _isLoading: false,
@@ -85,7 +88,11 @@ export default class ManagementUser extends Component {
           },
         }
       )
-      .then(() => alert("done"))
+      .then(() =>
+        toast.success(<ToastSuccess message={"Phê duyệt thành công."} />, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        })
+      )
       .catch((error) => alert(error))
       .finally(this.closePreview());
   };
@@ -186,7 +193,7 @@ export default class ManagementUser extends Component {
                       />
                     </div>
                   </div>
-                  <div className="col-md-6">
+                  {/* <div className="col-md-6">
                     <div className="form-group">
                       <label>Dân tộc</label>
                       <input
@@ -245,7 +252,7 @@ export default class ManagementUser extends Component {
                         disabled={true}
                       />
                     </div>
-                  </div>
+                  </div> */}
                   <div className="col-md-12">
                     <div className="form-group">
                       <label>Số điện thoại</label>

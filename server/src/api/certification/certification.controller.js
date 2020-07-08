@@ -325,3 +325,23 @@ export async function getAllPropertiesOfUser(_req, res, next) {
     next(error);
   }
 }
+
+// get owner info of certificate
+export async function getOwnersInfoOfCertificate(req, res, next) {
+  try {
+    const transactionHash = req.params.txHash;
+    const certificate = await Certification.findOne({ transactionHash })
+      .select("owners -_id")
+      .lean();
+    let ownersInfo = [];
+    if (certificate) {
+      const p1 = certificate.owners.map((publicAddress) =>
+        User.findOne({ publicAddress })
+      );
+      ownersInfo = await Promise.all(p1);
+    }
+    return res.status(200).json({ statusCode: 200, data: ownersInfo });
+  } catch (error) {
+    return res.status(500).json({ statusCode: 500, message: error.message });
+  }
+}

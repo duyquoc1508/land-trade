@@ -19,11 +19,11 @@ class Info extends Component {
     this.props.change("homeLand", user.homeLand || "");
     this.props.change("birthday", user.birthday || "");
     this.props.change("permanentResidence", user.permanentResidence || "");
-    this.props.change("ethnic", user.ethnic || "");
-    this.props.change("religion", user.religion || "");
-    this.props.change("deformity", user.deformity || "");
-    this.props.change("dateIdNumber", user.dateIdNumber || "");
-    this.props.change("placeIdNumber", user.placeIdNumber || "");
+    // this.props.change("ethnic", user.ethnic || "");
+    // this.props.change("religion", user.religion || "");
+    // this.props.change("deformity", user.deformity || "");
+    // this.props.change("dateIdNumber", user.dateIdNumber || "");
+    // this.props.change("placeIdNumber", user.placeIdNumber || "");
     // this.props.change("phoneNumber", user.phoneNumber || "");
     // this.props.change("email", user.email || "");
   }
@@ -62,7 +62,7 @@ class Info extends Component {
             <div className="db-add-list-wrap">
               <div className="db-add-listing">
                 <form onSubmit={this.props.handleSubmit(this.handleUpdate)}>
-                  <div className="row">
+                  <div className="row ">
                     <div className="col-md-12">
                       <div className="form-group">
                         <label>Họ tên</label>
@@ -123,7 +123,7 @@ class Info extends Component {
                         />
                       </div>
                     </div>
-                    <div className="col-md-6">
+                    {/* <div className="col-md-6">
                       <div className="form-group">
                         <label>Dân tộc</label>
                         <Field
@@ -182,14 +182,10 @@ class Info extends Component {
                           placeholder="Nơi cấp"
                         />
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="col-md-12">
-                      <button
-                        className="btn v3"
-                      >
-                        Cập nhập
-                      </button>
+                      <button className="btn v3">Cập nhập</button>
                     </div>
                   </div>
                 </form>
@@ -201,7 +197,6 @@ class Info extends Component {
     );
   }
 }
-
 
 Info = reduxForm({
   // a unique name for the form

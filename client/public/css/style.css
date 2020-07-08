@@ -1220,7 +1220,7 @@ ul.list-inline li {
   padding: 5px 14px;
   border-radius: 3px;
   border: 0.5px solid #ddd;
-  color: #ddd !important;
+  color: #ffffff !important;
   transition: 0.3s;
   display: inline-block;
   font-size: 15px;
@@ -3886,7 +3886,7 @@ input[type="text"]:focus {
 }
 
 .trend-right i {
-  color: #888;
+  color: #ffffff;
   font-size: 18px;
 }
 

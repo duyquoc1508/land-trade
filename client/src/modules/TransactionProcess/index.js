@@ -284,26 +284,25 @@ const TransactionProcess = (props) => {
         {/** right collumn */}
         <div className="col-md-9">
           {/** step in process */}
-          <div className="container py-2">
-            {/* <h4 className="">{stepsToName[steps]}</h4>
-            <h5 className="" style={{ color: "red" }}>
-              {" "}
-              {props.transaction.state}
-            </h5> */}
-            {party === PARTY_CONSTANT.SELLER
-              ? (steps === 1 && <InitTransaction />) ||
-                (steps === 2 && <SellerAcceptTransaction />) ||
-                (steps === 3 && <SellerPayment />) ||
-                (steps === 4 && <SellerConfirmTransaction />)
-              : party === PARTY_CONSTANT.BUYER
-              ? (steps === 1 && <BuyerAcceptTransaction />) ||
-                (steps === 2 && <BuyerAcceptTransaction />) ||
-                (steps === 3 && <BuyerPayment />) ||
-                (steps === 4 && <BuyerConfirmTransaction />)
-              : (steps === 1 && <BuyerAcceptTransaction />) ||
-                (steps === 2 && <BuyerAcceptTransaction />) ||
-                (steps === 3 && <SellerPayment />) ||
-                (steps === 4 && <BuyerConfirmTransaction />)}
+          <div className="col-md-12">
+            <div className="container py-2">
+              <h4 className="">{stepsToName[steps]}</h4>
+              <h5 className="" style={{ color: "red" }}>
+                {" "}
+                {props.transaction.state}
+              </h5>
+              {party === PARTY_CONSTANT.SELLER
+                ? (steps === 2 && <SellerAcceptTransaction />) ||
+                  (steps === 3 && <SellerPayment />) ||
+                  (steps === 4 && <SellerConfirmTransaction />)
+                : party === PARTY_CONSTANT.BUYER
+                ? (steps === 2 && <BuyerAcceptTransaction />) ||
+                  (steps === 3 && <BuyerPayment />) ||
+                  (steps === 4 && <BuyerConfirmTransaction />)
+                : (steps === 2 && <BuyerAcceptTransaction />) ||
+                  (steps === 3 && <SellerPayment />) ||
+                  (steps === 4 && <BuyerConfirmTransaction />)}
+            </div>
           </div>
         </div>
       </div>

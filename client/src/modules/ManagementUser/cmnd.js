@@ -13,6 +13,7 @@ export class CMND extends Component {
     };
     // this.handleCheckbox = this.handleCheckbox.bind(this);
   }
+
   async componentDidMount() {
     loadScript(`${process.env.REACT_APP_BASE_URL}/js/plugin.js`);
     loadScript(`${process.env.REACT_APP_BASE_URL}/js/main.js`);
@@ -96,7 +97,6 @@ export class CMND extends Component {
       };
     });
     this.setState({ imageName: result.data.data, imageFiles: listImages });
-    alert("anh dang upload thanh cong!");
   }
 
   render() {

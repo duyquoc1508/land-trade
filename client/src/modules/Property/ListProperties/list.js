@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import formatCurrency from "../../../utils/formatCurrency";
 import { Link } from "react-router-dom";
 
 class ListProperties extends Component {
@@ -36,19 +37,19 @@ class ListProperties extends Component {
                 </ul>
               </div>
               <div className="property-title-box">
-                <h4>
+                {/* <h4>
                   <Link to={`property-standard/${property.transactionHash}`}>
                     {property.moreInfo.title}
                   </Link>
-                </h4>
+                </h4> */}
                 <div className="property-location">
                   <i className="fa fa-map-marker-alt"></i>
                   <p>{property.properties.landLot.address}</p>
                 </div>
-                <div className="trend-open mt-10">
-                  <p> {property.moreInfo.price} VND </p>
-                </div>
-                <ul className="property-feature">
+                {/* <div className="trend-open mt-10">
+                  <p> {formatCurrency(property.moreInfo.price)} VND </p>
+                </div> */}
+                {/* <ul className="property-feature">
                   <li>
                     {" "}
                     <i className="fas fa-bed"></i>
@@ -69,7 +70,7 @@ class ListProperties extends Component {
                     <i className="fas fa-car"></i>
                     <span>{property.moreInfo.utilities.length} tiện ích</span>
                   </li>
-                </ul>
+                </ul> */}
                 <div
                   className="trending-bottom"
                   style={{ padding: "15px 0px" }}
@@ -77,7 +78,7 @@ class ListProperties extends Component {
                   <div className="trend-right float-right">
                     <div className="trend-open">
                       <button
-                        className="btn v4 ml-2"
+                        className="btn v4 ml-2 text-light"
                         style={{
                           background: "#6449e7",
                           border: "1px solid transparent",

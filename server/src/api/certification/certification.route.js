@@ -111,4 +111,13 @@ routes.get(
  */
 routes.get("/:txHash", certificationController.getCertificationWithTxHash);
 
+/**
+ * GET certificate information with txHash
+ * GET api/v1/certification/owners/{{txHash}}
+ */
+routes.get(
+  "/owners/:txHash",
+  certificationController.getOwnersInfoOfCertificate
+);
+
 export default routes;

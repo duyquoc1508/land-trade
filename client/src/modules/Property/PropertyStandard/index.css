@@ -2,6 +2,7 @@
   margin: 0 50px;
   font-weight: bold;
   font-style: italic;
+  padding-right: 10px;
 }
 
 .ow-li-lv2 {
@@ -12,4 +13,9 @@
 .ow-li-lv2 span {
   font-weight: bold;
   margin-left: 50px;
+}
+
+li p {
+  display: inline-block;
+  font-style: normal;
 }
