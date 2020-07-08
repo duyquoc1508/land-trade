@@ -70,7 +70,79 @@ const ConfirmTransaction = (props) => {
   return (
     <div className="card">
       <div className="card-body">
-        <div className="row">
+        <div className="agent-details">
+          <h5>Xác nhận giao dịch</h5>
+          <ul className="address-list">
+            <li>
+              <span>Giá trị giao dịch:</span>
+              {formatCurrency(
+                convertWeiToVND(props.transaction.transferPrice)
+              )}{" "}
+              VNĐ
+            </li>
+            <li>
+              <span>Số tiền đã đặt cọc:</span>
+              {formatCurrency(
+                convertWeiToVND(props.transaction.depositPrice)
+              )}{" "}
+              VNĐ
+            </li>
+            <li>
+              <span>Số tiền còn lại:</span>
+              {formatCurrency(
+                convertWeiToVND(
+                  props.transaction.transferPrice -
+                    props.transaction.depositPrice
+                )
+              )}{" "}
+              VNĐ
+            </li>
+            <li>
+              <span>Thuế thu nhập cá nhân:</span>
+              {formatCurrency(
+                convertWeiToVND(props.transaction.transferPrice * 0.02)
+              )}{" "}
+              VNĐ
+            </li>
+            <li>
+              <span>Số tiền nhận được:</span>
+              {formatCurrency(
+                convertWeiToVND(
+                  props.transaction.transferPrice -
+                    props.transaction.depositPrice -
+                    props.transaction.transferPrice * 0.02
+                )
+              )}{" "}
+              VNĐ
+            </li>
+          </ul>
+          <h6>Lưu ý</h6>
+          <ul className="address-list">
+            <li>
+              Việc đồng ý xác nhận giao dịch này đồng nghĩa bạn phải thực hiện
+              đúng các yêu cầu của điều khoản của hợp đồng!
+            </li>
+          </ul>
+        </div>
+        {props.transaction.state == "PAYMENT_REQUEST" && (
+          <button
+            className="btn v3 float-right mt-5 "
+            onClick={handleClickOpen}
+          >
+            <i className="ion-android-cancel"></i> Xác nhận giao dịch
+          </button>
+        )}
+      </div>
+
+      <Dialog
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+      >
+        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+          Xác nhận giao dịch
+        </DialogTitle>
+        <DialogContent dividers>
           <div className="agent-details">
             <h5>Nghĩa vụ bên bán</h5>
             <ol className="address-list">
@@ -110,74 +182,6 @@ const ConfirmTransaction = (props) => {
                 này.
               </li>
             </ol>
-          </div>
-        </div>
-        <button className="btn v3 float-right mt-5 " onClick={handleClickOpen}>
-          <i className="ion-android-cancel"></i> Xác nhận giao dịch
-        </button>
-      </div>
-
-      <Dialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Xác nhận giao dịch
-        </DialogTitle>
-        <DialogContent dividers>
-          <div className="agent-details">
-            <ul className="address-list">
-              <li>
-                <span>Giá trị giao dịch:</span>
-                {formatCurrency(
-                  convertWeiToVND(props.transaction.transferPrice)
-                )}{" "}
-                VNĐ
-              </li>
-              <li>
-                <span>Số tiền đã đặt cọc:</span>
-                {formatCurrency(
-                  convertWeiToVND(props.transaction.depositPrice)
-                )}{" "}
-                VNĐ
-              </li>
-              <li>
-                <span>Số tiền còn lại:</span>
-                {formatCurrency(
-                  convertWeiToVND(
-                    props.transaction.transferPrice -
-                      props.transaction.depositPrice
-                  )
-                )}{" "}
-                VNĐ
-              </li>
-              <li>
-                <span>Thuế thu nhập cá nhân:</span>
-                {formatCurrency(
-                  convertWeiToVND(props.transaction.transferPrice * 0.02)
-                )}{" "}
-                VNĐ
-              </li>
-              <li>
-                <span>Số tiền nhận được:</span>
-                {formatCurrency(
-                  convertWeiToVND(
-                    props.transaction.transferPrice -
-                      props.transaction.depositPrice -
-                      props.transaction.transferPrice * 0.02
-                  )
-                )}{" "}
-                VNĐ
-              </li>
-            </ul>
-            <h6>Lưu ý</h6>
-            <ul className="address-list">
-              <li>
-                Việc đồng ý xác nhận giao dịch này đồng nghĩa bạn phải thực hiện
-                đúng các yêu cầu của điều khoản của hợp đồng!
-              </li>
-            </ul>
           </div>
         </DialogContent>
         <DialogActions>

@@ -21,7 +21,7 @@ export async function handleTransactionCreated(event) {
     const transaction = {
       buyers: event.returnValues.buyers,
       sellers: event.returnValues.sellers,
-      idProperty: event.returnValues.idCertificate,
+      idPropertyInBlockchain: event.returnValues.idCertificate,
       depositPrice: event.returnValues.depositPrice,
       transferPrice: event.returnValues.transferPrice,
       depositTime: event.returnValues.depositTime,
@@ -67,7 +67,7 @@ export async function handleTransactionAccepted(event) {
     );
     // set state is ACTIVATED // require using await here
     await Certification.updateOne(
-      { idInBlockchain: transaction.idProperty },
+      { idInBlockchain: transaction.idPropertyInBlockchain },
       {
         state: 3,
       }
@@ -150,7 +150,7 @@ export async function handleTransactionConfirmed(event) {
     const { buyers, sellers } = transaction;
     // update state of certificate and change ownership
     const certificate = await Certification.findOneAndUpdate(
-      { idInBlockchain: transaction.idProperty },
+      { idInBlockchain: transaction.idPropertyInBlockchain },
       { state: 1, owners: transaction.buyers }
     );
     const idCertificate = certificate._id;
@@ -213,7 +213,7 @@ export async function handleTransactionCanceled(event) {
     );
     // update state of certificate  // require using await here
     await Certification.updateOne(
-      { idInBlockchain: transaction.idProperty },
+      { idInBlockchain: transaction.idPropertyInBlockchain },
       { state: 2 }
     );
     const data = {

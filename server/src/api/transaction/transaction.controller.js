@@ -1,6 +1,7 @@
 import Transaction from "./transaction.model";
 import ErrorHandler from "../../helper/error";
 import Notification from "../notification/notification.model";
+import Certification from "../certification/certification.model";
 
 export async function createTransaction(req, res, next) {
   try {
@@ -13,13 +14,13 @@ export async function createTransaction(req, res, next) {
       publicAddress: item,
       isAccept: false,
     }));
-    const { transferPrice, downPayment, idProperty } = req.body;
+    const { transferPrice, downPayment, idPropertyInBlockchain } = req.body;
     const newTransaction = {
       buyer,
       seller,
       transferPrice,
       downPayment,
-      idProperty,
+      idPropertyInBlockchain,
     };
     const transaction = await Transaction.create(newTransaction);
     const sellerContent = {
@@ -54,23 +55,38 @@ export async function createTransaction(req, res, next) {
 export async function getMyTransactions(req, res, next) {
   try {
     let transactionP1 = Transaction.find({
-      $in: {
-        buyers: req.user.publicAddress,
-      },
-    });
+      buyers: req.user.publicAddress,
+    }).lean();
     let transactionP2 = Transaction.find({
-      $in: {
-        sellers: req.user.publicAddress,
-      },
-    });
+      sellers: req.user.publicAddress,
+    }).lean();
 
     let [transactionBuy, transactionSale] = await Promise.all([
       transactionP1,
       transactionP2,
     ]);
-    return res
-      .status(200)
-      .json({ statusCode: 200, data: { transactionBuy, transactionSale } });
+
+    let test = [...transactionBuy, ...transactionSale].map(
+      (item) => item.idInBlockchain
+    );
+    let arrayIdCertificationInBlockchain = Array.from(
+      new Set(
+        [...transactionBuy, ...transactionSale].map(
+          (item) => item.idPropertyInBlockchain
+        )
+      )
+    );
+    let properties = await Certification.find({
+      idInBlockchain: arrayIdCertificationInBlockchain,
+    });
+    return res.status(200).json({
+      statusCode: 200,
+      data: {
+        transactionBuy,
+        transactionSale,
+        properties,
+      },
+    });
   } catch (error) {
     next(error);
   }

@@ -69,7 +69,71 @@ const Payment = (props) => {
   return (
     <div className="card">
       <div className="card-body">
-        <div className="row">
+        <div className="agent-details">
+          <h5>Giá trị giao dịch</h5>
+          <ul className="address-list">
+            <li>
+              <span>Số tiền chuyển:</span>
+              {formatCurrency(
+                convertWeiToVND(
+                  props.transaction.transferPrice -
+                    props.transaction.depositPrice
+                )
+              )}{" "}
+              VNĐ
+            </li>
+            <li>
+              <span>Thuế trước bạ:</span>
+              {formatCurrency(
+                convertWeiToVND(props.transaction.transferPrice * 0.005)
+              )}{" "}
+              VNĐ
+            </li>
+            <li>
+              <span>Tổng số tiền chuyển:</span>
+              {formatCurrency(
+                convertWeiToVND(
+                  props.transaction.transferPrice -
+                    props.transaction.depositPrice +
+                    props.transaction.transferPrice * 0.005
+                )
+              )}{" "}
+              VNĐ
+            </li>
+          </ul>
+        </div>
+        <div className="agent-details">
+          <h5>Lưu ý:</h5>
+          <ul className="address-list">
+            <li>
+              Với việc xác nhận này bạn sẽ chuyển số tiền giao dich cho người
+              bán và chờ xác nhận để hoàn tất việc nhận tài sản
+            </li>
+            <li>
+              Bạn có thể hủy giao dịch nếu người bán chưa xác nhận và mất tiền
+              đặt cọc
+            </li>
+          </ul>
+        </div>
+
+        {props.transaction.state == "DEPOSIT_CONFIRMED" && (
+          <button
+            className="btn v3 float-right mt-5 "
+            onClick={handleClickOpen}
+          >
+            <i className="ion-android-cancel"></i> Chuyển số tiền còn lại
+          </button>
+        )}
+      </div>
+      <Dialog
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+      >
+        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+          Chuyển tiền
+        </DialogTitle>
+        <DialogContent dividers>
           <div className="agent-details">
             <h5>Nghĩa vụ bên mua</h5>
             <ol className="address-list">
@@ -111,66 +175,6 @@ const Payment = (props) => {
                 này.
               </li>
             </ol>
-          </div>
-        </div>
-        <button className="btn v3 float-right mt-5 " onClick={handleClickOpen}>
-          <i className="ion-android-cancel"></i> Chuyển số tiền còn lại
-        </button>
-      </div>
-      <Dialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Chuyển tiền
-        </DialogTitle>
-        <DialogContent dividers>
-          <div className="agent-details">
-            <h5>Giá trị giao dịch</h5>
-            <ul className="address-list">
-              <li>
-                <span>Số tiền chuyển:</span>
-                {formatCurrency(
-                  convertWeiToVND(
-                    props.transaction.transferPrice -
-                      props.transaction.depositPrice
-                  )
-                )}{" "}
-                VNĐ
-              </li>
-              <li>
-                <span>Thuế trước bạ:</span>
-                {formatCurrency(
-                  convertWeiToVND(props.transaction.transferPrice * 0.005)
-                )}{" "}
-                VNĐ
-              </li>
-              <li>
-                <span>Tổng số tiền chuyển:</span>
-                {formatCurrency(
-                  convertWeiToVND(
-                    props.transaction.transferPrice -
-                      props.transaction.depositPrice +
-                      props.transaction.transferPrice * 0.005
-                  )
-                )}{" "}
-                VNĐ
-              </li>
-            </ul>
-          </div>
-          <div className="agent-details">
-            <h5>Lưu ý:</h5>
-            <ul className="address-list">
-              <li>
-                Với việc xác nhận này bạn sẽ chuyển số tiền giao dich cho người
-                bán và chờ xác nhận để hoàn tất việc nhận tài sản
-              </li>
-              <li>
-                Bạn có thể hủy giao dịch nếu người bán chưa xác nhận và mất tiền
-                đặt cọc
-              </li>
-            </ul>
           </div>
         </DialogContent>
         <DialogActions>
