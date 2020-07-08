@@ -1,19 +1,6 @@
 // component process of transaction
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import formatDate from "../../utils/formatDate";
-import TransactionInfo from "../TransactionInfo";
-
-import Info from "./sections/1_info";
-import DepositContract from "./sections/2_deposit_contract";
-import DepositPayment from "./sections/3_deposit_payment";
-import DepositConfirm from "./sections/4_deposit_confirm";
-import TransferContract from "./sections/5_transfer_contract";
-import PaymentConfirm from "./sections/6_payment_confirm";
-import PayTaxes from "./sections/7_pay_taxes";
-import TaxesConfirm from "./sections/8_taxes_confirm";
-import Finished from "./sections/9_finished";
-
 import BuyerAcceptTransaction from "./buyer/acceptTransaction";
 import BuyerConfirmTransaction from "./buyer/confirmTransaction";
 import BuyerPayment from "./buyer/payment";
@@ -21,6 +8,8 @@ import BuyerPayment from "./buyer/payment";
 import SellerAcceptTransaction from "./seller/acceptTransaction";
 import SellerConfirmTransaction from "./seller/confirmTransaction";
 import SellerPayment from "./seller/payment";
+
+import CancelModal from "./cancelModal";
 
 import {
   fetchTransactionRequest,
@@ -77,19 +66,21 @@ const Transaction = (props) => {
   // fetch transaction and tranding property
   useEffect(() => {
     props.fetchTransaction(transactionHash);
-  }, []);
+  }, [props.reload]);
 
   // check role of user in transaction
   useEffect(() => {
-    if (props.user.publicAddress.includes(props.transaction.sellers)) {
-      setParty("SELLER");
-    } else if (props.user.publicAddress.includes(props.transaction.buyers)) {
-      setParty("BUYER");
+    if (props.transaction) {
+      if (props.transaction.sellers.includes(props.user.publicAddress)) {
+        setParty("SELLER");
+      } else if (props.transaction.buyers.includes(props.user.publicAddress)) {
+        setParty("BUYER");
+      }
+      const steps = mapStateToSteps[props.transaction.state];
+      setCurrentSteps(steps);
+      setSteps(steps >= MAX_STEPS ? steps : steps + 1);
     }
-    const steps = mapStateToSteps[props.transaction.state];
-    setCurrentSteps(steps);
-    setSteps(steps >= MAX_STEPS ? steps : steps + 1);
-  }, [props.transaction]);
+  }, [props.transaction, props.user]);
 
   return (
     <div className="ml-4 mr-4 mt-75">
@@ -284,7 +275,7 @@ const Transaction = (props) => {
               Xem toàn bộ giao dịch chuyển đến trang khách
             </div>
             <div className="row">
-              <button
+              {/* <button
                 className="btn v3 float-right mt-5 "
                 onClick={() =>
                   props.cancelTransaction(
@@ -294,7 +285,8 @@ const Transaction = (props) => {
                 }
               >
                 <i className="ion-android-cancel"></i> Hủy bỏ giao dịch
-              </button>
+              </button> */}
+              <CancelModal party={party} />
             </div>
             {/*/row*/}
           </div>
@@ -303,11 +295,11 @@ const Transaction = (props) => {
         <div className="col-md-9">
           {/** step in process */}
           <div className="container py-2">
-            <h4 className="">{stepsToName[steps]}</h4>
+            {/* <h4 className="">{stepsToName[steps]}</h4>
             <h5 className="" style={{ color: "red" }}>
               {" "}
               {props.transaction.state}
-            </h5>
+            </h5> */}
             {party === PARTY_CONSTANT.SELLER
               ? (steps === 1 && <InitTransaction />) ||
                 (steps === 2 && <SellerAcceptTransaction />) ||
@@ -334,6 +326,7 @@ const mapStateToProps = (state) => {
     transaction: state.transaction.data,
     user: state.user.data,
     transactionContract: state.shared.transaction,
+    reload: state.transaction.reload,
   };
 };
 
