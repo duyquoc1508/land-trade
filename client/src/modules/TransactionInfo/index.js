@@ -4,6 +4,7 @@ import formatDate from "../../utils/formatDate";
 import { convertWeiToVND } from "../../utils/convertCurrency";
 import axios from "axios";
 import Cookie from "../../helper/cookie";
+import formatCurrency from "../../utils/formatCurrency";
 
 function TransactionInfo(props) {
   const [buyers, setBuyers] = useState([]);
@@ -64,11 +65,17 @@ function TransactionInfo(props) {
               </li>
               <li>
                 <span>Giá trị đặt cọc:</span>
-                {convertWeiToVND(props.transaction.depositPrice)}
+                {formatCurrency(
+                  convertWeiToVND(props.transaction.depositPrice)
+                )}{" "}
+                VNĐ
               </li>
               <li>
                 <span>Giá trị giao dịch:</span>
-                {convertWeiToVND(props.transaction.transferPrice)}
+                {formatCurrency(
+                  convertWeiToVND(props.transaction.transferPrice)
+                )}{" "}
+                VNĐ
               </li>
             </ul>
           </div>

@@ -127,8 +127,8 @@ const payment = async (transactionContract, transaction) => {
               {
                 nonce: txCount,
                 from: coinbase,
-                // value: web3.utils.toWei(totalValue, "wei"), // include 0.5% tax
-                value: web3.utils.toWei("20000000000000000000", "wei"),
+                value: web3.utils.toWei(totalValue, "wei"), // include 0.5% tax
+                // value: web3.utils.toWei("20000000000000000000", "wei"),
               },
               function (error, transactionHash) {
                 if (error) {
@@ -156,10 +156,25 @@ const confirmTransaction = async (transactionContract, transaction) => {
         return web3.eth.getCoinbase();
       })
       .then((coinbase) => {
+        const personalIncomeTax = web3.utils
+          .toBN(transaction.transferPrice)
+          .div(web3.utils.toBN(50)); //2% tax
+        console.log(personalIncomeTax);
+        const remainingAmount = web3.utils
+          .toBN(transaction.transferPrice)
+          .sub(web3.utils.toBN(transaction.depositPrice));
+        console.log(remainingAmount);
+        let value = "0";
+        // If the remaining amount is less than the tax amount, the value must be submitted to pay tax
+        if (remainingAmount.lt(personalIncomeTax)) {
+          value = personalIncomeTax.sub(remainingAmount);
+        }
+        console.log(value);
         web3.eth.getTransactionCount(coinbase, (error, txCount) => {
           if (error) {
             reject(error);
           }
+
           const personalIncomeTax = web3.utils
             .toBN(transaction.transferPrice)
             .div(web3.utils.toBN(50)); //2% tax
@@ -177,7 +192,7 @@ const confirmTransaction = async (transactionContract, transaction) => {
               {
                 nonce: txCount,
                 from: coinbase,
-                value: web3.utils.toWei(value, "wei"),
+                value: web3.utils.toWei("0", "wei"),
               },
               function (error, transactionHash) {
                 if (error) {

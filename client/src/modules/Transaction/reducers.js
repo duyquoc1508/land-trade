@@ -31,6 +31,7 @@ const initialState = {
   property: "",
   loading: false,
   error: "",
+  reload: false, // if transaction success => change reload
 };
 
 export default function transactionReducers(state = initialState, action) {
@@ -77,7 +78,7 @@ export default function transactionReducers(state = initialState, action) {
           action.payload.history.push(`/transaction/${action.payload.txHash}`);
         },
       });
-      return { ...state, loading: false };
+      return { ...state, reload: !state.reaload, loading: false };
 
     case ACCEPT_TRANSACTION_REQUEST:
       return { ...state, loading: true };
@@ -97,7 +98,7 @@ export default function transactionReducers(state = initialState, action) {
           action.payload.history.push(`/transaction/${action.payload.txHash}`);
         },
       });
-      return { ...state, loading: false };
+      return { ...state, reload: !state.reload, loading: false };
 
     case PAYMENT_REQUEST:
       return { ...state, loading: true };
@@ -117,7 +118,7 @@ export default function transactionReducers(state = initialState, action) {
           action.payload.history.push(`/transaction/${action.payload.txHash}`);
         },
       });
-      return { ...state, loading: false };
+      return { ...state, reload: !state.reload, loading: false };
 
     case CONFIRM_TRANSACTION_REQUEST:
       return { ...state, loading: true };
@@ -137,7 +138,7 @@ export default function transactionReducers(state = initialState, action) {
           action.payload.history.push(`/transaction/${action.payload.txHash}`);
         },
       });
-      return { ...state, loading: false };
+      return { ...state, reload: !state.reload, loading: false };
 
     default:
       return state;

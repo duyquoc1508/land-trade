@@ -7,5 +7,5 @@ export function convertVNDtoETH(str) {
 }
 
 export function convertWeiToVND(value) {
-  return (value * ethToWei) / vndToEth;
+  return ((value * ethToWei) / vndToEth).toFixed();
 }

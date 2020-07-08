@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 import { convertWeiToVND } from "../../../../utils/convertCurrency";
+import formatCurrency from "../../../../utils/formatCurrency";
 
 const styles = (theme) => ({
   root: {
@@ -89,7 +90,10 @@ const AcceptTransaction = (props) => {
             <ul className="address-list">
               <li>
                 <span>Số tiền nhận:</span>
-                {convertWeiToVND(props.transaction.depositPrice)}
+                {formatCurrency(
+                  convertWeiToVND(props.transaction.depositPrice)
+                )}{" "}
+                VNĐ
               </li>
             </ul>
           </div>

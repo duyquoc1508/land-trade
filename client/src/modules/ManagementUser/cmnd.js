@@ -13,9 +13,33 @@ export class CMND extends Component {
     };
     // this.handleCheckbox = this.handleCheckbox.bind(this);
   }
-  componentDidMount() {
+
+  async componentDidMount() {
     loadScript(`${process.env.REACT_APP_BASE_URL}/js/plugin.js`);
     loadScript(`${process.env.REACT_APP_BASE_URL}/js/main.js`);
+    let response = await axios({
+      method: "get",
+      url: `${process.env.REACT_APP_BASE_URL_API}/users/me`,
+      headers: {
+        Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
+      },
+    });
+    // console.log(response);
+    let user = response.data.data;
+    let imgResBlob = await Promise.all(
+      user.imageIdNumber.map((item) =>
+        fetch(
+          `${process.env.REACT_APP_BASE_URL_IMAGE}/CMND/${item}`
+        ).then((response) => response.blob())
+      )
+    );
+
+    let previewImg = imgResBlob.map((item) =>
+      Object.assign({}, { preview: URL.createObjectURL(item) })
+    );
+    this.setState({
+      imageFiles: previewImg,
+    });
   }
 
   nextStep() {
@@ -85,6 +109,20 @@ export class CMND extends Component {
                 <div className="db-add-list-wrap">
                   <div className="act-title">
                     <h5>CMND :</h5>
+                  </div>
+                  <div className="add-btn">
+                    <button
+                      className="btn v3"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        this.setState({
+                          imageFiles: [],
+                          galleries: [],
+                        });
+                      }}
+                    >
+                      Xóa ảnh
+                    </button>
                   </div>
                   <div className="db-add-listing">
                     <div className="row">
