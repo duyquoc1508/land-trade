@@ -53,9 +53,6 @@ contract RealEstate {
     /// @dev Emits when the owner activate certificate (PENDDING => ACTIVATED)
     event Activate(uint256 idCertificate, address owner, State state);
 
-    // /// @dev Emits when the owner activate sale for certificate (ACTIVATED => SELLING)
-    // event ActivateSale(uint256 idCertificate, address owner, State state);
-
     constructor(IRBAC _roleContract) public {
         // Initialize roleContract
         roleContract = _roleContract;
@@ -80,13 +77,13 @@ contract RealEstate {
         _;
     }
 
-    // modifier onlySelling(uint256 _id) {
-    //     require(
-    //         tokenToState[_id] == State.SELLING,
-    //         "RealEstate: Require state is SELLING"
-    //     );
-    //     _;
-    // }
+    modifier onlyInTransaction(uint256 _id) {
+        require(
+            tokenToState[_id] == State.IN_TRANSACTION,
+            "RealEstate: Require state is iN_TRANSACTION"
+        );
+        _;
+    }
 
     modifier onlyOwnerOf(uint256 _id) {
         require(
@@ -176,35 +173,11 @@ contract RealEstate {
         emit Activate(_id, msg.sender, tokenToState[_id]);
     }
 
-    // /**
-    //  * @notice Activate for sale
-    //  * @dev require current token state is 'ACTIVATED'
-    //  * @dev Require msg.sender is owner of certification and msg.sender has not activated
-    //  * Change state of certificate if all owner has activated
-    //  */
-    // function activateSale(uint256 _id)
-    //     public
-    //     onlyActivated(_id)
-    //     onlyOwnerOf(_id)
-    // {
-    //     // require msg.sender dot not ACTIVATED
-    //     require(
-    //         !_checkExitInArray(tokenToApprovals[_id], msg.sender),
-    //         "RealEstate: Account already approved"
-    //     );
-    //     // store msg.sender to list approved
-    //     tokenToApprovals[_id].push(msg.sender);
-    //     // if all owner approved => set state of certificate to 'SELLING'
-    //     if (tokenToApprovals[_id].length == tokenToOwners[_id].length) {
-    //         tokenToState[_id] = State.SELLING;
-    //     }
-    //     emit ActivateSale(_id, msg.sender, tokenToState[_id]);
-    // }
-
     function transferOwnership(
         uint256 _idCertificate,
         address[] calldata _newOwners
-    ) external onlyActivated(_idCertificate) {
+    ) external onlyInTransaction(_idCertificate) {
+        // require deposit before => accept deposit => change state to IN_TRANSACTION
         // first owner is representative of owners of certificate
         require(
             _newOwners.length > 0,
@@ -224,30 +197,6 @@ contract RealEstate {
     }
 
     /**
-     * @notice Transfer ownership of certificate
-     * @dev Only notary allowed && msg.sender is not the owner
-     */
-    // function transfer(address[] memory _newOwners, uint256 _id)
-    //     public
-    //     onlySelling(_id) // require state of certificate is 'SELLING'
-    // {
-    //     require(
-    //         roleContract.hasRole(msg.sender, 1),
-    //         "RealEstate: Require notary"
-    //     );
-    //     require(
-    //         !_checkExitInArray(_newOwners, msg.sender),
-    //         "RealEstate: Can't transfer to current owner"
-    //     );
-    //     // require(_newOwners.length > 0, "RealEstate: Require one owner at least");
-    //     address[] memory _currentOwners = getOwnersOf(_id);
-    //     tokenToOwners[_id] = _newOwners;
-    //     tokenToState[_id] = State.ACTIVATED;
-    //     delete tokenToApprovals[_id];
-    //     emit Transfer(_currentOwners, _newOwners, _id, msg.sender);
-    // }
-
-    /**
      * @notice Check state of certificate is 'ACTIVATED'
      * @param _id identifier of certificate
      * @return bool
@@ -255,15 +204,6 @@ contract RealEstate {
     function isActivated(uint256 _id) public view returns (bool) {
         return tokenToState[_id] == State.ACTIVATED;
     }
-
-    // /**
-    //  * @notice Check state of certificate is 'SELLING'
-    //  * @param _id identifier of certificate
-    //  * @return bool
-    //  */
-    // function isSelling(uint256 _id) public view returns (bool) {
-    //     return tokenToState[_id] == State.SELLING;
-    // }
 
     function getOwnersOfCert(uint256 _idCertificate)
         external
