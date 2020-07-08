@@ -33,53 +33,6 @@ function PropertySelling({ properties, cancelSale }) {
                   </span>
                 </li>
               </ul>
-              {/* <div className="property-author-wrap">
-                <a href="#" className="property-author">
-                  <img src="images/agents/agent_min_1.jpg" alt="..." />
-                  <span>Tony Stark</span>
-                </a>
-                <ul className="save-btn">
-                  <li
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Photos"
-                  >
-                    <a href=".html" className="btn-gallery">
-                      <i className="lnr lnr-camera"></i>
-                    </a>
-                  </li>
-                  <li
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Bookmark"
-                  >
-                    <a href="#">
-                      <i className="lnr lnr-heart"></i>
-                    </a>
-                  </li>
-                  <li
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Add to Compare"
-                  >
-                    <a href="#">
-                      <i className="fas fa-arrows-alt-h"></i>
-                    </a>
-                  </li>
-                </ul>
-                <div className="hidden photo-gallery">
-                  <a href="images/single-listing/property_view_1.jpg"></a>
-                  <a href="images/single-listing/property_view_2.jpg"></a>
-                  <a href="images/single-listing/property_view_3.jpg"></a>
-                  <a href="images/single-listing/property_view_4.jpg"></a>
-                  <a href="images/single-listing/property_view_5.jpg"></a>
-                  <a href="images/single-listing/property_view_6.jpg"></a>
-                  <a href="images/single-listing/property_view_7.jpg"></a>
-                </div>
-              </div> */}
             </div>
             <div className="property-title-box">
               <h4>
@@ -109,7 +62,7 @@ function PropertySelling({ properties, cancelSale }) {
                   {" "}
                   <i className="fas fa-arrows-alt"></i>
                   <span>
-                    {property.moreInfo.areaFloor} m<super>2</super>
+                    {property.moreInfo.areaFloor} m<sup>2</sup>
                   </span>
                 </li>
                 <li>

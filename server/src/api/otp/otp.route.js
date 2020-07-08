@@ -9,6 +9,9 @@ const routes = Router();
 
 routes.post("/verify-email", authJwt, async (req, res, next) => {
   try {
+    if (!req.query.email) {
+      throw new ErrorHandler(502, "Missing email params");
+    }
     let checkExists = await Otp.findOne({ userId: req.user._id });
     let otp = checkExists
       ? await Otp.findOneAndUpdate(
@@ -19,7 +22,7 @@ routes.post("/verify-email", authJwt, async (req, res, next) => {
           },
           { new: true }
         )
-      : await Otp.create({ userId: req.user._id });
+      : await Otp.create({ userId: req.user._id, email: req.query.email });
     const mailOptions = {
       from: "landtrade.cskh@gmail.com",
       to: req.query.email,
@@ -36,6 +39,9 @@ routes.post("/phone", authJwt, (req, res) => {});
 
 routes.post("/verify", authJwt, async (req, res, next) => {
   try {
+    if (!req.query.email) {
+      throw new ErrorHandler(502, "Missing email params");
+    }
     let otp = await Otp.findOne({ userId: req.user._id });
     if (!otp) {
       throw new ErrorHandler(404, "No otp");
@@ -47,7 +53,11 @@ routes.post("/verify", authJwt, async (req, res, next) => {
     if (currentTime >= otp.expiedCode) {
       throw new ErrorHandler(400, "expired code");
     }
-    await User.findOneAndUpdate({ _id: req.user._id }, { isVerified: 1 });
+
+    await User.updateOne(
+      { _id: req.user._id },
+      { isVerified: 1, email: req.query.email }
+    );
     res.json({ message: "verify successful" });
   } catch (error) {
     next(error);

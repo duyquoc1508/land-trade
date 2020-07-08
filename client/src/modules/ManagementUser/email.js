@@ -29,13 +29,14 @@ class Info extends Component {
     })
       .then(() => {
         this.setState({ loading: false });
-        toast.success("Vui lòng kiểm tra email và nhập mã xác thực.", {
+        toast.info("Vui lòng kiểm tra email và nhập mã xác thực.", {
           position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: false,
         });
       })
       .catch(() => {
         this.setState({ loading: false });
-        toast.error("Mã xác thực không hợp lệ!", {
+        toast.error("Tạo mã xác thực không thành công!", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
       });
@@ -51,13 +52,20 @@ class Info extends Component {
     try {
       await axios({
         method: "post",
-        url: `${process.env.REACT_APP_BASE_URL_API}/otp/verify?code=${this.state.code}`,
+        url: `${process.env.REACT_APP_BASE_URL_API}/otp/verify?code=${this.state.code}&email=${this.state.email}`,
+        headers: {
+          Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
+        },
+      });
+      const user = await axios({
+        method: "get",
+        url: `${process.env.REACT_APP_BASE_URL_API}/users/me`,
         headers: {
           Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
         },
       });
       this.setState({ loading: false });
-
+      localStorage.setItem("user", JSON.stringify(user.data.data));
       toast.success(
         "Thông tin đã được lưu lại. Vui lòng liên hệ công chương viên để xác thực.",
         {
@@ -67,7 +75,7 @@ class Info extends Component {
       window.location.href = "/";
     } catch (error) {
       this.setState({ loading: false });
-      toast.error("Mã xác thực không hợp lệ!", {
+      toast.error("Email hoặc mã xác thực không hợp lệ!", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
     }
