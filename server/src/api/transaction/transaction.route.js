@@ -23,6 +23,15 @@ routes.get("/", authJwt, transactionController.getMyTransactions);
 routes.get("/:txHash", transactionController.getTransaction);
 
 /**
+ * Get all transaction ended of property
+ * GET api/v1/transaction
+ */
+routes.get(
+  "/property/idPropertyIbBlockchain",
+  transactionController.getAllTransactionsOfProperty
+);
+
+/**
  * Seller accept transaction
  * POST api/v1/transaction
  */

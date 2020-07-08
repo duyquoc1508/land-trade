@@ -1,5 +1,5 @@
 import Transaction from "./transaction.model";
-import ErrorHandler from "../../helper/error";
+import { ErrorHandler } from "../../helper/error";
 import Notification from "../notification/notification.model";
 import Certification from "../certification/certification.model";
 
@@ -161,6 +161,28 @@ export async function buyerRejectTransaction(req, res, next) {
       { "buyer.$.isAccept": false },
       { new: true }
     );
+    return res.status(200).json({ statusCode: 200, data: transaction });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * get all transactions of property ended =>  state CANCELED or PAYMENT_CONFIRMED
+ */
+export async function getAllTransactionsOfProperty(req, res, next) {
+  try {
+    const stateOfTransactionEnded = ["CANCELED", "PAYMENT_CONFIRMED"]; // this state => transaction possible modifier
+    const idPropertyInBlockchain = req.params.idPropertyInBlockchain;
+    const transaction = await Transaction.find({
+      idPropertyInBlockchain,
+      state: { $in: stateOfTransactionEnded },
+    })
+      .sort({ updatedAt: 1 }) // old to new
+      .lean();
+    if (transaction.length === 0) {
+      throw new ErrorHandler(404, "Not found transaction");
+    }
     return res.status(200).json({ statusCode: 200, data: transaction });
   } catch (error) {
     next(error);
