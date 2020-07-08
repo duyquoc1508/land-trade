@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
 import { activateSaleRequest } from "./action";
+import formatCurrency from "../../../utils/formatCurrency";
 
 function PropertyActivated({ properties, activateSale }) {
   const history = useHistory();
@@ -43,7 +44,7 @@ function PropertyActivated({ properties, activateSale }) {
                 <p>{property.properties.landLot.address}</p>
               </div>
               <div className="trend-open mt-10">
-                <p> {property.moreInfo.price} VND </p>
+                <p> {formatCurrency(property.moreInfo.price)} VND </p>
               </div>
               <ul className="property-feature">
                 <li>

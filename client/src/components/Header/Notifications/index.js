@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchNotificationsRequest } from "./action";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import formatDate from "../../../utils/formatDate";
 
 function Notifications(props) {
@@ -46,7 +46,7 @@ function Notifications(props) {
           ))}
 
         <div className="notify-bottom text-center py-20">
-          <a href="#">Xem tất cả thông báo</a>
+          <Link to={"/notification"}>Xem tất cả thông báo</Link>
         </div>
 
         {/* <div className="notifi__item">

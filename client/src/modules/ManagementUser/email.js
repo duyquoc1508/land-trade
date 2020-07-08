@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import Cookie from "../../helper/cookie";
-
-import Loading from '../../components/Loading/loading'
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Loading from "../../components/Loading/loading";
 
 class Info extends Component {
   constructor() {
@@ -11,55 +12,71 @@ class Info extends Component {
     this.state = {
       email: "",
       code: 0,
-      loading: false
+      loading: false,
     };
   }
 
-  sendCode = async(e) =>{
-    this.setState({loading: true})
+  sendCode = (e) => {
+    this.setState({ loading: true });
     e.preventDefault();
-    let response = await axios({
+
+    axios({
       method: "post",
       url: `${process.env.REACT_APP_BASE_URL_API}/otp/verify-email?email=${this.state.email}`,
       headers: {
         Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
       },
-    });
-    if (response.status == 200) {
-      this.setState({ loading: false })
-      alert('thanh cong')
-    }
-  }
+    })
+      .then(() => {
+        this.setState({ loading: false });
+        toast.success("Vui lòng kiểm tra email và nhập mã xác thực.", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+      })
+      .catch(() => {
+        this.setState({ loading: false });
+        toast.error("Mã xác thực không hợp lệ!", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+      });
+  };
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
   handleUpdate = async (e) => {
-    this.setState({ loading: true })
+    this.setState({ loading: true });
     e.preventDefault();
-    let response = await axios({
-      method: "post",
-      url: `${process.env.REACT_APP_BASE_URL_API}/otp/verify?code=${this.state.code}`,
-      headers: {
-        Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
-      },
-    });
-    if (response.status == 200) {
-      this.setState({ loading: false })
-      
-      window.location.href = '/';
-    } else{
-      this.setState({ loading: false })
-      alert('Vui long thu lai')
-    }
+    try {
+      await axios({
+        method: "post",
+        url: `${process.env.REACT_APP_BASE_URL_API}/otp/verify?code=${this.state.code}`,
+        headers: {
+          Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
+        },
+      });
+      this.setState({ loading: false });
 
-  }
+      toast.success(
+        "Thông tin đã được lưu lại. Vui lòng liên hệ công chương viên để xác thực.",
+        {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        }
+      );
+      window.location.href = "/";
+    } catch (error) {
+      this.setState({ loading: false });
+      toast.error("Mã xác thực không hợp lệ!", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    }
+  };
 
   render() {
     return (
       <div className="container">
-        <Loading isLoading={this.state.loading}/>
+        <Loading isLoading={this.state.loading} />
         <div className="row">
           <div className="col-md-2"></div>
           <div className="col-md-8">
@@ -80,32 +97,39 @@ class Info extends Component {
                       </div>
                     </div>
 
+                    <div className="col-md-12 mb-10">
+                      <button
+                        className="btn v4"
+                        style={{
+                          backgroundColor: "#6449e7",
+                          color: "white !important",
+                        }}
+                        onClick={(e) => this.sendCode(e)}
+                      >
+                        Gửi mã xác thực
+                      </button>
+                    </div>
+
                     <div className="col-md-12">
                       <div className="form-group">
                         <label>Code</label>
-                        <table>
-                          <tbody>
-                            <tr>
-                              <td colSpan={2}>
-                                <input
-                                  name="code"
-                                  type="text"
-                                  className="form-control filter-input"
-                                  placeholder="Code"
-                                  onChange={(e) => this.handleChange(e)}
-                                />
-                              </td>
-                              <td>
-                                <button className="btn v2" onClick={(e) => this.sendCode(e)}>Gửi</button>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                        <input
+                          name="code"
+                          type="text"
+                          className="form-control filter-input"
+                          placeholder="Nhập mã xác thực email..."
+                          onChange={(e) => this.handleChange(e)}
+                        />
                       </div>
                     </div>
 
                     <div className="col-md-12">
-                      <button className="btn v3" onClick={(e) => this.handleUpdate(e)}>Cập nhập</button>
+                      <button
+                        className="btn v3"
+                        onClick={(e) => this.handleUpdate(e)}
+                      >
+                        Cập nhập
+                      </button>
                     </div>
                   </div>
                 </form>

@@ -6,6 +6,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Cookie from "../../../helper/cookie";
 import ImagePreview from "../../../components/ImagePreview/imagePreview";
 import PropertyStandard from "../PropertyStandard";
+import formatCurrency from "../../../utils/formatCurrency";
 
 const utilities = [
   "Bể bơi",
@@ -24,7 +25,7 @@ export class EditProperty extends Component {
       imageFiles: [],
       galleries: [],
       title: "",
-      price: 0,
+      price: "",
       description: "",
       areaFloor: 0,
       numOfBedrooms: 0,
@@ -75,7 +76,10 @@ export class EditProperty extends Component {
     let response = await axios({
       method: "put",
       url: `${process.env.REACT_APP_BASE_URL_API}/certification/edit/${this.props.match.params.hash}`,
-      data: this.state,
+      data: {
+        ...this.state,
+        price: this.state.price.toString().replace(".", ""),
+      },
       headers: {
         Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
       },
@@ -183,7 +187,7 @@ export class EditProperty extends Component {
                             className="form-control filter-input"
                             placeholder="Nhập tiêu đề"
                             onChange={(e) => this.handleChange(e)}
-                            value={this.state.title}
+                            defaultValue={this.state.title}
                           />
                         </div>
                       </div>
@@ -196,9 +200,13 @@ export class EditProperty extends Component {
                             component="input"
                             className="form-control filter-input"
                             placeholder="Nhập giá bán"
-                            type="number"
-                            onChange={(e) => this.handleChange(e)}
-                            value={this.state.price}
+                            type="text"
+                            onChange={(e) =>
+                              this.setState({
+                                price: formatCurrency(e.target.value),
+                              })
+                            }
+                            value={this.state.price || ""}
                           />
                           <div className="input-group-append">
                             <span className="input-group-text"> VND </span>
@@ -216,7 +224,7 @@ export class EditProperty extends Component {
                             rows="4"
                             placeholder="Mô tả nội dung"
                             onChange={(e) => this.handleChange(e)}
-                            value={this.state.description}
+                            defaultValue={this.state.description}
                           ></textarea>
                         </div>
                       </div>
@@ -239,7 +247,7 @@ export class EditProperty extends Component {
                             placeholder="Diện tích mặt sàn"
                             type="number"
                             onChange={(e) => this.handleChange(e)}
-                            value={this.state.areaFloor}
+                            defaultValue={this.state.areaFloor}
                           />
                           <div className="input-group-append">
                             <span className="input-group-text">
@@ -259,7 +267,7 @@ export class EditProperty extends Component {
                             placeholder="Số phòng ngủ"
                             type="number"
                             onChange={(e) => this.handleChange(e)}
-                            value={this.state.numOfBedrooms}
+                            defaultValue={this.state.numOfBedrooms}
                           />
                         </div>
                       </div>
@@ -273,7 +281,7 @@ export class EditProperty extends Component {
                             placeholder="Số phòng tắm"
                             type="number"
                             onChange={(e) => this.handleChange(e)}
-                            value={this.state.numOfBathrooms}
+                            defaultValue={this.state.numOfBathrooms}
                           />
                         </div>
                       </div>

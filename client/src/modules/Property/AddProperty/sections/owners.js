@@ -36,7 +36,7 @@ class OwnersForm extends Component {
 
   async componentDidMount() {
     const response = await axios.get(
-      `${process.env.REACT_APP_BASE_URL_API}/users`,
+      `${process.env.REACT_APP_BASE_URL_API}/users?verified=2`,
       {
         headers: { Authorization: `Bearer ${Cookie.getCookie("accessToken")}` },
       }

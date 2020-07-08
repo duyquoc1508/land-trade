@@ -31,7 +31,7 @@ const userSchema = new Schema(
       sparse: true, //prevent duplicate value but allow multiple null
     },
     // 0-chua duyet, 1-dang cho, 2-da duyet
-    isVerifired: {
+    isVerified: {
       type: Number,
       default: 0,
     },
@@ -45,14 +45,7 @@ const userSchema = new Schema(
     homeLand: String,
     birthday: String,
     permanentResidence: String,
-    ethnic: String,
-    religion: String,
-    deformity: String,
-    dateIdNumber: String,
-    placeIdNumber: String,
-    imageIdNumber: [
-      {type: String}
-    ],
+    imageIdNumber: [{ type: String }],
     phoneNumber: {
       type: String,
       trim: true,

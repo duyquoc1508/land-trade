@@ -5,6 +5,7 @@ import {
   activateCertificateRequest,
   activateCertificateSuccess,
 } from "./action";
+import NotFound from "../../NotFound/index";
 
 const ConfirmProperty = (props) => {
   useEffect(() => {
