@@ -13,13 +13,13 @@ import PropertyStandard from "../Property/PropertyStandard";
 import ConfirmProperty from "../Property/ConfirmProperty";
 import InitTransaction from "../InitTransaction";
 import NotFound from "../NotFound";
-import DownPaymentContract from "../Transaction/sections/DownPaymentContract";
-import TradeContract from "../Transaction/sections/TradeContract";
+// import TradeContract from "../Transaction/sections/TradeContract";
 import Transaction from "../Transaction";
 import ManagementUser from "../ManagementUser";
 import VerifyAccount from "../ManagementUser/verifyAccount";
 import Notification from "../Notification";
 import MyTransactions from "../MyTransactions";
+import TransactionDetail from "../TransactionDetail";
 
 const routes = [
   {
@@ -96,13 +96,13 @@ const routes = [
       <TabListProperties match={match} history={history} />
     ),
   },
-  // {
-  //   path: "/transaction/:txHash",
-  //   exact: true,
-  //   main: ({ match, history }) => (
-  //     <Transaction match={match} history={history} />
-  //   ),
-  // },
+  {
+    path: "/transaction-detail/:txHash",
+    exact: true,
+    main: ({ match, history }) => (
+      <TransactionDetail match={match} history={history} />
+    ),
+  },
   {
     path: "/create-transaction/:transactionHash",
     exact: true,
@@ -115,17 +115,11 @@ const routes = [
     exact: true,
     main: () => <Role />,
   },
-
-  {
-    path: "/down-payment-contract",
-    exact: false,
-    main: () => <DownPaymentContract />,
-  },
-  {
-    path: "/trade-contract",
-    exact: false,
-    main: () => <TradeContract />,
-  },
+  // {
+  //   path: "/trade-contract",
+  //   exact: false,
+  //   main: () => <TradeContract />,
+  // },
   {
     path: "/transaction/:transactionHash",
     exact: false,

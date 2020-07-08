@@ -119,7 +119,7 @@ const Transaction = (props) => {
                 <div className="row">
                   <div className="col">&nbsp;</div>
                 </div>
-                <h5 className=" text-success">Yêu cầu đặc cọc</h5>
+                <h5 className=" text-success">Yêu cầu đặt cọc</h5>
               </div>
             </div>
             {/*/row*/}

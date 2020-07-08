@@ -56,7 +56,10 @@ function* fetchTransactionFlow(action) {
   try {
     const transaction = yield call(fetchTransaction, action.payload);
     yield put({ type: FETCH_TRANSACTION_SUCCESS, payload: transaction });
-    const property = yield call(fetchPropertyTrading, transaction.idProperty);
+    const property = yield call(
+      fetchPropertyTrading,
+      transaction.idPropertyInBlockchain
+    );
     yield put({ type: FETCH_TRADING_PROPERTY_SUCCESS, payload: property });
   } catch (error) {
     yield put({ type: FETCH_TRANSACTION_FAILURE, payload: error.message });

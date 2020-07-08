@@ -9,6 +9,7 @@ import formatCurrency from "../../utils/formatCurrency";
 function TransactionInfo(props) {
   const [buyers, setBuyers] = useState([]);
   const [sellers, setSellers] = useState([]);
+
   const address =
     (props.property.properties &&
       props.property.properties.house &&
@@ -59,6 +60,15 @@ function TransactionInfo(props) {
           <div className="agent-details col-6">
             <h5>Tài sản giao dịch</h5>
             <ul className="address-list">
+              <li>
+                <span>Xem chi tiết tài sản:</span>
+                <a
+                  target="_blank"
+                  href={`${process.env.REACT_APP_BASE_URL}/property-standard/${props.property.transactionHash}`}
+                >
+                  {props.property && props.property.moreInfo.title}
+                </a>
+              </li>
               <li>
                 <span>Địa điểm:</span>
                 {address}

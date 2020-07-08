@@ -20,7 +20,7 @@ routes.get("/", authJwt, transactionController.getMyTransactions);
  * Get info transaction
  * POST api/v1/transactionHash
  */
-routes.get("/:txHash", authJwt, transactionController.getTransaction);
+routes.get("/:txHash", transactionController.getTransaction);
 
 /**
  * Seller accept transaction

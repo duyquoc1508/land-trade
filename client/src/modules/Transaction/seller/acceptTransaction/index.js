@@ -73,9 +73,11 @@ const AcceptTransaction = (props) => {
     <div>
       <h4 className="">Tổng quan</h4>
       <TransactionInfo />
-      <button className="btn v3 float-right mt-5 " onClick={handleClickOpen}>
-        <i className="ion-android-cancel"></i> Chấp nhận giao dịch
-      </button>
+      {props.transaction.state == "DEPOSIT_REQUEST" && (
+        <button className="btn v3 float-right mt-5 " onClick={handleClickOpen}>
+          <i className="ion-android-cancel"></i> Chấp nhận giao dịch
+        </button>
+      )}
       <Dialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
