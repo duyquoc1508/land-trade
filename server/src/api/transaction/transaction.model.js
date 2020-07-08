@@ -21,7 +21,7 @@ const transactionSchema = new Schema(
   {
     buyers: { type: Array },
     sellers: { type: Array },
-    idProperty: { type: String },
+    idPropertyInBlockchain: { type: String },
     transferPrice: { type: String },
     depositPrice: { type: String },
     timeStart: { type: Date }, // = timeDeposit

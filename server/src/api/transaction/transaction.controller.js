@@ -157,10 +157,10 @@ export async function buyerRejectTransaction(req, res, next) {
 export async function getAllTransactionsOfProperty(req, res, next) {
   try {
     const stateOfTransactionEnded = ["CANCELED", "PAYMENT_CONFIRMED"]; // this state => transaction possible modifier
-    const idProperty = req.query.idPropertyInBlockchain;
+    const idPropertyInBlockchain = req.params.idPropertyInBlockchain;
     const transaction = await Transaction.find({
-      idProperty,
-      // state: { $in: stateOfTransactionEnded },
+      idPropertyInBlockchain,
+      state: { $in: stateOfTransactionEnded },
     })
       .sort({ updatedAt: 1 }) // old to new
       .lean();
