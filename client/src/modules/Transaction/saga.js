@@ -192,7 +192,7 @@ const confirmTransaction = async (transactionContract, transaction) => {
               {
                 nonce: txCount,
                 from: coinbase,
-                value: web3.utils.toWei("0", "wei"),
+                value: web3.utils.toWei(value, "wei"),
               },
               function (error, transactionHash) {
                 if (error) {

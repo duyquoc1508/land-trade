@@ -93,8 +93,10 @@ export class EditProperty extends Component {
       toast(<ToastSuccess message={"Cập nhật thành công!"} />, {
         type: toast.TYPE.SUCCESS,
         position: toast.POSITION.BOTTOM_RIGHT,
+        onClick: () => {
+          this.props.history.push(`/property/${this.props.match.params.hash}`);
+        },
       });
-      setTimeout(() => this.props.history.push(`/my-properties`), 500);
     } else {
       toast.error("Cập nhật thất bại. Vui lòng thử lại!", {
         position: toast.POSITION.BOTTOM_RIGHT,
@@ -234,6 +236,7 @@ export class EditProperty extends Component {
                                 price: formatCurrency(e.target.value),
                               })
                             }
+                            value={formatCurrency(this.state.price)}
                             defaultValue={formatCurrency(this.state.price)}
                           />
                           <div className="input-group-append">
@@ -384,7 +387,7 @@ export class EditProperty extends Component {
                           className="btn v3"
                           onClick={(e) => this.handleSubmit(e)}
                         >
-                          Cập nhập
+                          Cập nhật
                         </button>
                       </div>
                     </div>

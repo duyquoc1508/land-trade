@@ -141,6 +141,7 @@ function PropertyStandard({ match, history, data, fetchSingleProperty }) {
               <div className="card-body">
                 {images.map((img, index) => (
                   <img
+                    alt="Sơ đồ thửa đất"
                     src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${img}`}
                     style={{ maxHeight: "100%" }}
                     key={index}

@@ -12,7 +12,7 @@ const Placeholder = ({ getInputProps, getRootProps, error, touched }) => (
       style={{ fontSize: 200, paddingTop: 50, paddingBottom: 50 }}
     />
     {/* <i className="lnr lnr-cloud-upload"></i> */}
-    <p>Click or drag image file to this area to upload.</p>
+    <p>Nhấp vào đây để tải lên ảnh.</p>
   </div>
 );
 
@@ -20,7 +20,7 @@ Placeholder.propTypes = {
   error: PropTypes.string,
   getInputProps: PropTypes.func.isRequired,
   getRootProps: PropTypes.func.isRequired,
-  touched: PropTypes.bool
+  touched: PropTypes.bool,
 };
 
 export default Placeholder;

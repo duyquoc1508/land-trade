@@ -55,9 +55,6 @@ function ScrollableTabsButtonAuto(props) {
   useEffect(() => {
     props.handleClick();
   }, []);
-  let listPending = props.myListing.filter((property) => property.state === 0);
-  let listActive = props.myListing.filter((property) => property.state === 1);
-  let listSale = props.myListing.filter((property) => property.state === 2);
   return (
     <div className="container mt-75 mb-100">
       <div className="recent-activity my-listing">

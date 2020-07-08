@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { initTransactionRequest, initTransactionSuccess } from "./action";
 import { connect } from "react-redux";
-import CardProperty from "../CardProperty";
 import formatCurrency from "../../utils/formatCurrency";
 import { convertVNDtoETH } from "../../utils/convertCurrency";
 import axios from "axios";
@@ -99,9 +98,9 @@ function Init(props) {
           <Steps />
         </div>
         <div className="col-md-8">
-          <h6>Tài sản</h6>
           <div className="row">
             <div className="col-md-6 col-sm-12">
+              <h6>Tài sản</h6>
               <div className="single-property-box">
                 {/* <div className="property-item">
                   <Link
@@ -125,7 +124,7 @@ function Init(props) {
                     <p>{saleItem.properties.landLot.address}</p>
                   </div>
                   <div className="trend-open mt-10">
-                    <p> {saleItem.moreInfo.price} </p>
+                    <p> {formatCurrency(saleItem.moreInfo.price)} </p>
                   </div>
                   <ul className="property-feature">
                     <li>
@@ -228,7 +227,6 @@ function Init(props) {
               </div>
             </div>
           </div>
-          Mã tài sản: {saleItem && saleItem.transactionHash}
           <h6>Bên bán</h6>
           <div>
             {sellers.map((owner, index) => (

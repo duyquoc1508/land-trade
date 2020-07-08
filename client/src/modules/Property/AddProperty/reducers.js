@@ -93,9 +93,8 @@ function createReducer(state = initialState, action) {
         },
       });
       return {
-        success: true,
-        // messages: "Đăng ký thành công!",
-        // data: action.payload.data,
+        ...state,
+        success: false,
         loading: false,
       };
     case CREATE_CERT_WAIT_BLOCKCHAIN_CONFIRM:
@@ -104,12 +103,13 @@ function createReducer(state = initialState, action) {
         autoClose: false,
         position: toast.POSITION.BOTTOM_RIGHT,
       });
+      return { ...initialState, loading: true, success: true };
     case CREATE_ERROR:
       return {
+        ...state,
         success: false,
-        // messages: "Đăng ký thất bại!",
-        data: action.payload.data,
         loading: false,
+        message: action.payload,
       };
     default:
       return state;

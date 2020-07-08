@@ -22,6 +22,7 @@ class ForestForm extends Component {
                   className="form-control"
                   rows="4"
                   placeholder=""
+                  autoFocus={true}
                 />
               </div>
             </div>
@@ -34,7 +35,7 @@ class ForestForm extends Component {
 
 ForestForm = reduxForm({
   // a unique name for the form
-  form: "forest"
+  form: "forest",
 })(ForestForm);
 
 export default ForestForm;

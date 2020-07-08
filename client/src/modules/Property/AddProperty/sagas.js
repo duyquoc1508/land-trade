@@ -10,8 +10,7 @@ import { Base64 } from "js-base64";
 import getWeb3 from "../../../helper/getWeb3";
 
 function createCertificate(realEstateContract, property) {
-  console.log(property);
-  let { owners, properties, images } = property;
+  let { owners, properties } = property;
   const propertyBase64 = objectToB64(properties);
   return new Promise((resolve, reject) => {
     let web3 = "";

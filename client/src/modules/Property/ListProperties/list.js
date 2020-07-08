@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import formatCurrency from "../../../utils/formatCurrency";
 import { Link } from "react-router-dom";
 
 class ListProperties extends Component {
   render() {
     let { list, history } = this.props;
-    return (
+    return list.length === 0 ? (
+      <h3 className="post-title text-center">Bạn chưa có tài sản nào</h3>
+    ) : (
       <div className="viewd-item-wrap row">
         {list.map((property, index) => (
           <div className="col-xl-4 col-md-6 col-sm-12" key={index}>

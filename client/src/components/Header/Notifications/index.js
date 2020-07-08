@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { fetchNotificationsRequest } from "./action";
 import { connect } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
@@ -29,7 +29,13 @@ function Notifications(props) {
     <div className={toggleNotifications} onClick={changeToggleNotifications}>
       <i className="ion-ios-bell-outline"></i>
       <div className="notifi-dropdown js-dropdown">
-        {props.notifications.length > 0 &&
+        {props.notifications.length === 0 ? (
+          <div className="notifi__item">
+            <div className="content">
+              <p>Bạn chưa có thông báo nào</p>
+            </div>
+          </div>
+        ) : (
           props.notifications.map((notification, index) => (
             <div
               className="notifi__item"
@@ -43,26 +49,13 @@ function Notifications(props) {
                 </span>
               </div>
             </div>
-          ))}
-
-        <div className="notify-bottom text-center py-20">
-          <Link to={"/notification"}>Xem tất cả thông báo</Link>
-        </div>
-
-        {/* <div className="notifi__item">
-          <div className="content">
-            <p>
-              Your Property <b>Villa On Hartford</b> has been approved!
-            </p>
-            <span className="date">5 min ago</span>
+          ))
+        )}
+        {props.notifications.length > 0 && (
+          <div className="notify-bottom text-center py-20">
+            <Link to={"/notification"}>Xem tất cả thông báo</Link>
           </div>
-        </div>
-        <div className="notifi__item">
-          <div className="content">
-            <p>You have 3 unread Messages</p>
-            <span className="date">5 min ago</span>
-          </div>
-        </div>*/}
+        )}
       </div>
     </div>
   );

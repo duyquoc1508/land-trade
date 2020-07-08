@@ -2,21 +2,7 @@ import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import axios from "axios";
 import Cookie from "../../../../helper/cookie";
-import Multiselect from "react-widgets/lib/Multiselect";
-import "react-widgets/dist/css/react-widgets.css";
 import "./owner.css";
-// const renderMultiselect = ({ input, data, valueField, textField }) => (
-//   <Multiselect
-//     {...input}
-//     onBlur={() => input.onBlur()}
-//     value={input.value || []} // requires value to be an array
-//     data={data}
-//     valueField={valueField}
-//     textField={(item) =>
-//       `<ul><li>${item.fullName}</li> <li> ${item.idNumber}</li></ul>`
-//     }
-//   />
-// );
 
 class OwnersForm extends Component {
   getValue(data) {

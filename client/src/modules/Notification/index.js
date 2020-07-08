@@ -34,7 +34,15 @@ export default class Notification extends Component {
         <div className="au-inbox-wrap js-inbox-wrap">
           <div className="au-message js-list-load">
             <div className="au-message-list">
-              {this.state.data.length > 0 &&
+              {this.state.data.length === 0 ? (
+                <div className="au-message__item unread">
+                  <div className="au-message__item-inner">
+                    <div className="au-message__item-text">
+                      <p>Bạn chưa có thông báo nào</p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
                 this.state.data.map((notification, index) => (
                   <div className="au-message__item unread" key={index}>
                     <div
@@ -52,10 +60,13 @@ export default class Notification extends Component {
                       </div>
                     </div>
                   </div>
-                ))}
-              <div className="au-message__footer">
-                <button className="btn v1">Xem thêm</button>
-              </div>
+                ))
+              )}
+              {this.state.data.length > 7 && (
+                <div className="au-message__footer">
+                  <button className="btn v1">Xem thêm</button>
+                </div>
+              )}
             </div>
           </div>
         </div>
