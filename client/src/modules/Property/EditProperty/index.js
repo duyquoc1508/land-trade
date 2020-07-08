@@ -7,6 +7,10 @@ import Cookie from "../../../helper/cookie";
 import ImagePreview from "../../../components/ImagePreview/imagePreview";
 import PropertyStandard from "../PropertyStandard";
 import formatCurrency from "../../../utils/formatCurrency";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+import ToastLoading from "../../../components/ToastCustom/ToastLoading";
+import ToastSuccess from "../../../components/ToastCustom/ToastSuccess";
 
 const utilities = [
   "Bể bơi",
@@ -73,22 +77,28 @@ export class EditProperty extends Component {
   }
   handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(this.state.price.toString().replace(/\./g, ""));
     let response = await axios({
       method: "put",
       url: `${process.env.REACT_APP_BASE_URL_API}/certification/edit/${this.props.match.params.hash}`,
       data: {
         ...this.state,
-        price: this.state.price.toString().replace(".", ""),
+        price: this.state.price.toString().replace(/\./g, ""),
       },
       headers: {
         Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
       },
     });
     if (response.status === 200) {
-      alert("Thành công!");
-      this.props.history.push(`/my-properties`);
+      toast(<ToastSuccess message={"Cập nhật thành công!"} />, {
+        type: toast.TYPE.SUCCESS,
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+      setTimeout(() => this.props.history.push(`/my-properties`), 500);
     } else {
-      alert("Thất bại! Vui lòng thử lại!");
+      toast.error("Cập nhật thất bại. Vui lòng thử lại!", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
     }
   };
   handleChange(event) {
@@ -119,25 +129,43 @@ export class EditProperty extends Component {
   }
 
   async handleUpload(event) {
-    const fd = new FormData();
-    let newImageFiles = document.querySelector("input[type=file]").files;
-    newImageFiles = Object.values(newImageFiles);
-    newImageFiles.forEach((item) => {
-      fd.append("images", item);
-    });
-    let result = await axios.post(
-      `${process.env.REACT_APP_BASE_URL_API}/upload/image`,
-      fd
-    );
-    let listImages = newImageFiles.map((imageFile) => {
-      return {
-        name: imageFile.name,
-        size: imageFile.size,
-        preview: URL.createObjectURL(imageFile),
-      };
-    });
-    this.setState({ galleries: result.data.data, imageFiles: listImages });
-    alert("anh dang upload thanh cong!");
+    const toastId = Math.random();
+    try {
+      toast(<ToastLoading message={"Đang tải lên ảnh..."} />, {
+        toastId: toastId,
+        autoClose: false,
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+      const fd = new FormData();
+      let newImageFiles = document.querySelector("input[type=file]").files;
+      newImageFiles = Object.values(newImageFiles);
+      newImageFiles.forEach((item) => {
+        fd.append("images", item);
+      });
+      let result = await axios.post(
+        `${process.env.REACT_APP_BASE_URL_API}/upload/image`,
+        fd
+      );
+      let listImages = newImageFiles.map((imageFile) => {
+        return {
+          name: imageFile.name,
+          size: imageFile.size,
+          preview: URL.createObjectURL(imageFile),
+        };
+      });
+      console.log(toastId);
+      this.setState({ galleries: result.data.data, imageFiles: listImages });
+      toast.update(toastId, {
+        render: <ToastSuccess message={"Tải lên ảnh thành công"} />,
+        type: toast.TYPE.SUCCESS,
+      });
+      console.log(toastId);
+    } catch (error) {
+      toast.error("Tải lên ảnh thất bại. Vui lòng thử lại!", {
+        toastId: toastId,
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    }
   }
 
   renderCheckBox = () => {
@@ -206,7 +234,7 @@ export class EditProperty extends Component {
                                 price: formatCurrency(e.target.value),
                               })
                             }
-                            value={this.state.price || ""}
+                            defaultValue={formatCurrency(this.state.price)}
                           />
                           <div className="input-group-append">
                             <span className="input-group-text"> VND </span>

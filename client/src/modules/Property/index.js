@@ -158,6 +158,7 @@ class Property extends Component {
                             <span>
                               {formatCurrency(property.moreInfo.price)}
                             </span>
+                            {" VND"}
                           </li>
                         </ul>
                       </div>

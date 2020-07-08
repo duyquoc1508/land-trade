@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import "./index.css";
 import { fetchSinglePropertyRequest } from "./actions";
-import NotFound from "../../NotFound";
 import axios from "axios";
 
 function PropertyStandard({ match, history, data, fetchSingleProperty }) {
@@ -137,14 +136,18 @@ function PropertyStandard({ match, history, data, fetchSingleProperty }) {
             </ol>
           </div>
           <div className="col-sm-6">
-            <h5>Sơ đồ tài sản</h5>
-            {images.map((img, index) => (
-              <img
-                src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${img}`}
-                style={{ maxHeight: "100%" }}
-                key={index}
-              />
-            ))}
+            <h5>Sơ đồ thửa đất</h5>
+            <div className="card">
+              <div className="card-body">
+                {images.map((img, index) => (
+                  <img
+                    src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${img}`}
+                    style={{ maxHeight: "100%" }}
+                    key={index}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

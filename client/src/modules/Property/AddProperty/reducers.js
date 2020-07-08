@@ -87,7 +87,9 @@ function createReducer(state = initialState, action) {
         type: toast.TYPE.SUCCESS,
         autoClose: 5000,
         onClick: () => {
-          action.payload.history.push(`/property/${action.payload.txHash}`);
+          action.payload.history.push(
+            `/property-standard/${action.payload.txHash}`
+          );
         },
       });
       return {
