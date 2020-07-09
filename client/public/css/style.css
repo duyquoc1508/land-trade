@@ -2511,7 +2511,7 @@ ul.hero_list li:last-child {
 }
 
 input[type="text"]:focus {
-  border: 1px solid #888;
+  /* border: 1px solid #888; */
 }
 
 .hero__form .hero__form-input {
