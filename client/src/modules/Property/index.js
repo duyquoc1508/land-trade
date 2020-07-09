@@ -79,6 +79,7 @@ class Property extends Component {
                     data-target="#carousel-thumb"
                     data-slide-to={index}
                     className=""
+                    key={index}
                   >
                     <img
                       className="img-fluid d-block w-100"
@@ -167,8 +168,8 @@ class Property extends Component {
                       <div className="mb-40">
                         <h4>Tiện ích</h4>
                         <ul className="listing-features">
-                          {property.moreInfo.utilities.map((util) => (
-                            <li>
+                          {property.moreInfo.utilities.map((util, index) => (
+                            <li key={index}>
                               <i className="far fa-check-square"></i> {util}
                             </li>
                           ))}
@@ -179,7 +180,7 @@ class Property extends Component {
                       <h4>Sơ đồ thửa đất</h4>
                       <div id="accordion10" role="tablist" className="pt-2">
                         {property.images.map((item, index) => (
-                          <div className="card">
+                          <div className="card" key={index}>
                             <div
                               id="collapseOne"
                               className="panel-collapse collapse show"
@@ -233,6 +234,27 @@ class Property extends Component {
                             }
                           >
                             Đặt cọc ngay
+                          </button>
+                        </div>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="widget mortgage-widget">
+                    <div className="agent-details">
+                      {/* <h3>Giao dịch</h3> */}
+                      <ul className="address-list" style={{ margin: 0 }}>
+                        <div className="mortgage-btn">
+                          <button
+                            disabled={property.owners.includes(
+                              this.props.user.publicAddress
+                            )}
+                            onClick={() =>
+                              this.props.history.push(
+                                `/transactions-of-property/${property.transactionHash}/${property.idInBlockchain}`
+                              )
+                            }
+                          >
+                            Xem lịch sử giao dịch của tài sản này
                           </button>
                         </div>
                       </ul>

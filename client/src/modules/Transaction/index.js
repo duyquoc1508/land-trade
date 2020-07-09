@@ -10,6 +10,7 @@ import SellerConfirmTransaction from "./seller/confirmTransaction";
 import SellerPayment from "./seller/payment";
 
 import CancelModal from "./cancelModal";
+import StepOne from "./seller/step1";
 
 import {
   fetchTransactionRequest,
@@ -61,6 +62,7 @@ const Transaction = (props) => {
     OUT_TRANSACTION: "OUT_TRANSACTION",
   };
   const [party, setParty] = useState(PARTY_CONSTANT.OUT_TRANSACTION); // party: BUYER - SELLER - OUT_TRANSACTION
+  const [checkExpired, setCheckExpired] = useState(false);
   const transactionHash = props.match.params.transactionHash;
 
   // fetch transaction and tranding property
@@ -79,6 +81,10 @@ const Transaction = (props) => {
       const steps = mapStateToSteps[props.transaction.state];
       setCurrentSteps(steps);
       setSteps(steps >= MAX_STEPS ? steps : steps + 1);
+      let timeEnd = new Date(props.transaction.timeEnd).getTime();
+      if (timeEnd < Date.now()) {
+        setCheckExpired(true);
+      }
     }
   }, [props.transaction, props.user]);
 
@@ -271,9 +277,7 @@ const Transaction = (props) => {
                 </h5>
               </div>
             </div>
-            <div className="row">
-              Xem toàn bộ giao dịch chuyển đến trang khách
-            </div>
+
             <div className="row">
               {/* <button
                 className="btn v3 float-right mt-5 "
@@ -286,7 +290,11 @@ const Transaction = (props) => {
               >
                 <i className="ion-android-cancel"></i> Hủy bỏ giao dịch
               </button> */}
-              <CancelModal party={party} />
+              <CancelModal
+                party={party}
+                checkExpired={checkExpired}
+                history={props.history}
+              />
             </div>
             {/*/row*/}
           </div>
@@ -301,14 +309,20 @@ const Transaction = (props) => {
               {props.transaction.state}
             </h5> */}
             {party === PARTY_CONSTANT.SELLER
-              ? (steps === 1 && <InitTransaction />) ||
-                (steps === 2 && <SellerAcceptTransaction />) ||
+              ? (steps === 1 && <StepOne />) ||
+                (steps === 2 && (
+                  <SellerAcceptTransaction checkExpired={checkExpired} />
+                )) ||
                 (steps === 3 && <SellerPayment />) ||
-                (steps === 4 && <SellerConfirmTransaction />)
+                (steps === 4 && (
+                  <SellerConfirmTransaction checkExpired={checkExpired} />
+                ))
               : party === PARTY_CONSTANT.BUYER
-              ? (steps === 1 && <BuyerAcceptTransaction />) ||
+              ? (steps === 1 && (
+                  <SellerAcceptTransaction checkExpired={checkExpired} />
+                )) ||
                 (steps === 2 && <BuyerAcceptTransaction />) ||
-                (steps === 3 && <BuyerPayment />) ||
+                (steps === 3 && <BuyerPayment checkExpired={checkExpired} />) ||
                 (steps === 4 && <BuyerConfirmTransaction />)
               : (steps === 1 && <BuyerAcceptTransaction />) ||
                 (steps === 2 && <BuyerAcceptTransaction />) ||

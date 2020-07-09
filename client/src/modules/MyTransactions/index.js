@@ -37,7 +37,7 @@ export default class MyTransactons extends Component {
             DEPOSIT_REQUEST: "Đang đặt cọc",
             DEPOSIT_CONFIRMED: "Đã đặt cọc",
             PAYMENT_REQUEST: "Đang thanh toán",
-            PAYMENT_CONFIRMED: "Đã thanh toán",
+            PAYMENT_CONFIRMED: "Giao dich thành công",
             CANCELED: "Đã hủy",
           },
         },
@@ -129,23 +129,6 @@ export default class MyTransactons extends Component {
             }),
           ]}
         />
-        <div>
-          <Dialog
-            open={this.state.openAction}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogContent>Hello</DialogContent>
-            <DialogActions>
-              <Button color="primary" onClick={() => this.closePreview()}>
-                Hủy bỏ
-              </Button>
-              <Button color="primary" autoFocus>
-                Duyệt
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
       </div>
     );
   }

@@ -116,7 +116,7 @@ const Payment = (props) => {
           </ul>
         </div>
 
-        {props.transaction.state == "DEPOSIT_CONFIRMED" && (
+        {props.transaction.state == "DEPOSIT_CONFIRMED" && !props.checkExpired && (
           <button
             className="btn v3 float-right mt-5 "
             onClick={handleClickOpen}

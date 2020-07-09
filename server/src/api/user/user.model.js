@@ -21,7 +21,7 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["government", "natory", "owner"],
+      enum: ["government", "notary", "owner"],
       default: "owner",
     },
     email: {
