@@ -176,7 +176,7 @@ export async function getAllTransactionsOfProperty(req, res, next) {
     const idPropertyInBlockchain = req.params.idPropertyInBlockchain;
     const transaction = await Transaction.find({
       idPropertyInBlockchain,
-      state: { $in: stateOfTransactionEnded },
+      // state: { $in: stateOfTransactionEnded },
     })
       .sort({ updatedAt: 1 }) // old to new
       .lean();

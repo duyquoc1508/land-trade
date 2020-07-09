@@ -120,10 +120,11 @@ const payment = async (transactionContract, transaction) => {
           const remainingAmount = web3.utils
             .toBN(transaction.transferPrice)
             .sub(web3.utils.toBN(transaction.depositPrice));
-          const personalTax = web3.utils.toBN(
-            Math.ceil(transaction.transferPrice / 200)
-          ); // 0.5% tax
+          const personalTax = web3.utils
+            .toBN(transaction.transferPrice)
+            .div(web3.utils.toBN(200)); // 0.5% tax
           const totalValue = remainingAmount.add(personalTax);
+          console.log(totalValue.toString());
           transactionContract.methods
             .payment(transaction.idInBlockchain)
             .send(
@@ -131,7 +132,7 @@ const payment = async (transactionContract, transaction) => {
                 nonce: txCount,
                 from: coinbase,
                 value: web3.utils.toWei(totalValue, "wei"), // include 0.5% tax
-                // value: web3.utils.toWei("20000000000000000000", "wei"),
+                // value: web3.utils.toWei("32986135155378261525", "wei"),
               },
               function (error, transactionHash) {
                 if (error) {

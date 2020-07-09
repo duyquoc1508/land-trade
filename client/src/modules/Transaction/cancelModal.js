@@ -126,9 +126,33 @@ const CancelTransaction = (props) => {
 
   return (
     <div>
-      <button className="btn v3 float-right mt-5 " onClick={handleClickOpen}>
-        <i className="ion-android-cancel"></i> Hủy giao dịch
-      </button>
+      {props.checkExpired ? (
+        <div>
+          <div className="text-center">
+            <h5>Giao dịch đã hết hạn</h5>
+          </div>
+          <button
+            className="btn v3 float-right mt-5 "
+            onClick={() =>
+              props.history.push(
+                `/transaction-detail/${props.transaction.transactionHash}`
+              )
+            }
+          >
+            <i className="ion-ios-search"></i> Tra cứu giao dịch tại đây
+          </button>
+        </div>
+      ) : (
+        ["CANCELED", "PAYMENT_CONFIRMED"].includes(props.transaction.state) || (
+          <button
+            className="btn v3 float-right mt-5 "
+            onClick={handleClickOpen}
+          >
+            <i className="ion-android-cancel"></i> Hủy giao dịch
+          </button>
+        )
+      )}
+
       <Dialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"

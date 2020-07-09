@@ -10,7 +10,6 @@ function TransactionDetail(props) {
   const [sellers, setSellers] = useState([]);
   const [transaction, setTransaction] = useState({});
   const [property, setProperty] = useState({});
-  const [translate, setTranslate] = useState({});
 
   // get all user infor from publicAddress
   const getUserProfile = async (publicAddress) => {
@@ -316,7 +315,7 @@ function TransactionDetail(props) {
         <h3 class="font-weight-light text-center text-muted py-3">
           Lịch sử giao dịch
         </h3>
-        {renderTimeline(transaction, translate)}
+        {renderTimeline(transaction)}
       </div>
     </div>
   );

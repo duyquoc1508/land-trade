@@ -19,6 +19,7 @@ import ManagementUser from "../ManagementUser";
 import VerifyAccount from "../ManagementUser/verifyAccount";
 import Notification from "../Notification";
 import MyTransactions from "../MyTransactions";
+import TransactionProperty from "../Property/TransactionProperty";
 import TransactionDetail from "../TransactionDetail";
 
 const routes = [
@@ -44,6 +45,14 @@ const routes = [
     exact: true,
     main: ({ match, history }) => (
       <MyTransactions match={match} history={history} />
+    ),
+  },
+
+  {
+    path: "/transactions-of-property/:hash/:idPropertyInBlockchain",
+    exact: true,
+    main: ({ match, history }) => (
+      <TransactionProperty match={match} history={history} />
     ),
   },
   {

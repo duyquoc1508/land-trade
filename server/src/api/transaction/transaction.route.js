@@ -27,7 +27,7 @@ routes.get("/:txHash", transactionController.getTransaction);
  * GET api/v1/transaction
  */
 routes.get(
-  "/property/idPropertyIbBlockchain",
+  "/property/:idPropertyInBlockchain",
   transactionController.getAllTransactionsOfProperty
 );
 

@@ -15,7 +15,7 @@ const Payment = (props) => {
             className="my-50"
           />
           <h5 className="mb-5">Bạn đã chấp nhận giao dịch</h5>
-          {props.transaction.state == "PAYMENT_REQUEST" && (
+          {props.transaction.state == "DEPOSIT_CONFIRMED" && (
             <p> Vui lòng chờ người mua thanh toán số tiền còn lại!</p>
           )}
           <hr />
