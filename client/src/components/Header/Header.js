@@ -36,12 +36,6 @@ const menus = [
     role: "Notary",
   },
   {
-    name: "Giao dịch",
-    to: "/add-property",
-    exact: false,
-    role: "Notary",
-  },
-  {
     name: "Quản lý người dùng",
     to: "/management-user",
     exact: false,

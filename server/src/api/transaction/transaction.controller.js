@@ -52,6 +52,32 @@ export async function createTransaction(req, res, next) {
   }
 }
 
+export async function getAllTransactions(req, res, next) {
+  try {
+    let transactions = await Transaction.find({})
+      .sort({ updatedAt: -1 })
+      .lean();
+
+    let arrayIdCertificationInBlockchain = Array.from(
+      new Set(transactions.map((item) => item.idPropertyInBlockchain))
+    );
+    let properties = await Certification.find({
+      idInBlockchain: arrayIdCertificationInBlockchain,
+    })
+      .sort({ updatedAt: -1 })
+      .lean();
+    return res.status(200).json({
+      statusCode: 200,
+      data: {
+        transactions,
+        properties,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function getMyTransactions(req, res, next) {
   try {
     let transactionP1 = Transaction.find({
@@ -66,9 +92,6 @@ export async function getMyTransactions(req, res, next) {
       transactionP2,
     ]);
 
-    let test = [...transactionBuy, ...transactionSale].map(
-      (item) => item.idInBlockchain
-    );
     let arrayIdCertificationInBlockchain = Array.from(
       new Set(
         [...transactionBuy, ...transactionSale].map(

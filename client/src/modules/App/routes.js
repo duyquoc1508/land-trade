@@ -21,6 +21,7 @@ import Notification from "../Notification";
 import MyTransactions from "../MyTransactions";
 import TransactionProperty from "../Property/TransactionProperty";
 import TransactionDetail from "../TransactionDetail";
+import Investing from "../Investing";
 
 const routes = [
   {
@@ -39,6 +40,12 @@ const routes = [
     path: "/listings",
     exact: true,
     main: ({ match, history }) => <Listings match={match} history={history} />,
+  },
+
+  {
+    path: "/investing",
+    exact: true,
+    main: ({ match, history }) => <Investing match={match} history={history} />,
   },
   {
     path: "/my-transactions",
