@@ -67,6 +67,7 @@
 
 .header-button .header-button-item {
   cursor: pointer;
+  /* margin-left: 25px; */
 }
 
 .header-button .header-button-item:first-child {
@@ -305,6 +306,23 @@
 
 .notifi__item:hover {
   background: #f7f7f7;
+}
+
+.notifi__item.unread div.content {
+  position: relative;
+  display: inline-block;
+}
+
+.notifi__item.unread div.content:after {
+  position: absolute;
+  content: "Mới";
+  top: 0;
+  right: -50px;
+  background: #f91;
+  padding: 0 5px;
+  color: #fff;
+  font-size: 13px;
+  border-radius: 5px;
 }
 
 .notifi__item .img-cir {
@@ -1219,10 +1237,15 @@
   transition: all 0.5s ease;
   padding-bottom: 15px;
   margin-bottom: 20px;
+  padding: 15px;
 }
 
 .au-message-list .au-message__item:last-child {
   margin-bottom: 0;
+}
+
+.au-message__item.unread {
+  background: #f5f5f5;
 }
 
 .au-message__item.unread h5.name {
@@ -1232,7 +1255,7 @@
 
 .au-message__item.unread h5.name:after {
   position: absolute;
-  content: "New";
+  content: "Mới";
   top: 0;
   right: -50px;
   background: #f91;
@@ -1996,6 +2019,19 @@ ul.buttons li {
 
   .db-review-item-wrap .reviewer-img img {
     min-width: 140px;
+  }
+
+  .navbar-brand {
+    clear: both;
+    float: left;
+    margin: 10px auto 5px 20px;
+    width: 0%;
+    display: none;
+  }
+
+  .site-navbar-wrap.v2.style2 {
+    margin-left: 0;
+    float: left;
   }
 }
 

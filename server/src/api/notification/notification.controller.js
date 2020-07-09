@@ -30,3 +30,18 @@ export async function createNotification(req, res, next) {
     next(error);
   }
 }
+
+/**
+ * @dev get/ read notification => mark field seen equal to true
+ */
+export async function readNotification(req, res, next) {
+  try {
+    await Notification.updateOne(
+      { _id: req.params.idNotification },
+      { seen: true }
+    );
+    return res.status(204).json({ statusCode: 204 });
+  } catch (error) {
+    next(error);
+  }
+}

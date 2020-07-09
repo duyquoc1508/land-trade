@@ -1,7 +1,8 @@
 import {
   FETCH_NOTIFICATIONS_REQUEST,
   FETCH_NOTIFICATIONS_SUCCESS,
-  FETCH_MY_LISTING_FAILURE,
+  FETCH_NOTIFICATIONS_FAILURE,
+  READ_NOTIFICATION,
 } from "./constants";
 
 const initialState = {
@@ -23,13 +24,16 @@ export default function notificationsReducer(state = initialState, action) {
         loading: false,
         notifications: action.payload,
       };
-    case FETCH_MY_LISTING_FAILURE:
+    case FETCH_NOTIFICATIONS_FAILURE:
       return {
         ...state,
         loading: false,
         notifications: [],
         error: action.payload,
       };
+      return state;
+    case READ_NOTIFICATION:
+      return { ...state };
     default:
       return state;
   }

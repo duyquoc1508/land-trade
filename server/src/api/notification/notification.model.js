@@ -14,7 +14,7 @@ const notificationSchema = new mongoose.Schema(
     message: {
       type: String,
     },
-    isReaded: {
+    seen: {
       type: Boolean, // true: seen
       default: false,
     },

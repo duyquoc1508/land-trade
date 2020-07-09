@@ -221,7 +221,7 @@ contract Transaction {
 		    );
 	    	address payable buyer = address(uint160(transaction.buyers[0]));
 		    buyer.transfer(compensationAmount);
-		    idToState[_idTransaction] = State.DEPOSIT_BROKEN_BY_BUYER;
+		    idToState[_idTransaction] = State.DEPOSIT_BROKEN_BY_SELLER;
 	    }
         // if buyer sended payment => refund payment + 0.5% tax and compensation amount
         else if(idToState[_idTransaction] == State.TRANSFER_REQUEST){

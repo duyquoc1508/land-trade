@@ -1,32 +1,52 @@
-import React, { useState } from "react";
-import { fetchNotificationsRequest } from "./action";
+import React, { useState, useEffect } from "react";
+import { fetchNotificationsRequest, readNotification } from "./action";
 import { connect } from "react-redux";
-import { useHistory, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import formatDate from "../../../utils/formatDate";
+import Cookie from "../../../helper/cookie";
 
 function Notifications(props) {
   const [toggleNotifications, setToggleNotifications] = useState(
-    "header-button-item has-noti js-item-menu"
+    "header-button-item js-item-menu"
   );
   const [toggleNotificationsStatus, setToggleNotificationsStatus] = useState(
     false
   );
   const changeToggleNotifications = () => {
-    if (!toggleNotificationsStatus) {
-      setToggleNotificationsStatus(true);
+    const hasNotify =
+      (props.notifications.some((item) => !item.seen) && "has-noti") || "";
+    if (toggleNotificationsStatus === false) {
       setToggleNotifications(
-        "header-button-item has-noti js-item-menu show-dropdown"
+        "header-button-item js-item-menu show-dropdown " + hasNotify
       );
-      props.fetchNotifications();
     } else {
-      setToggleNotificationsStatus(false);
-      setToggleNotifications("header-button-item has-noti js-item-menu");
+      setToggleNotifications("header-button-item js-item-menu " + hasNotify);
     }
+    setToggleNotificationsStatus(!toggleNotificationsStatus);
   };
 
-  const history = useHistory();
+  useEffect(() => {
+    const hasNotify =
+      (props.notifications.some((item) => !item.seen) && "has-noti") || "";
+    setToggleNotifications("header-button-item js-item-menu " + hasNotify);
+  }, [props.notifications]);
+
+  const readNotification = (idNotification) => {
+    const url = `${process.env.REACT_APP_BASE_URL_API}/notification/${idNotification}`;
+    fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${Cookie.getCookie("accessToken")}`,
+      },
+    });
+    props.readNotification();
+  };
+
   return (
-    <div className={toggleNotifications} onClick={changeToggleNotifications}>
+    <div
+      className={toggleNotifications}
+      onClick={() => changeToggleNotifications()}
+    >
       <i className="ion-ios-bell-outline"></i>
       <div className="notifi-dropdown js-dropdown">
         {props.notifications.length === 0 ? (
@@ -38,9 +58,12 @@ function Notifications(props) {
         ) : (
           props.notifications.map((notification, index) => (
             <div
-              className="notifi__item"
+              className={"notifi__item " + (!notification.seen && "unread")}
               key={index}
-              onClick={() => history.push(notification.url)}
+              onClick={() => {
+                props.history.push(notification.url);
+                !notification.seen && readNotification(notification._id);
+              }}
             >
               <div className="content">
                 <p>{notification.message}</p>
@@ -70,6 +93,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchNotifications: () => dispatch(fetchNotificationsRequest()),
+    readNotification: () => dispatch(readNotification()),
   };
 };
 
