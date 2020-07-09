@@ -164,16 +164,18 @@ class Menu extends Component {
       <header className="db-top-header">
         <div className="container-fluid">
           <div className="row align-items-center">
-            <div className="col-md-1 col-sm-3 col-4">
-              <Link className="navbar-brand" to={"/"}>
-                <img
-                  src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
-                  alt="logo"
-                  className="img-fluid"
-                />
-              </Link>
+            <div className="col-md-2 ">
+              <div className="navbar-brand">
+                <Link to={"/"}>
+                  <img
+                    src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
+                    alt="logo"
+                    className="img-fluid"
+                  />
+                </Link>
+              </div>
             </div>
-            <div className="col-md-8 col-sm-3 col-2">
+            <div className="col-md-8 col-sm-4 col-2">
               <div className="site-navbar-wrap v2 style2">
                 <div className="site-navbar">
                   <nav className="site-navigation">
@@ -183,7 +185,9 @@ class Menu extends Component {
                       </ul>
                     </div>
                   </nav>
-                  <div className="d-lg-none sm-right">
+                  <div className="d-lg-none ">
+                    {" "}
+                    {/* sm-right */}
                     <a href="#" className="mobile-bar js-menu-toggle">
                       <span className="lnr lnr-menu"></span>
                     </a>
@@ -200,10 +204,10 @@ class Menu extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-md-2 col-sm-6 col-6">
+            <div className="col-md-2 col-sm-8 col-10">
               {!!this.props.checkAuth ? (
                 <div className="header-button">
-                  <Notifications />
+                  <Notifications history={this.props.history} />
                   <div
                     className="header-button-item js-sidebar-btn"
                     onClick={this.changeToggleAuth}

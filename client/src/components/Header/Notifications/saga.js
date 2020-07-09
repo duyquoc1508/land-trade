@@ -4,7 +4,8 @@ import Cookie from "../../../helper/cookie";
 import {
   FETCH_NOTIFICATIONS_REQUEST,
   FETCH_NOTIFICATIONS_SUCCESS,
-  FETCH_MY_LISTING_FAILURE,
+  FETCH_NOTIFICATIONS_FAILURE,
+  READ_NOTIFICATION,
 } from "./constants";
 
 const fetchNotificationsFromApi = async () => {
@@ -24,10 +25,12 @@ function* fetchNotifications() {
     const response = yield call(fetchNotificationsFromApi);
     yield put({ type: FETCH_NOTIFICATIONS_SUCCESS, payload: response });
   } catch (error) {
-    yield put({ type: FETCH_MY_LISTING_FAILURE, payload: error.message });
+    yield put({ type: FETCH_NOTIFICATIONS_FAILURE, payload: error.message });
   }
 }
 
 export default function* watchFetchNotifications() {
   yield takeEvery(FETCH_NOTIFICATIONS_REQUEST, fetchNotifications);
+  yield takeEvery("REFRESH_PAGE", fetchNotifications);
+  yield takeEvery(READ_NOTIFICATION, fetchNotifications);
 }

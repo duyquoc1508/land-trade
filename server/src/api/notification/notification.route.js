@@ -16,4 +16,13 @@ routes.get("/", authJwt, pagination, notificationController.getNotifications);
  */
 routes.post("/", authJwt, notificationController.createNotification);
 
+/**
+ * @dev read notifications
+ */
+routes.put(
+  "/:idNotification",
+  authJwt,
+  notificationController.readNotification
+);
+
 export default routes;
