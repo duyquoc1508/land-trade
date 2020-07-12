@@ -9,7 +9,7 @@ import User from "./../api/user/user.model";
  */
 
 const jwtOpts = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
   secretOrKey: process.env.ACCESS_TOKEN_SECRET || "access-token-landtrade"
 };
 

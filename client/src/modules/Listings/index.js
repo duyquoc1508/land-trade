@@ -7,14 +7,25 @@ import { Link } from "react-router-dom";
 import formatCurrency from "../../utils/formatCurrency";
 
 class Listings extends Component {
+  constructor(props) {
+    super(props);
+    // this.state = {
+    //   listingSale:[]
+    // }
+  }
   componentDidMount() {
     loadScript("js/plugin.js");
     loadScript("js/main.js");
     this.props.handleClick();
+     }
+ getCity = () =>{
+    return new URLSearchParams(location.search).get("city") || '';
   }
 
+
   renderItem() {
-    return this.props.listingSale.map(
+    return this.props.listingSale.filter(property => property.properties.landLot.address
+      .includes(this.getCity())).map(
       (item, index) =>
         !item.owners.includes(this.props.user.publicAddress) && (
           <div className="col-xl-4 col-md-6 col-sm-12" key={index}>
@@ -114,13 +125,14 @@ class Listings extends Component {
       <div>
         <div className="filter-wrapper section-padding">
           <div className="container">
-            {/* {this.props.listingSale.length === 0 ? (
+            {this.props.listingSale.filter(property => property.properties.landLot.address.
+            includes(this.getCity())).length === 0 ? (
               <h3 className="post-title text-center">
                 Không có tài sản nào đang bán
               </h3>
-            ) : ( */}
+            ) : (
             <div className="row">{this.renderItem()}</div>
-            {/* )} */}
+            )}
           </div>
         </div>
       </div>
