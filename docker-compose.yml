@@ -1,0 +1,82 @@
+version: "3.7" # version of docker-compose file
+
+services:
+  # ganache-cli: simulated test rpc on dev environment
+  ganache-cli:
+    container_name: ganache-cli
+    image: trufflesuite/ganache-cli:latest
+  db:
+    image: mongo
+    volumes:
+      - "/.docker/data/mongod.conf:/etc/mongod.conf"
+      - "mongo_data:/data/db"
+    ports:
+      - "37017:27017"
+    restart: unless-stopped
+  back_end:
+    container_name: back_end
+    build: ./server
+    ports:
+      - "${PUBLIC_PORT}:${PORT}" # mapping port from physical to container
+    # restart: unless-stopped   # auto restart
+    depends_on:
+      # - db
+      - ganache-cli
+    # volumes:
+    # - "./server:/app"
+    environment:
+      PORT: ${PORT}
+      NODE_ENV: ${NODE_ENV}
+      SECRET_KEY: ${SECRET_KEY}
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      ACCESS_TOKEN_LIFE: ${ACCESS_TOKEN_LIFE}
+      REFRESH_TOKEN_LIFE: ${REFRESH_TOKEN_LIFE}
+      USERNAME_EMAIL: ${USERNAME_EMAIL}
+      PASSWORD_EMAIL: ${PASSWORD_EMAIL}
+      WEBSOCKET_PROVIDER: ${WEBSOCKET_PROVIDER}
+      WEBSOCKET_PROVIDER_GETH: ${WEBSOCKET_PROVIDER_GETH}
+      REACT_APP_BASE_URL: ${REACT_APP_BASE_URL}
+      COIN_MARKET_API_KEY: ${COIN_MARKET_API_KEY}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+
+  front_end:
+    container_name: front_end
+    build:
+      context: ./client
+      args:
+        REACT_APP_BASE_URL_API: ${REACT_APP_BASE_URL_API}
+        REACT_APP_PORT: ${REACT_APP_PORT}
+        REACT_APP_BASE_URL: ${REACT_APP_BASE_URL}
+        REACT_APP_BASE_URL_IMAGE: ${REACT_APP_BASE_URL_IMAGE}
+        REACT_APP_BASE_URL_ASSETS: ${REACT_APP_BASE_URL_ASSETS}
+        REACT_APP_BASE_URL_SOCKET: ${REACT_APP_BASE_URL_SOCKET}
+        REACT_APP_BASE_URL_PROVIDER: ${REACT_APP_BASE_URL_PROVIDER}
+        REACT_APP_BASE_URL_PROVIDER_GETH: ${REACT_APP_BASE_URL_PROVIDER_GETH}
+    ports:
+      - "${REACT_APP_PORT}:${REACT_APP_PORT}" # mapping port from physical to container
+    # restart: unless-stopped   # auto restart
+    depends_on:
+      - back_end
+    volumes:
+      - "./client:/app"
+    environment:
+      PORT: ${REACT_APP_PORT}
+
+    env_file: ./.env
+    #   REACT_APP_BASE_URL_API: ${REACT_APP_BASE_URL_API}
+    #   REACT_APP_PORT: ${REACT_APP_PORT}
+    #   REACT_APP_BASE_URL: ${REACT_APP_BASE_URL}
+    #   REACT_APP_BASE_URL_IMAGE: ${REACT_APP_BASE_URL_IMAGE}
+    #   REACT_APP_BASE_URL_ASSETS: ${REACT_APP_BASE_URL_ASSETS}
+    #   REACT_APP_BASE_URL_SOCKET: ${REACT_APP_BASE_URL_SOCKET}
+    #   REACT_APP_BASE_URL_PROVIDER: ${REACT_APP_BASE_URL_PROVIDER}
+    #   REACT_APP_BASE_URL_PROVIDER_GETH: ${REACT_APP_BASE_URL_PROVIDER_GETH}
+
+networks:
+  default:
+    driver: overlay #same network => allow access to all
+volumes:
+  mongo_data:

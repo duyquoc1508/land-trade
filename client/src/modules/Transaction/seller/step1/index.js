@@ -1,8 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { convertWeiToVND } from "../../../../utils/convertCurrency";
-import formatCurrency from "../../../../utils/formatCurrency";
-import formatDate from "../../../../utils/formatDate";
 
 const StepOne = (props) => {
   return (
