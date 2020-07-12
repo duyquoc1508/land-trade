@@ -9,6 +9,8 @@ import { initializeListeners } from "./eventListener/listener";
 import http from "http";
 import { SocketService } from "./socketService";
 
+console.log(`bien moi truong ${process.env}`)
+
 const app = express();
 // Setup socket io for realtime
 const server = http.createServer(app);
@@ -16,7 +18,7 @@ app.set("socketService", new SocketService(server));
 
 // Middlewares
 middlewaresConfig(app);
-app.use("/static", express.static(path.join(__dirname, "public")));
+app.use("/static", express.static("public"));
 
 // Initialize event listener on blockchain
 initializeListeners();

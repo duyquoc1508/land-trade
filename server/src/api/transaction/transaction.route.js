@@ -11,10 +11,16 @@ const routes = Router();
 routes.post("/", authJwt, transactionController.createTransaction);
 
 /**
- * get allall transaction
+ * get all transaction
  * get api/v1/transaction/investing
  */
 routes.get("/investing", transactionController.getAllTransactions);
+
+/**
+ * get most deals transaction
+ * get api/v1/transaction/most-deals
+ */
+routes.get("/most-deals", transactionController.getMostDeals);
 
 /**
  * get my transaction

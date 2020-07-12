@@ -1,17 +1,27 @@
 import React, { Component } from "react";
 import { loadScript } from "../../helper/utils";
-import Loading from "../../components/Loading/loading";
+import axios from "axios";
+import formatCurrency from "../../utils/formatCurrency";
+import { Link } from "react-router-dom";
 
 class HomePage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mostDeals: []
+    }
+  }
   componentDidMount() {
     loadScript("js/plugin.js");
     console.log("load main");
     loadScript("js/main.js");
+    axios.get(`${process.env.REACT_APP_BASE_URL_API}/transaction/most-deals`)
+    .then(response => this.setState({ mostDeals: response.data.data}))
   }
   render() {
     return (
       <div>
-        <div className="hero-parallax bg-fixed">
+        <div className="hero-parallax bg-fixed" style={{backgroundImage: 'url(images/header/header_11.jpg)'}}>
           <div className="overlay op-1"></div>
           <div className="container">
             <div className="row">
@@ -20,14 +30,20 @@ class HomePage extends Component {
                   <div className="row">
                     <div className="col-xl-6 col-lg-6 col-md-12 col-12">
                       <div className="header-text v2">
-                        <span>Click or call we do it all </span>
-                        <h1>Find Properties that make you money</h1>
+                        <span>Chào mừng bạn đến với </span>
+                        <h1>LandTrade</h1>
                         <p>
-                          Lorem ipsum dolor sit amet, consectetur adipisicing
-                          elit. Eligendi quia fugiat ea adipisci earum
-                          repudiandae, corporis culpa esse distinctio
-                          consequuntur?
+                        Ứng dụng đăng ký, quản lý và giao dich BĐS đáng tin cậy. Thông tin chính xác, bảo mật cho người dùng dựa trên công nghệ blockchain
                         </p>
+                        {/* <div className="row">
+                          <div className="col-sm-12">
+                            <div className="search_btn">
+                              <Link to={`/listing`}>
+                                Tìm kiếm ngay
+                              </Link>
+                            </div>
+                          </div>
+                        </div> */}
                       </div>
                     </div>
                     <div className="col-xl-4 offset-xl-2 col-lg-5 offset-lg-1 col-md-12">
@@ -114,8 +130,8 @@ class HomePage extends Component {
           <div className="row">
             <div className="col-md-12">
               <div className="section-title v1">
-                <p>Browse popular properties around the world</p>
-                <h2>Find Properties in Your city</h2>
+                {/* <p>Browse popular properties around the world</p> */}
+                <h2>Địa điểm nổi bật </h2>
               </div>
             </div>
           </div>
@@ -125,89 +141,89 @@ class HomePage extends Component {
             <div className="container">
               <div className="row">
                 <div className="col-lg-6 col-md-6 col-sm-12 mb-30">
-                  <a href="grid-fullwidth-map.html">
+                  <Link to="/listings?city=ho+chi+minh">
                     <div className="single-place-wrap">
                       <div className="single-place-image">
                         <img src="images/places/place_10.jpg" alt="place" />
                       </div>
-                      <span className="single-place-title">Havana</span>
+                      <span className="single-place-title">Hồ Chí Minh</span>
                       <div className="single-place-content">
-                        <h3>80 Property Listings</h3>
+                        {/* <h3>Có 80 bất động đang bán</h3> */}
                         <p>
-                          See all Listings{" "}
+                          Xem thêm{" "}
                           <i className="lnr lnr-arrow-right"></i>
                         </p>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 </div>
                 <div className="col-lg-6 col-md-6 col-sm-12 mb-30">
-                  <a href="grid-fullwidth-map.html">
+                  <Link to="/listings?city=Da+Nang">
                     <div className="single-place-wrap">
                       <div className="single-place-image">
                         <img src="images/places/place_7.jpg" alt="place" />
                       </div>
-                      <span className="single-place-title">Prague</span>
+                      <span className="single-place-title">Đà Nẵng</span>
                       <div className="single-place-content">
-                        <h3>120 Apartment for sale</h3>
+                        {/* <h3>Có 80 bất động đang bán</h3> */}
                         <p>
-                          See all Listings{" "}
+                          Xem thêm{" "}
                           <i className="lnr lnr-arrow-right"></i>
                         </p>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 </div>
                 <div className="col-lg-4 col-md-6 col-sm-12 mb-30">
-                  <a href="grid-fullwidth-map.html">
+                  <Link to="/listings?city=ha+noi">
                     <div className="single-place-wrap">
                       <div className="single-place-image">
                         <img src="images/places/place_13.jpg" alt="place" />
                       </div>
-                      <span className="single-place-title">Miami</span>
+                      <span className="single-place-title">Hà Nội</span>
                       <div className="single-place-content">
-                        <h3>30 Luxury villa</h3>
+                        {/* <h3>Có 80 bất động đang bán</h3> */}
                         <p>
-                          See all Listings{" "}
+                          Xem thêm{" "}
                           <i className="lnr lnr-arrow-right"></i>
                         </p>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 </div>
                 <div className="col-lg-4 col-md-6 col-sm-12 mb-30">
-                  <a href="grid-fullwidth-map.html">
+                  <Link to="/listings?city=Da+Lat">
                     <div className="single-place-wrap">
                       <div className="single-place-image">
                         <img src="images/places/place_17.jpg" alt="place" />
                       </div>
-                      <span className="single-place-title">Milan</span>
+                      <span className="single-place-title">Đà Lạt</span>
                       <div className="single-place-content">
-                        <h3>135 Property for sale</h3>
+                        {/* <h3>Có 80 bất động đang bán</h3> */}
                         <p>
-                          See all Listings{" "}
+                          Xem thêm{" "}
                           <i className="lnr lnr-arrow-right"></i>
                         </p>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 </div>
                 <div className="col-lg-4 col-md-6 col-sm-12 mb-30">
-                  <a href="grid-fullwidth-map.html">
+                  <Link to="/listings?city=vung+tau">
                     <div className="single-place-wrap">
                       <div className="single-place-image">
                         <img src="images/places/place_15.jpg" alt="place" />
                       </div>
-                      <span className="single-place-title">New York</span>
+                      <span className="single-place-title">Vũng Tàu</span>
                       <div className="single-place-content">
-                        <h3>120 houses for Rent</h3>
+                        {/* <h3>Có 80 bất động đang bán</h3> */}
                         <p>
-                          See all Listings{" "}
+                          Xem thêm{" "}
                           <i className="lnr lnr-arrow-right"></i>
                         </p>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -218,218 +234,52 @@ class HomePage extends Component {
             <div className="row">
               <div className="col-xl-3 col-lg-12">
                 <div className="section-title v2">
-                  <p>Check out some of our</p>
-                  <h2>Featured Properties</h2>
+                  <p>Giao dịch nhiều nhất</p>
+                  <h2>Một số BĐS nổi bật</h2>
                 </div>
               </div>
               <div className="col-xl-9 col-lg-12">
                 <div className="featured-property-wrap v2 swiper-container">
                   <div className="swiper-wrapper">
-                    <div className="swiper-slide single-property-box">
+                    {this.state.mostDeals.map((item, index) => (<div className="swiper-slide single-property-box" key={index}>
                       <div className="property-item">
-                        <a
+                        <Link
                           className="property-img"
-                          href="single-listing-two.html"
+                          to={`/property/${item.transactionHash}`}
                         >
-                          <img src="images/featured/featured_1.jpg" alt="..." />{" "}
-                        </a>
+                          <img src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${item.images[0]}`} alt="..." />{" "}
+                        </Link>
                         <ul className="feature_text">
-                          <li className="feature_cb">
-                            <span>Featured</span>
-                          </li>
+
                           <li className="feature_or">
-                            <span>For Rent</span>
+                            <span>Đang bán</span>
                           </li>
                         </ul>
                         <div className="property-author-wrap">
-                          <a href="#" className="property-author">
-                            <h4>Condo on Hartfold</h4>
-                          </a>
+                          <Link to={`/property/${item.transactionHash}`} className="property-author">
+                            <h4>{item.moreInfo.title}</h4>
+                          </Link>
                           <ul className="property-feature">
                             <li>
-                              <span>3 Bed</span>
+                              <span>{item.moreInfo.numOfBedrooms} phòng ngủ</span>
                             </li>
                             <li>
-                              <span>2 Bath</span>
+                              <span>{item.moreInfo.numOfBathrooms} phòng tắm</span>
                             </li>
                             <li>
-                              <span>1400 sqft</span>
+                              <span>{item.moreInfo.areaFloor} m2</span>
                             </li>
                           </ul>
                           <div className="featured-price">
                             <p>
-                              <span className="per_sale">starts from</span>
-                              $34000
+                              <span className="per_sale">Giá giao dịch</span>
+                              {formatCurrency(item.moreInfo.price)} VNĐ
                             </p>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="swiper-slide single-property-box">
-                      <div className="property-item">
-                        <a
-                          className="property-img"
-                          href="single-listing-two.html"
-                        >
-                          <img src="images/featured/featured_8.jpg" alt="..." />{" "}
-                        </a>
-                        <ul className="feature_text">
-                          <li className="feature_cb">
-                            <span>Featured</span>
-                          </li>
-                          <li className="feature_or">
-                            <span>For Rent</span>
-                          </li>
-                        </ul>
-                        <div className="property-author-wrap">
-                          <a href="#" className="property-author">
-                            <h4>Family Apartment </h4>
-                          </a>
-                          <ul className="property-feature">
-                            <li>
-                              <span>2 Bed</span>
-                            </li>
-                            <li>
-                              <span>2 Bath</span>
-                            </li>
-                            <li>
-                              <span>1400 sqft</span>
-                            </li>
-                          </ul>
-                          <div className="featured-price">
-                            <p>
-                              $1200<span className="per_month">month</span>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="swiper-slide single-property-box">
-                      <div className="property-item">
-                        <a
-                          className="property-img"
-                          href="single-listing-two.html"
-                        >
-                          <img src="images/featured/featured_9.jpg" alt="..." />{" "}
-                        </a>
-                        <ul className="feature_text">
-                          <li className="feature_cb">
-                            <span>Featured</span>
-                          </li>
-                          <li className="feature_or">
-                            <span>For Rent</span>
-                          </li>
-                        </ul>
-                        <div className="property-author-wrap">
-                          <a href="#" className="property-author">
-                            <h4>Villa on Sunbury</h4>
-                          </a>
-                          <ul className="property-feature">
-                            <li>
-                              <span>4 Bed</span>
-                            </li>
-                            <li>
-                              <span>3 Bath</span>
-                            </li>
-                            <li>
-                              <span>2400 sqft</span>
-                            </li>
-                          </ul>
-                          <div className="featured-price">
-                            <p>
-                              <span className="per_sale">starts from</span>
-                              $12000
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="swiper-slide single-property-box">
-                      <div className="property-item">
-                        <a
-                          className="property-img"
-                          href="single-listing-two.html"
-                        >
-                          <img
-                            src="images/featured/featured_10.jpg"
-                            alt="..."
-                          />
-                        </a>
-                        <ul className="feature_text">
-                          <li className="feature_cb">
-                            <span>Featured</span>
-                          </li>
-                          <li className="feature_or">
-                            <span>For Sale</span>
-                          </li>
-                        </ul>
-                        <div className="property-author-wrap">
-                          <a href="#" className="property-author">
-                            <h4>Family Apartment</h4>
-                          </a>
-                          <ul className="property-feature">
-                            <li>
-                              <span>3 Bed</span>
-                            </li>
-                            <li>
-                              <span>2 Bath</span>
-                            </li>
-                            <li>
-                              <span>2142 sqft</span>
-                            </li>
-                          </ul>
-                          <div className="featured-price">
-                            <p>
-                              <span className="per_sale">starts from</span>
-                              $12000
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="swiper-slide single-property-box">
-                      <div className="property-item">
-                        <a
-                          className="property-img"
-                          href="single-listing-two.html"
-                        >
-                          <img
-                            src="images/featured/featured_11.jpg"
-                            alt="..."
-                          />{" "}
-                        </a>
-                        <ul className="feature_text">
-                          <li className="feature_cb">
-                            <span>Featured</span>
-                          </li>
-                          <li className="feature_or">
-                            <span>For Slae</span>
-                          </li>
-                        </ul>
-                        <div className="property-author-wrap">
-                          <a href="#" className="property-author">
-                            <h4>Luxury Apartment</h4>
-                          </a>
-                          <ul className="property-feature">
-                            <li>
-                              <span>3 Bed</span>
-                            </li>
-                            <li>
-                              <span>2 Bath</span>
-                            </li>
-                            <li>
-                              <span>1800 sqft</span>
-                            </li>
-                          </ul>
-                          <div className="featured-price">
-                            <p>
-                              <span className="per_sale">starts from</span>
-                              $12000
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    </div>))}
+
                   </div>
                   <div className="slider-btn v2 featured_prev">
                     <i className="lnr lnr-arrow-left"></i>
