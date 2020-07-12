@@ -4,22 +4,22 @@ const JWT_SECRET =
   process.env.SECRET_KEY || "qwertyuiopasdfghjklzxcvbnm123456ss";
 
 const devConfig = {
-  MONGO_URL: "mongodb://localhost:27017/landtrade_dev",
-  JWT_SECRET
+  MONGO_URL: `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+  JWT_SECRET,
 };
 
 const testConfig = {
-  MONGO_URL: "mongodb://localhost:27017/landtrade_test",
-  JWT_SECRET
+  MONGO_URL: `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+  JWT_SECRET,
 };
 
 const prodConfig = {
-  MONGO_URL: "mongodb://localhost:27017/landtrade_prod",
-  JWT_SECRET
+  MONGO_URL: `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+  JWT_SECRET,
 };
 
 const defaultConfig = {
-  PORT: process.env.PORT || 5000
+  PORT: process.env.PORT || 5000,
 };
 
 function envConfig(env) {
@@ -35,5 +35,5 @@ function envConfig(env) {
 
 export default {
   ...defaultConfig,
-  ...envConfig(process.env.NODE_ENV)
+  ...envConfig(process.env.NODE_ENV),
 };

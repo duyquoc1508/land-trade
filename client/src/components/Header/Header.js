@@ -1,14 +1,14 @@
 import React, { Component } from "react";
-import { Route, Link } from "react-router-dom";
-import ButtonLogin from "../../modules/Login";
 import { connect } from "react-redux";
-import Cookie from "../../helper/cookie";
-import Notifications from "./Notifications";
-import { ToastContainer, toast } from "react-toastify";
+import { Link, Route } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import io from "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js.map";
+import Cookie from "../../helper/cookie";
+import ButtonLogin from "../../modules/Login";
 import { initSocket, refreshPage, dispatchEventFromBlockchain } from "./action";
 import formatCurrency from "../../utils/formatCurrency";
+import { dispatchEventFromBlockchain, initSocket, refreshPage } from "./action";
+import Notifications from "./Notifications";
 
 const menus = [
   {

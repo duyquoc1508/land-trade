@@ -4,10 +4,10 @@ import certificationRoutes from "./certification/certification.route";
 import uploadRoutes from "./upload/upload.route";
 import notificationRoutes from "./notification/notification.route";
 import transactionRoutes from "./transaction/transaction.route";
-import onlinePaymentRoutes from "./onlinepayment/onlinepayment.route";
+import onlinePaymentRoutes from "./onlinePayment/onlinePayment.route";
 import pdfRoutes from "./pdf/pdf.route";
 import exchangeRateRoutes from "./exchangeRate/exchangeRate.route";
-import otpRoutes from './otp/otp.route';
+import otpRoutes from "./otp/otp.route";
 
 export default (app) => {
   app.use("/api/v1/upload", uploadRoutes);
