@@ -213,20 +213,31 @@ class Property extends Component {
                         <li>
                           <span>Số tiền :</span>
                           {formatCurrency(property.moreInfo.price)}
+                          {" VNĐ"}
                         </li>
                         <li>
                           <span>Thuế:</span>
                           {formatCurrency(property.moreInfo.price * 0.005)}
+                          {" VNĐ"}
                         </li>
                         <li>
                           <span>Tổng số tiền:</span>
                           {formatCurrency(property.moreInfo.price * 1.05)}
+                          {" VNĐ"}
                         </li>
+
                         <div className="mortgage-btn">
                           <button
                             disabled={property.owners.includes(
                               this.props.user.publicAddress
                             )}
+                            style={{
+                              cursor: property.owners.includes(
+                                this.props.user.publicAddress
+                              )
+                                ? "not-allowed"
+                                : "",
+                            }}
                             onClick={() =>
                               this.props.history.push(
                                 `/create-transaction/${property.transactionHash}`

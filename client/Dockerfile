@@ -9,9 +9,12 @@ COPY package.json ./
 COPY package-lock.json ./
 RUN npm install --silent
 RUN npm install react-scripts@0.9.5 -g --silent
+RUN npm install create-react-app --silent
+#using --silent => only print warn and err
+RUN npm install serve
 
 # add app
 COPY . ./
 
 # start app
-CMD ["npm", "start"]
+CMD ["npm", "run", "app"]

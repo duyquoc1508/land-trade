@@ -5,9 +5,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookie from "../../helper/cookie";
 import ButtonLogin from "../../modules/Login";
-import { initSocket, refreshPage, dispatchEventFromBlockchain } from "./action";
+import {
+  initSocket,
+  refreshPage,
+  dispatchEventFromBlockchain,
+  newNotification,
+} from "./action";
 import formatCurrency from "../../utils/formatCurrency";
-import { dispatchEventFromBlockchain, initSocket, refreshPage } from "./action";
 import Notifications from "./Notifications";
 
 const menus = [
@@ -117,6 +121,7 @@ class Menu extends Component {
       Object.keys(socketEventToAction).map((eventName) => {
         // emit event to
         this.props.socket.on(eventName, (data) => {
+          this.props.newNotification(); // fetch notification
           toast.info(`${data.message}`, {
             position: toast.POSITION.BOTTOM_RIGHT,
             autoClose: false,
@@ -325,6 +330,7 @@ const mapDispatchToProps = (dispatch) => {
     refreshPage: () => dispatch(refreshPage()),
     dispatchEventFromBlockchain: (eventName, txHash) =>
       dispatch(dispatchEventFromBlockchain(eventName, txHash)),
+    newNotification: () => dispatch(newNotification()),
   };
 };
 

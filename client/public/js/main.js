@@ -393,17 +393,29 @@ $(document).ready(function() {
     /*==========Price===========*/
     $("#slider-range_two").slider({
       range: true,
-      min: 0,
-      max: 10000,
-      values: [0, 5600],
-      slide: function(event, ui) {
-        $("#amount_two").val(ui.values[0] + " - $" + ui.values[1]);
-      }
+      min: 100000000,
+      max: 10000000000,
+      values: [0, 3000000000],
+      slide: function (event, ui) {
+        $("#amount_two").val(
+          ui.values[0].toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.") +
+            " - " +
+            ui.values[1].toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.") +
+            " VNĐ"
+        );
+      },
     });
     $(" #amount_two").val(
-      $("#slider-range_two").slider("values", 0) +
-        " - $" +
-        $("#slider-range_two").slider("values", 1)
+      $("#slider-range_two")
+        .slider("values", 0)
+        .toString()
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.") +
+        " - " +
+        $("#slider-range_two")
+          .slider("values", 1)
+          .toString()
+          .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.") +
+        " VNĐ"
     );
     /* -------------------------------------
                  Category menu Activation

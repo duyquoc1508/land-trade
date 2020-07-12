@@ -90,8 +90,12 @@ function Init(props) {
   };
 
   return !saleItem || !props.user ? (
-    <div className="container mt-75"><h4 className="text-center"> Vui lòng đăng nhập để tiếp tục sử dụng tính năng này</h4></div>
-
+    <div className="container mt-75">
+      <h4 className="text-center">
+        {" "}
+        Vui lòng đăng nhập để tiếp tục sử dụng tính năng này
+      </h4>
+    </div>
   ) : (
     <div className="container mt-75">
       <div className="row">
@@ -175,10 +179,6 @@ function Init(props) {
                     </div>
                   </div>
                 </div>
-                <p>
-                  {convertVNDtoETH(depositPrice)}
-                  {" ETH"}
-                </p>
               </div>
               <div className="form-group">
                 <h6>Giá mua</h6>
@@ -200,10 +200,6 @@ function Init(props) {
                     </div>
                   </div>
                 </div>
-                <p>
-                  {convertVNDtoETH(transferPrice)}
-                  {" ETH"}
-                </p>
               </div>
               <div className="form-group">
                 <h6>Thời gian đặt cọc</h6>

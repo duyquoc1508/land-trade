@@ -31,7 +31,8 @@
     "terser": "^3.14.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=8081 && react-scripts start",
+    "app": "npm run build && serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
