@@ -89,8 +89,9 @@ function Init(props) {
     return Promise.all([Promise.all(promises1), Promise.all(promises2)]);
   };
 
-  return !saleItem ? (
-    ""
+  return !saleItem || !props.user ? (
+    <div className="container mt-75"><h4 className="text-center"> Vui lòng đăng nhập để tiếp tục sử dụng tính năng này</h4></div>
+
   ) : (
     <div className="container mt-75">
       <div className="row">

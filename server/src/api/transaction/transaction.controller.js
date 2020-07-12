@@ -78,6 +78,22 @@ export async function getAllTransactions(req, res, next) {
   }
 }
 
+export async function getMostDeals(req, res, next) {
+  try {
+    // db.exhibits.aggregate( [ { $unwind: "$tags" },  { $sortByCount: "$tags" } ] )
+    let transactions = await Transaction.aggregate( [{ $sortByCount: "$idPropertyInBlockchain" }, { $limit: 5 } ] )
+
+    let properties = await Promise.all(transactions.map( idInBlockchain => Certification.findOne({idInBlockchain}) ))
+
+    return res.status(200).json({
+      statusCode: 200,
+      data: properties,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function getMyTransactions(req, res, next) {
   try {
     let transactionP1 = Transaction.find({

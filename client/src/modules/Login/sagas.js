@@ -3,7 +3,7 @@ import { LOGIN_REQUESTING, LOGIN_SUCCESS, LOGIN_ERROR } from "./constants";
 import axios from "axios";
 import Cookie from "../../helper/cookie";
 import Web3 from "web3";
-import io from "socket.io-client";
+// import io from "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js.map";
 
 const handleSignMessage = async (publicAddress, nonce) => {
   try {

@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import { Link, Route } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import io from "socket.io-client";
 import Cookie from "../../helper/cookie";
 import ButtonLogin from "../../modules/Login";
+import { initSocket, refreshPage, dispatchEventFromBlockchain } from "./action";
 import formatCurrency from "../../utils/formatCurrency";
 import { dispatchEventFromBlockchain, initSocket, refreshPage } from "./action";
 import Notifications from "./Notifications";
@@ -25,7 +25,7 @@ const menus = [
   },
   {
     name: "Tra cứu",
-    to: "/search",
+    to: "/investing",
     exact: false,
     role: "all",
   },
@@ -75,7 +75,7 @@ class Menu extends Component {
   componentDidMount() {
     const accessToken = Cookie.getCookie("accessToken");
     if (accessToken) {
-      const socket = io(process.env.REACT_APP_BASE_URL_SOCKET);
+      const socket = window.io(process.env.REACT_APP_BASE_URL_SOCKET);
       socket.emit("user-connected", accessToken);
       this.props.initSocket(socket);
       this.props.refreshPage();
@@ -95,7 +95,7 @@ class Menu extends Component {
     if (!this.props.socket) {
       const accessToken = Cookie.getCookie("accessToken");
       if (accessToken) {
-        const socket = io(process.env.REACT_APP_BASE_URL_SOCKET);
+        const socket = window.io(process.env.REACT_APP_BASE_URL_SOCKET);
         socket.emit("user-connected", accessToken);
         this.props.initSocket(socket);
         this.props.refreshPage();

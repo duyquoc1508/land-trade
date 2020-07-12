@@ -13,7 +13,7 @@ async function asyncForEach(array, callback) {
 export async function uploadCetification(req, res, next) {
   try {
     console.log(req.body);
-    const imagePath = "src/public/uploads/cetification";
+    const imagePath = "public/uploads/cetification";
     const fileUpload = new Resize(imagePath);
     if (!req.file) {
       throw new ErrorHandler(400, "Please provide a file to upload");
@@ -30,7 +30,7 @@ export async function uploadCetification(req, res, next) {
  */
 export async function uploadMultipleImages(req, res, next) {
   try {
-    const imagePath = "src/public/uploads/images";
+    const imagePath = "public/uploads/images";
     const fileUpload = new Resize(imagePath);
     if (!req.files) {
       throw new ErrorHandler(400, "Please provide a file to upload");
@@ -51,7 +51,7 @@ export async function uploadMultipleImages(req, res, next) {
  */
 export async function uploadFile(req, res, next) {
   try {
-    const imagePath = "src/public/uploads/CMND";
+    const imagePath = "public/uploads/CMND";
     const fileUpload = new Resize(imagePath);
     if (!req.files) {
       throw new ErrorHandler(400, "Please provide a file to upload");
