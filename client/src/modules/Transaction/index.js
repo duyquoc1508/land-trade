@@ -22,6 +22,7 @@ import {
 } from "./action";
 
 import InitTransaction from "../InitTransaction";
+import NotFound from "../NotFound";
 
 const Transaction = (props) => {
   // State of transaction
@@ -88,7 +89,9 @@ const Transaction = (props) => {
     }
   }, [props.transaction, props.user]);
 
-  return (
+  return !props.transaction ? (
+    <NotFound />
+  ) : (
     <div className="ml-4 mr-4 mt-75">
       <div className="row">
         <div className="col-md-3">

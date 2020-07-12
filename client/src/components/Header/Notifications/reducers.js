@@ -31,7 +31,6 @@ export default function notificationsReducer(state = initialState, action) {
         notifications: [],
         error: action.payload,
       };
-      return state;
     case READ_NOTIFICATION:
       return { ...state };
     default:

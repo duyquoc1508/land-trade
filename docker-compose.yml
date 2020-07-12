@@ -2,28 +2,29 @@ version: "3.7" # version of docker-compose file
 
 services:
   # ganache-cli: simulated test rpc on dev environment
-  ganache-cli:
-    container_name: ganache-cli
-    image: trufflesuite/ganache-cli:latest
-  db:
-    image: mongo
-    volumes:
-      - "/.docker/data/mongod.conf:/etc/mongod.conf"
-      - "mongo_data:/data/db"
-    ports:
-      - "37017:27017"
-    restart: unless-stopped
+  # ganache-cli:
+  #   container_name: ganache-cli
+  #   image: trufflesuite/ganache-cli:latest
+  # db:
+  #   image: mongo
+  #   volumes:
+  #     - "/.docker/data/mongod.conf:/etc/mongod.conf"
+  #     - "mongo_data:/data/db"
+  #   ports:
+  #     - "37017:27017"
+  #   restart: unless-stopped
   back_end:
     container_name: back_end
+    image: back_end:0.0.1
     build: ./server
     ports:
       - "${PUBLIC_PORT}:${PORT}" # mapping port from physical to container
     # restart: unless-stopped   # auto restart
-    depends_on:
-      # - db
-      - ganache-cli
-    # volumes:
-    # - "./server:/app"
+    # depends_on:
+    # - db
+    # - ganache-cli
+    volumes:
+      - "./server:/app"
     environment:
       PORT: ${PORT}
       NODE_ENV: ${NODE_ENV}
@@ -43,6 +44,7 @@ services:
       DB_NAME: ${DB_NAME}
 
   front_end:
+    image: front_end:0.0.1
     container_name: front_end
     build:
       context: ./client

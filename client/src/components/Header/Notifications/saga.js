@@ -30,7 +30,13 @@ function* fetchNotifications() {
 }
 
 export default function* watchFetchNotifications() {
-  yield takeEvery(FETCH_NOTIFICATIONS_REQUEST, fetchNotifications);
-  yield takeEvery("REFRESH_PAGE", fetchNotifications);
-  yield takeEvery(READ_NOTIFICATION, fetchNotifications);
+  yield takeEvery(
+    [
+      FETCH_NOTIFICATIONS_REQUEST,
+      READ_NOTIFICATION,
+      "REFRESH_PAGE",
+      "NEW_NOTIFICATION",
+    ],
+    fetchNotifications
+  );
 }

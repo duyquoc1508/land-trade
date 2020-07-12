@@ -9,8 +9,6 @@ import { initializeListeners } from "./eventListener/listener";
 import http from "http";
 import { SocketService } from "./socketService";
 
-console.log(`bien moi truong ${process.env}`)
-
 const app = express();
 // Setup socket io for realtime
 const server = http.createServer(app);
@@ -40,7 +38,7 @@ app.use((req, res) => {
   res.status(404).send({ url: req.originalUrl + " not found." });
 });
 
-server.listen(constants.PORT, (err) => {
+server.listen(constants.PORT, err => {
   if (err) {
     throw err;
   } else {
