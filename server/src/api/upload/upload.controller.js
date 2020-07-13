@@ -8,12 +8,11 @@ async function asyncForEach(array, callback) {
 }
 
 /**
- * Upload cetification image (single image)
+ * Upload certification image (single image)
  */
-export async function uploadCetification(req, res, next) {
+export async function uploadCertification(req, res, next) {
   try {
-    console.log(req.body);
-    const imagePath = "public/uploads/cetification";
+    const imagePath = "public/uploads/certification";
     const fileUpload = new Resize(imagePath);
     if (!req.file) {
       throw new ErrorHandler(400, "Please provide a file to upload");
@@ -36,7 +35,7 @@ export async function uploadMultipleImages(req, res, next) {
       throw new ErrorHandler(400, "Please provide a file to upload");
     }
     const arrayImages = [];
-    await asyncForEach(req.files, async (file) => {
+    await asyncForEach(req.files, async file => {
       let filename = await fileUpload.save(file.buffer);
       arrayImages.push(filename);
     });
@@ -57,7 +56,7 @@ export async function uploadFile(req, res, next) {
       throw new ErrorHandler(400, "Please provide a file to upload");
     }
     const arrayImages = [];
-    await asyncForEach(req.files, async (file) => {
+    await asyncForEach(req.files, async file => {
       let filename = await fileUpload.save(file.buffer);
       arrayImages.push(filename);
     });

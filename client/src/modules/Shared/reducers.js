@@ -5,6 +5,7 @@ import {
   GET_COINBASE_BALANCE_FAILURE,
   GET_ETH_PRICE_SUCCESS,
   GET_ETH_PRICE_FAILURE,
+  FETCH_USER_PROFILE_FAILURE,
 } from "./constants";
 
 const initialState = {
@@ -33,9 +34,11 @@ export default function sharedReducers(state = initialState, action) {
       };
     case GET_COINBASE_BALANCE_SUCCESS:
       return { ...state, accountBalance: action.payload };
+
     case INIT_CONTRACT_FAILURE:
     case GET_COINBASE_BALANCE_FAILURE:
     case GET_ETH_PRICE_FAILURE:
+    case FETCH_USER_PROFILE_FAILURE:
       return { ...state, error: action.payload };
     default:
       return state;
