@@ -14,18 +14,18 @@ const fileFillter = (req, file, cb) => {
 
 const upload = multer({
   limits: {
-    fileSize: 5 * 1024 * 1024,
+    fileSize: 5 * 1024 * 1024
   },
-  filefillter: fileFillter,
+  filefillter: fileFillter
 });
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function(req, file, cb) {
     cb(null, "src/public/uploads/CMND/");
   },
-  filename: function (req, file, cb) {
+  filename: function(req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
-  },
+  }
 });
 
 const uploadFile = multer({ storage: storage });
@@ -34,8 +34,8 @@ const routes = Router();
 
 routes.post(
   "/",
-  upload.single("cetification"),
-  uploadController.uploadCetification
+  upload.single("certification"),
+  uploadController.uploadCertification
 );
 
 routes.post(

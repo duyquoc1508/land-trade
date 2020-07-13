@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import MaterialTable from "material-table";
 import getWeb3 from "../../helper/getWeb3";
 import RoleBasedAclContract from "../../contracts/RoleBasedAcl.json";
-import { roleContractAddress } from "../../../config/common-path"
+import { roleContractAddress } from "../../../config/common-path";
 
 export default class Role extends Component {
   constructor(props) {
@@ -15,16 +15,16 @@ export default class Role extends Component {
           field: "publicAddress",
         },
         {
-          title: "Role",
+          title: "Quyền",
           field: "role",
-          lookup: { 0: "Super Admin", 1: "Notary" },
+          lookup: { 0: "Quản trị viên", 1: "Công chứng viên" },
         },
       ],
       data: [],
       web3: null,
       accounts: null,
       contract: null,
-      _isLoading: false
+      _isLoading: false,
     };
     this.role = ["Super Admin", "Notary"];
   }
@@ -39,8 +39,12 @@ export default class Role extends Component {
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = RoleBasedAclContract.networks[networkId];
       if (!deployedNetwork) {
-        alert(`Switch Ether network to ${process.env.REACT_APP_BASE_URL_PROVIDER}`)
-        throw new Error(`Switch Ether network to ${process.env.REACT_APP_BASE_URL_PROVIDER}`);
+        alert(
+          `Switch Ether network to ${process.env.REACT_APP_BASE_URL_PROVIDER}`
+        );
+        throw new Error(
+          `Switch Ether network to ${process.env.REACT_APP_BASE_URL_PROVIDER}`
+        );
       }
       const instance = new web3.eth.Contract(
         RoleBasedAclContract.abi,
@@ -85,6 +89,10 @@ export default class Role extends Component {
     }
   };
 
+  // fetchAllUser = async () => {
+  //   axios.get(`${process.env.REACT_APP_BASE_URL}/user`)
+  // }
+
   fetchData = async () => {
     console.log("index -> fetchData -> fetchData");
     const { contract } = this.state;
@@ -111,15 +119,15 @@ export default class Role extends Component {
     const { publicAddress, role } = newData;
     const { contract, accounts } = this.state;
     try {
-      this.setState({ _isLoading: true })
+      this.setState({ _isLoading: true });
       // add role for address
       contract.methods
         .addRole(publicAddress, role)
         .send({ from: accounts[0] }, (error, _transactionHash) => {
           if (error) {
-            this.setState({ _isLoading: false })
+            this.setState({ _isLoading: false });
           }
-        })
+        });
     } catch (error) {
       alert(error.message);
     }
@@ -129,7 +137,7 @@ export default class Role extends Component {
     const { publicAddress, role } = oldData;
     const { contract, accounts } = this.state;
     try {
-      this.setState({ _isLoading: true })
+      this.setState({ _isLoading: true });
       contract.methods
         .removeRole(publicAddress, role)
         .send({ from: accounts[0] }, (error, _transactionHash) => {
@@ -147,9 +155,10 @@ export default class Role extends Component {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
-      <div className="mt-100 container">
-        <MaterialTable isLoading={this.state._isLoading}
-          title="Role Based RealEstate"
+      <div className="mt-100 container ">
+        <MaterialTable
+          isLoading={this.state._isLoading}
+          title="Phân quyền người dùng"
           columns={this.state.columns}
           options={{
             actionsColumnIndex: -1,

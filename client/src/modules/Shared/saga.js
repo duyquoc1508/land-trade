@@ -1,4 +1,4 @@
-import { takeEvery, call, put, all } from "redux-saga/effects";
+import { takeEvery, call, put, all, select } from "redux-saga/effects";
 import {
   REFRESH_PAGE,
   INIT_CONTRACT_SUCCESS,
@@ -6,6 +6,8 @@ import {
   GET_COINBASE_BALANCE_SUCCESS,
   GET_ETH_PRICE_SUCCESS,
   GET_ETH_PRICE_FAILURE,
+  FETCH_USER_PROFILE_SUCCESS,
+  FETCH_USER_PROFILE_FAILURE,
 } from "./constants";
 import getWeb3 from "../../helper/getWeb3";
 import RealEstateContract from "../../contracts/RealEstate.json";
@@ -69,9 +71,34 @@ function* initContractFlow() {
   }
 }
 
+const fetchUserInfo = async (profile) => {
+  // check user info user change      // verified ?
+  if (profile.publicAddress) {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BASE_URL_API}/users/${profile.publicAddress}`
+    );
+    if (profile.isVerified != response.data.data.isVerified) {
+      localStorage.setItem("user", JSON.stringify(response.data.data));
+    }
+  }
+};
+
+const getProfileInLocal = (state) => state.user.data;
+
+function* checkInfoUserChange() {
+  try {
+    const profile = yield select(getProfileInLocal);
+    yield call(fetchUserInfo, profile);
+    yield put({ type: FETCH_USER_PROFILE_SUCCESS });
+  } catch (error) {
+    yield put({ type: FETCH_USER_PROFILE_FAILURE, payload: error.message });
+  }
+}
+
 export default function* initContractWatcher() {
   yield all([
     takeEvery(REFRESH_PAGE, getEthPriceFlow),
     takeEvery(REFRESH_PAGE, initContractFlow),
+    takeEvery(REFRESH_PAGE, checkInfoUserChange),
   ]);
 }

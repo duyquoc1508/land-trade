@@ -33,7 +33,7 @@ class AddProperty extends Component {
               history: this.props.history,
               txHash: event.transactionHash,
             });
-          }, 500);
+          }, 1000);   // handle case SUCCESS before WAITING => toast could not be updated
 
           // then push to screen this property
         })
