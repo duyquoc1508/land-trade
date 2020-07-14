@@ -36,7 +36,6 @@ export async function getMostDeals(req, res, next) {
       { $sortByCount: "$idPropertyInBlockchain" },
       { $limit: 5 }
     ]);
-    console.log(transactions);
     if (transactions.length === 0) {
       throw new ErrorHandler(404, "Transaction not found");
     }
