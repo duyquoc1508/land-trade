@@ -6,12 +6,12 @@ import { socketService } from "../../index";
 export async function updateCertStatus(event) {
   const update = {
     isConfirmed: true,
-    idInBlockchain: event.returnValues.idCertificate,
+    idInBlockchain: event.returnValues.idCertificate
   };
   const query = {
-    transactionHash: event.transactionHash,
+    transactionHash: event.transactionHash
   };
-  return Certificate.updateOne(query, update);
+  return Certificate.updateOne(query, update, { upsert: true }); // create if not exits
 }
 
 // create notification for all owners of certificate
@@ -19,14 +19,14 @@ export async function createNotification(event) {
   const owners = event.returnValues.owners;
   const data = {
     url: `/my-properties`,
-    message: "Bạn có 1 tài sản mới đang chờ xác nhận.",
+    message: "Bạn có 1 tài sản mới đang chờ xác nhận."
   };
-  const promises = owners.map((owner) => {
+  const promises = owners.map(owner => {
     data.userAddress = owner;
     return Notification.create(data);
   });
   // emit event new certificate for owners
-  owners.forEach((owner) =>
+  owners.forEach(owner =>
     socketService.emitEventToIndividualClient("new_certification", owner, data)
   );
   return promises;
@@ -37,7 +37,7 @@ export async function handleActivateCertificate(event) {
   const query = { idInBlockchain: event.returnValues.idCertificate };
   const update = {
     state: event.returnValues.state,
-    $push: { ownersActivated: event.returnValues.owner },
+    $push: { ownersActivated: event.returnValues.owner }
   };
   return Certificate.updateOne(query, update).then();
 }
