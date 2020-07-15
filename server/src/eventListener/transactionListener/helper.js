@@ -5,6 +5,18 @@ import User from "../../api/user/user.model";
 import { socketService } from "../../index";
 import * as State from "./State";
 import * as socketEvent from "./SocketEvent";
+import nodemailer from "nodemailer";
+
+// send email
+const transporter = nodemailer.createTransport({
+  sevice: "Gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  auth: {
+    user: process.env.USERNAME_EMAIL,
+    pass: process.env.PASSWORD_EMAIL
+  }
+});
 
 // cancel state map to state in smart contract because state in smart contract return is interger
 const cancelStateDetails = {
@@ -12,7 +24,7 @@ const cancelStateDetails = {
   "2": "DEPOSIT_CANCELED_BY_SELLER",
   "4": "DEPOSIT_BROKEN_BY_BUYER",
   "5": "DEPOSIT_BROKEN_BY_SELLER",
-  "7": "TRANSFER_CANCELED_BY_SELLER",
+  "7": "TRANSFER_CANCELED_BY_SELLER"
 };
 
 // handle transaction created (DEPOSIT_REQUEST) // caller by buyer
@@ -28,27 +40,36 @@ export async function handleTransactionCreated(event) {
       timeStart: event.returnValues.timeStart * 1000,
       timeEnd: event.returnValues.timeEnd * 1000,
       idInBlockchain: event.returnValues.idTransaction,
-      transactionHash: event.transactionHash,
+      transactionHash: event.transactionHash
     };
     Transaction.create(transaction);
-    const data = {
+    let data = {
       url: `/transaction/${event.transactionHash}`,
-      message: "Bạn nhận được một lời đề nghị mua nhà.",
+      message: "Bạn nhận được một lời đề nghị mua nhà"
     };
     // notification
-    const { sellers, buyers } = event.returnValues;
-    sellers.map((seller) => {
+    const { sellers } = event.returnValues;
+    sellers.map(seller => {
       data.userAddress = seller;
       return Notification.create(data);
     });
-    // emit event DEPOSIT_REQUEST for sellers
-    sellers.forEach((seller) => {
+    // emit event DEPOSIT_REQUEST to sellers
+    sellers.forEach(seller => {
       socketService.emitEventToIndividualClient(
         socketEvent.NEW_TRANSACTION,
         seller,
         data
       );
     });
+    // send email for seller
+    const sellerInfo = await User.findOne({ publicAddress: sellers[0] });
+    sellerInfo.email &&
+      transporter.sendMail({
+        from: "landtrade.cskh@gmail.com",
+        to: sellerInfo.email,
+        subject: data.message,
+        html: `<h3>${data.message}</h3><p>Xem chi tiết giao dịch <a href="${process.env.REACT_APP_BASE_URL}${data.url}">tại đây</a>.</p>`
+      });
   } catch (error) {
     console.log(error);
   }
@@ -62,27 +83,27 @@ export async function handleTransactionAccepted(event) {
       { idInBlockchain: event.returnValues.idTransaction },
       {
         depositConfirmed: { txHash: event.transactionHash, time: new Date() },
-        state: State.DEPOSIT_CONFIRMED,
+        state: State.DEPOSIT_CONFIRMED
       }
     );
     // set state is ACTIVATED // require using await here
     await Certification.updateOne(
       { idInBlockchain: transaction.idPropertyInBlockchain },
       {
-        state: 3,
+        state: 3
       }
     );
     // notification
-    const data = {
+    let data = {
       url: `/transaction/${transaction.transactionHash}`,
-      message: "Bạn có một giao dịch được chấp nhận.",
+      message: "Bạn có một giao dịch được chấp nhận"
     };
-    transaction.buyers.map((seller) => {
-      data.userAddress = seller;
+    transaction.buyers.map(buyer => {
+      data.userAddress = buyer;
       return Notification.create(data);
     });
     // emit event DEPOSIT_CONFIRMED to buyers
-    transaction.buyers.forEach((buyer) => {
+    transaction.buyers.forEach(buyer => {
       socketService.emitEventToIndividualClient(
         socketEvent.DEPOSIT_CONFIRMED,
         buyer,
@@ -94,6 +115,17 @@ export async function handleTransactionAccepted(event) {
       transaction.sellers[0], // send to sender
       { event: socketEvent.DEPOSIT_CONFIRMED, txHash: event.transactionHash }
     );
+    //send email for buyer transaction accecpt
+    const buyerInfo = await User.findOne({
+      publicAddress: transaction.buyers[0]
+    });
+    buyerInfo.email &&
+      transporter.sendMail({
+        from: "landtrade.cskh@gmail.com",
+        to: buyerInfo.email,
+        subject: data.message,
+        html: `<h3>${data.message}.</h3><p>Hãy tiến hành thanh toán số tiền còn lại để hoàn tất việc mua tài sản.</p><p>Xem chi tiết giao dịch <a href="${process.env.REACT_APP_BASE_URL}${data.url}">tại đây</a>.</p>`
+      });
   } catch (error) {
     console.log(error);
   }
@@ -106,20 +138,20 @@ export async function handleTransactionPayment(event) {
       { idInBlockchain: event.returnValues.idTransaction },
       {
         payment: { txHash: event.transactionHash, time: new Date() },
-        state: State.PAYMENT_REQUEST,
+        state: State.PAYMENT_REQUEST
       }
     );
     // notification
-    const data = {
+    let data = {
       url: `/transaction/${transaction.transactionHash}`,
-      message: "Bạn có một giao dịch đã được thanh toán.",
+      message: "Bạn có một giao dịch đã được thanh toán"
     };
-    transaction.sellers.map((seller) => {
+    transaction.sellers.map(seller => {
       data.userAddress = seller;
       return Notification.create(data);
     });
     // emit event PAYMENT_REQUEST for owners
-    transaction.sellers.forEach((seller) => {
+    transaction.sellers.forEach(seller => {
       socketService.emitEventToIndividualClient(
         socketEvent.PAYMENT_REQUEST,
         seller,
@@ -131,6 +163,17 @@ export async function handleTransactionPayment(event) {
       transaction.buyers[0], // send to sender
       { event: socketEvent.PAYMENT_REQUEST, txHash: event.transactionHash }
     );
+    //send email for seller transaction paid
+    const sellerInfo = await User.findOne({
+      publicAddress: transaction.sellers[0]
+    });
+    sellerInfo.email &&
+      transporter.sendMail({
+        from: "landtrade.cskh@gmail.com",
+        to: sellerInfo.email,
+        subject: data.message,
+        html: `<h3>${data.message}.</h3><p>Hãy xác nhận giao dịch để nhận số tiền còn lại và hoàn tất thủ tục bán tài sản.</p><p>Xem chi tiết giao dịch <a href="${process.env.REACT_APP_BASE_URL}${data.url}">tại đây</a>.</p>`
+      });
   } catch (error) {
     console.log(error);
   }
@@ -144,7 +187,7 @@ export async function handleTransactionConfirmed(event) {
       { idInBlockchain: event.returnValues.idTransaction },
       {
         paymentConfirmed: { txHash: event.transactionHash, time: new Date() },
-        state: State.PAYMENT_CONFIRMED,
+        state: State.PAYMENT_CONFIRMED
       }
     );
     const { buyers, sellers } = transaction;
@@ -155,14 +198,14 @@ export async function handleTransactionConfirmed(event) {
     );
     const idCertificate = certificate._id;
     // remove idCertificate in propertied field of seller in user collection
-    const p1 = buyers.map(async (publicAddress) => {
+    const p1 = buyers.map(async publicAddress => {
       await User.updateOne(
         { publicAddress: publicAddress },
         { $push: { properties: idCertificate } }
       );
     });
     // push idCertificate in properties field of buyer in user collection
-    const p2 = sellers.map(async (publicAddress) => {
+    const p2 = sellers.map(async publicAddress => {
       await User.updateOne(
         { publicAddress: publicAddress },
         { $pull: { properties: idCertificate } }
@@ -170,16 +213,16 @@ export async function handleTransactionConfirmed(event) {
     });
     Promise.all([Promise.all(p1), Promise.all(p2)]);
     // notifications
-    const data = {
+    let data = {
       url: `/transaction/${transaction.transactionHash}`,
-      message: "Bạn có một giao dịch đã được xác nhận.",
+      message: "Bạn có một giao dịch đã được xác nhận"
     };
-    buyers.map((buyer) => {
+    buyers.map(buyer => {
       data.userAddress = buyer;
       return Notification.create(data);
     });
     // emit event PAYMENT_CONFIRMED for owners
-    buyers.forEach((buyer) => {
+    buyers.forEach(buyer => {
       socketService.emitEventToIndividualClient(
         socketEvent.PAYMENT_CONFIRMED,
         buyer,
@@ -191,6 +234,16 @@ export async function handleTransactionConfirmed(event) {
       transaction.sellers[0], // send to sender
       { event: socketEvent.PAYMENT_CONFIRMED, txHash: event.transactionHash }
     );
+    const buyerInfo = await User.findOne({
+      publicAddress: transaction.buyers[0]
+    });
+    buyerInfo.email &&
+      transporter.sendMail({
+        from: "landtrade.cskh@gmail.com",
+        to: buyerInfo.email,
+        subject: data.message,
+        html: `<h3>${data.message}.</h3><p>Xem chi tiết giao dịch <a href="${process.env.REACT_APP_BASE_URL}${data.url}">tại đây</a>.</p>`
+      });
   } catch (error) {
     console.log(error);
   }
@@ -206,9 +259,9 @@ export async function handleTransactionCanceled(event) {
         transactionCanceled: {
           txHash: event.transactionHash,
           time: new Date(),
-          reason: cancelStateDetails[event.returnValues.state], // event.returnValue.state type "0"
+          reason: cancelStateDetails[event.returnValues.state] // event.returnValue.state type "0"
         },
-        state: State.CANCELED,
+        state: State.CANCELED
       }
     );
     // update state of certificate  // require using await here
@@ -216,30 +269,51 @@ export async function handleTransactionCanceled(event) {
       { idInBlockchain: transaction.idPropertyInBlockchain },
       { state: 2 }
     );
-    const data = {
+    let data = {
       url: `/transaction/${transaction.transactionHash}`,
-      message: "Bạn có một giao dịch bị hủy.",
+      message: "Bạn có một giao dịch bị hủy"
     };
     // if transaction canceled by buyer
     if (cancelStateDetails[event.returnValues.state].includes("BY_BUYER")) {
-      transaction.sellers.forEach((seller) => {
+      // send event and notification to seller
+      transaction.sellers.map(seller => {
+        data.userAddress = seller;
+        return Notification.create(data);
+      });
+      transaction.sellers.forEach(seller => {
         socketService.emitEventToIndividualClient(
           socketEvent.TRANSACTION_CANCELED,
           seller,
           data
         );
       });
+      // handler delete success in blockchain
       socketService.emitEventToIndividualClient(
         socketEvent.TRANSACTION_CHANGE_STATE,
         transaction.buyers[0], // send to sender
         {
           event: socketEvent.TRANSACTION_CANCELED,
-          txHash: event.transactionHash,
+          txHash: event.transactionHash
         }
       );
+      // send mail for seller transaction cancel by buyer
+      const sellerInfo = await User.findOne({
+        publicAddress: transaction.sellers[0]
+      });
+      sellerInfo.email &&
+        transporter.sendMail({
+          from: "landtrade.cskh@gmail.com",
+          to: sellerInfo.email,
+          subject: data.message,
+          html: `<h3>${data.message}.</h3><p>Xem chi tiết giao dịch <a href="${process.env.REACT_APP_BASE_URL}${data.url}">tại đây</a>.</p>`
+        });
     } else {
+      transaction.buyers.map(buyer => {
+        data.userAddress = buyer;
+        return Notification.create(data);
+      });
       // transaction canceled buy seller
-      transaction.buyers.forEach((buyer) => {
+      transaction.buyers.forEach(buyer => {
         socketService.emitEventToIndividualClient(
           socketEvent.PAYMENT_CONFIRMED,
           buyer,
@@ -251,6 +325,17 @@ export async function handleTransactionCanceled(event) {
         transaction.sellers[0], // send to sender
         { event: socketEvent.PAYMENT_CONFIRMED, txHash: event.transactionHash }
       );
+      // send mail for seller transaction cancel by buyer
+      const buyerInfo = await User.findOne({
+        publicAddress: transaction.buyers[0]
+      });
+      buyerInfo.email &&
+        transporter.sendMail({
+          from: "landtrade.cskh@gmail.com",
+          to: buyerInfo.email,
+          subject: data.message,
+          html: `<h3>${data.message}.</h3><p>Xem chi tiết giao dịch <a href="${process.env.REACT_APP_BASE_URL}${data.url}">tại đây</a>.</p>`
+        });
     }
   } catch (error) {
     console.log(error);

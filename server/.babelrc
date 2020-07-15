@@ -1,21 +1,11 @@
 {
-  "presets": [
-    // "@babel/preset-env",
-    [
-      "env",
-      {
-        "targets": {
-          "node": "current"
-        }
-      }
-    ]
-  ],
-  "plugins": [
-    [
-      "transform-object-rest-spread",
-      {
-        "useBuiltIns": true
-      }
-    ]
-  ]
+  "presets": ["@babel/preset-env"]
+  // "plugins": [
+  //   [
+  //     "@babel/plugin-transform-spread",
+  //     {
+  //       "loose": true
+  //     }
+  //   ]
+  // ]
 }

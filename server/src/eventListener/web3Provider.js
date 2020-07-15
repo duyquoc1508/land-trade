@@ -12,11 +12,9 @@ web3.eth.net
     console.log(`--
 Connected to provider`)
   )
-  .catch((e) =>
+  .catch(e =>
     console.log(`--
 Can't connect to provider: ${process.env.WEBSOCKET_PROVIDER}`)
   );
 
-module.exports = {
-  web3,
-};
+export default web3;

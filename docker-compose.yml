@@ -5,6 +5,8 @@ services:
   # ganache-cli:
   #   container_name: ganache-cli
   #   image: trufflesuite/ganache-cli:latest
+  #   ports:
+  #     - "7545:8545"
   # db:
   #   image: mongo
   #   volumes:
@@ -19,10 +21,10 @@ services:
     build: ./server
     ports:
       - "${PUBLIC_PORT}:${PORT}" # mapping port from physical to container
-    # restart: unless-stopped   # auto restart
+    restart: unless-stopped # auto restart
     # depends_on:
-    # - db
-    # - ganache-cli
+    #   - db
+    #   - ganache-cli
     volumes:
       - "./server:/app"
     environment:
@@ -42,6 +44,7 @@ services:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_NAME: ${DB_NAME}
+    # env_file: ./.env
 
   front_end:
     image: front_end:0.0.1
@@ -66,8 +69,7 @@ services:
       - "./client:/app"
     environment:
       PORT: ${REACT_APP_PORT}
-
-    env_file: ./.env
+    # env_file: ./.env
     #   REACT_APP_BASE_URL_API: ${REACT_APP_BASE_URL_API}
     #   REACT_APP_PORT: ${REACT_APP_PORT}
     #   REACT_APP_BASE_URL: ${REACT_APP_BASE_URL}
