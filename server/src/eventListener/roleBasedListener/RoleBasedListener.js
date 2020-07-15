@@ -1,4 +1,4 @@
-import { web3 } from "../web3Provider";
+import web3 from "../web3Provider";
 import RoleBasedAclContract from "../../contracts/RoleBasedAcl.json";
 import RoleBasedAclEvent from "./Event";
 import * as helper from "./helper";
@@ -13,7 +13,7 @@ const instanceContract = new web3.eth.Contract(
 export function roleBasedListener() {
   instanceContract.events
     .allEvents()
-    .on("data", (event) => {
+    .on("data", event => {
       console.log(`=========== Event: ${event.event} ===========`);
       return handleEvent(event);
     })

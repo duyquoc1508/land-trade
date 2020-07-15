@@ -32,7 +32,7 @@
   },
   "scripts": {
     "start": "set PORT=8081 && react-scripts start",
-    "app": "npm run build && serve -s build",
+    "app": "serve -s build -l 8081",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

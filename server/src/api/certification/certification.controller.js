@@ -1,6 +1,7 @@
 import Certification from "./certification.model";
 import User from "../user/user.model";
 import { ErrorHandler } from "../../helper/error";
+import { NEW_TRANSACTION } from "../../eventListener/transactionListener/SocketEvent";
 
 const checkResourceOwner = (listOwner, currentUser) => {
   if (!listOwner.includes(currentUser.publicAddress))
@@ -62,23 +63,20 @@ export async function createCertification(req, res, next) {
     // người chứng nhận
     const notary = req.user._id;
     const newCertification = {
-      // transactionHash,
+      transactionHash,
       owners,
       notary,
       title,
       properties,
       images
     };
-    const certification = await Certification.findOneAndUpdate(
-      { transactionHash },
-      newCertification,
-      { upsert: true } // create if not exists
-    );
+    const certification = await Certification.create(newCertification);
     // add idCertification for owners
     await User.updateMany(
       { publicAddress: { $in: owners } },
       { $push: { properties: certification._id } }
     ).lean();
+
     return res.status(201).json({ statusCode: 201, data: certification });
   } catch (error) {
     next(error);

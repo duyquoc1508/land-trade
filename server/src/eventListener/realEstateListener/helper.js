@@ -11,7 +11,9 @@ export async function updateCertStatus(event) {
   const query = {
     transactionHash: event.transactionHash
   };
-  return Certificate.updateOne(query, update, { upsert: true }); // create if not exits
+  return setTimeout(async () => {
+    await Certificate.updateOne(query, update);
+  }, 1000); // delay wait for certificate created before update
 }
 
 // create notification for all owners of certificate
