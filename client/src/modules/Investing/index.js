@@ -7,6 +7,16 @@ import DialogActions from "@material-ui/core/DialogActions";
 
 import axios from "axios";
 import formatDate from "../../utils/formatDate";
+import { convertWeiToVND } from "../../utils/convertCurrency";
+import formatCurrency from "../../utils/formatCurrency";
+
+const state = {
+  DEPOSIT_REQUEST: "Đang đặt cọc",
+  DEPOSIT_CONFIRMED: "Đã đặt cọc",
+  PAYMENT_REQUEST: "Đang thanh toán",
+  PAYMENT_CONFIRMED: "Giao dich thành công",
+  CANCELED: "Đã hủy",
+};
 
 export default class Investing extends Component {
   constructor(props) {
@@ -22,22 +32,54 @@ export default class Investing extends Component {
           field: "hash",
         },
         {
+          title: "Giá trị giao dịch",
+          field: "transferPrice",
+        },
+        {
           title: "Người bán",
           field: "seller",
         },
         {
-          title: "Ngày Kết thúc",
+          title: "Ngày mua",
           field: "buyer",
         },
         {
           title: "Trạng Thái",
           field: "state",
-          lookup: {
-            DEPOSIT_REQUEST: "Giao dịch đang diễn ra",
-            DEPOSIT_CONFIRMED: "Giao dịch đang diễn ra",
-            PAYMENT_REQUEST: "Giao dịch đang diễn ra",
-            PAYMENT_CONFIRMED: "Giao dịch thành công",
-            CANCELED: "Đã hủy",
+          render: (rowData) => {
+            switch (rowData.state) {
+              case "CANCELED":
+                return (
+                  <span
+                    style={{
+                      color: "red",
+                    }}
+                  >
+                    <i class="far fa-times-circle"></i> {state[rowData.state]}
+                  </span>
+                );
+              case "PAYMENT_CONFIRMED":
+                return (
+                  <span
+                    style={{
+                      color: "green",
+                    }}
+                  >
+                    <i class="fas fa-clipboard-check"></i>{" "}
+                    {state[rowData.state]}
+                  </span>
+                );
+              default:
+                return (
+                  <span
+                    style={{
+                      color: "orange",
+                    }}
+                  >
+                    <i class="fas fa-spinner"></i> {state[rowData.state]}
+                  </span>
+                );
+            }
           },
         },
       ],
@@ -83,6 +125,9 @@ export default class Investing extends Component {
         title: properties.find(
           (item) => item.idInBlockchain == transaction.idPropertyInBlockchain
         ).properties.landLot.address,
+        transferPrice: `${formatCurrency(
+          convertWeiToVND(transaction.transferPrice)
+        )} VNĐ`,
         seller: publicAddressToName[transaction.sellers[0]],
         buyer: publicAddressToName[transaction.buyers[0]],
         state: transaction.state,

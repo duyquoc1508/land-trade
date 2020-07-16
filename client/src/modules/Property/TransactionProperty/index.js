@@ -7,6 +7,16 @@ import DialogActions from "@material-ui/core/DialogActions";
 
 import axios from "axios";
 import formatDate from "../../../utils/formatDate";
+import { convertWeiToVND } from "../../../utils/convertCurrency";
+import formatCurrency from "../../../utils/formatCurrency";
+
+const state = {
+  DEPOSIT_REQUEST: "Đang đặt cọc",
+  DEPOSIT_CONFIRMED: "Đã đặt cọc",
+  PAYMENT_REQUEST: "Đang thanh toán",
+  PAYMENT_CONFIRMED: "Giao dich thành công",
+  CANCELED: "Đã hủy",
+};
 
 export default class TransactionProperty extends Component {
   constructor(props) {
@@ -18,8 +28,8 @@ export default class TransactionProperty extends Component {
           field: "title",
         },
         {
-          title: "Ngày bắt đầu",
-          field: "timeStart",
+          title: "Giá trị giao dịch",
+          field: "transferPrice",
         },
         {
           title: "Ngày Kết thúc",
@@ -28,12 +38,40 @@ export default class TransactionProperty extends Component {
         {
           title: "Trạng Thái",
           field: "state",
-          lookup: {
-            DEPOSIT_REQUEST: "Giao dịch đang diễn ra",
-            DEPOSIT_CONFIRMED: "Giao dịch đang diễn ra",
-            PAYMENT_REQUEST: "Giao dịch đang diễn ra",
-            PAYMENT_CONFIRMED: "Giao dịch thành công",
-            CANCELED: "Đã hủy",
+          render: (rowData) => {
+            switch (rowData.state) {
+              case "CANCELED":
+                return (
+                  <span
+                    style={{
+                      color: "red",
+                    }}
+                  >
+                    <i class="far fa-times-circle"></i> {state[rowData.state]}
+                  </span>
+                );
+              case "PAYMENT_CONFIRMED":
+                return (
+                  <span
+                    style={{
+                      color: "green",
+                    }}
+                  >
+                    <i class="fas fa-clipboard-check"></i>{" "}
+                    {state[rowData.state]}
+                  </span>
+                );
+              default:
+                return (
+                  <span
+                    style={{
+                      color: "orange",
+                    }}
+                  >
+                    <i class="fas fa-spinner"></i> {state[rowData.state]}
+                  </span>
+                );
+            }
           },
         },
       ],
@@ -66,7 +104,9 @@ export default class TransactionProperty extends Component {
       let data = transaction.map((transaction) => ({
         hash: transaction.transactionHash,
         title: property.properties.landLot.address,
-        timeStart: formatDate(transaction.timeStart),
+        transferPrice: `${formatCurrency(
+          convertWeiToVND(transaction.transferPrice)
+        )} VNĐ`,
         timeEnd: formatDate(transaction.timeEnd),
         state: transaction.state,
       }));

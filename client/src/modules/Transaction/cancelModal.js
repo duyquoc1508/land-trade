@@ -126,7 +126,7 @@ const CancelTransaction = (props) => {
 
   return (
     <div>
-      {props.checkExpired ? (
+      {props.checkExpired && (
         <div>
           <div className="text-center">
             <h5>Giao dịch đã hết hạn</h5>
@@ -142,15 +142,54 @@ const CancelTransaction = (props) => {
             <i className="ion-ios-search"></i> Tra cứu giao dịch tại đây
           </button>
         </div>
-      ) : (
-        ["CANCELED", "PAYMENT_CONFIRMED"].includes(props.transaction.state) || (
+      )}
+
+      {!props.checkExpired &&
+        !["CANCELED", "PAYMENT_CONFIRMED"].includes(
+          props.transaction.state
+        ) && (
           <button
             className="btn v3 float-right mt-5 "
             onClick={handleClickOpen}
           >
             <i className="ion-android-cancel"></i> Hủy giao dịch
           </button>
-        )
+        )}
+
+      {props.transaction.state === "CANCELED" && (
+        <div>
+          <div className="text-center">
+            <h5>Giao dịch đã hủy</h5>
+          </div>
+          <button
+            className="btn v3 float-right mt-5 "
+            onClick={() =>
+              props.history.push(
+                `/transaction-detail/${props.transaction.transactionHash}`
+              )
+            }
+          >
+            <i className="ion-ios-search"></i> Tra cứu giao dịch tại đây
+          </button>
+        </div>
+      )}
+
+      {props.transaction.state === "PAYMENT_CONFIRMED" && (
+        <div>
+          <div className="text-center">
+            <h5>Giao dịch đã thành công </h5>
+          </div>
+          <button
+            className="btn v3 float-right mt-5 "
+            onClick={() =>
+              props.history.push(
+                `/transaction-detail/${props.transaction.transactionHash}`
+              )
+            }
+          >
+            <i className="ion-ios-search"></i> Tra cứu giao dịch tại đây
+          </button>
+        </div>
       )}
 
       <Dialog
