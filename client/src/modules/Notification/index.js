@@ -72,9 +72,11 @@ class Notification extends Component {
                       }}
                     >
                       <div className="au-message__item-text">
-                        <h5 className="name">Sarah Conor</h5>
+                        <h5 className="name" style={{ fontSize: "15px" }}>
+                          {notification.message}
+                        </h5>
 
-                        <p>{notification.message}</p>
+                        {/* <p>{notification.message}</p> */}
                       </div>
                       <div className="au-message__item-time">
                         <span>{formatDate(notification.createdAt)}</span>

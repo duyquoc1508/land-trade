@@ -1,6 +1,7 @@
 import Certification from "./certification.model";
 import User from "../user/user.model";
 import { ErrorHandler } from "../../helper/error";
+import { NEW_TRANSACTION } from "../../eventListener/transactionListener/SocketEvent";
 
 const checkResourceOwner = (listOwner, currentUser) => {
   if (!listOwner.includes(currentUser.publicAddress))
@@ -14,7 +15,7 @@ const checkResourceOwner = (listOwner, currentUser) => {
 export async function getCertificationWithTxHash(req, res, next) {
   try {
     const certification = await Certification.findOne({
-      transactionHash: req.params.txHash,
+      transactionHash: req.params.txHash
     }).lean();
     if (!certification) {
       throw new ErrorHandler(404, "Certification not found");
@@ -29,7 +30,7 @@ export async function getCertificationWithTxHash(req, res, next) {
 export async function getCertificationWithIdInBlockchain(req, res, next) {
   try {
     const certification = await Certification.findOne({
-      idInBlockchain: req.params.idInBlockchain,
+      idInBlockchain: req.params.idInBlockchain
     }).lean();
     if (!certification) {
       throw new ErrorHandler(404, "Certification not found");
@@ -67,7 +68,7 @@ export async function createCertification(req, res, next) {
       notary,
       title,
       properties,
-      images,
+      images
     };
     const certification = await Certification.create(newCertification);
     // add idCertification for owners
@@ -75,6 +76,7 @@ export async function createCertification(req, res, next) {
       { publicAddress: { $in: owners } },
       { $push: { properties: certification._id } }
     ).lean();
+
     return res.status(201).json({ statusCode: 201, data: certification });
   } catch (error) {
     next(error);
@@ -97,7 +99,7 @@ export async function updateCertification(req, res, next) {
       req.params.idCertification,
       newCertification,
       {
-        new: true,
+        new: true
       }
     );
     return res
@@ -132,7 +134,7 @@ export async function deleteCertification(req, res, next) {
 export async function editCertification(req, res, next) {
   try {
     var certification = await Certification.findOne({
-      transactionHash: req.params.txHash,
+      transactionHash: req.params.txHash
     }).lean();
     console.log(req.params.txHash);
     const { publicAddress } = req.user;
@@ -152,7 +154,7 @@ export async function editCertification(req, res, next) {
       price,
       galleries,
       utilities,
-      title,
+      title
     } = req.body;
     let query = {
       moreInfo: {
@@ -163,8 +165,8 @@ export async function editCertification(req, res, next) {
         price,
         galleries,
         utilities,
-        title,
-      },
+        title
+      }
     };
     const a = await Certification.updateOne(
       { transactionHash: req.params.txHash },
@@ -285,7 +287,7 @@ export async function cancelSale(req, res, next) {
 export async function getAllActivatedCertificates(_req, res, next) {
   try {
     const listActivatedCertificates = await Certification.find({
-      state: { $gt: 0 },
+      state: { $gt: 0 }
     }).lean();
     if (listActivatedCertificates.length === 0)
       throw new ErrorHandler(404, "There are not properties activated");
@@ -315,7 +317,7 @@ export async function getAllPropertiesOfUser(_req, res, next) {
     // console.log(_req.user.publicAddress);
     const listPropertiesUser = await Certification.find({
       // owners: "0x300a85b19541Eb9C5c31CA5d203143a742267582"
-      owners: _req.user.publicAddress.toString(),
+      owners: _req.user.publicAddress.toString()
     }).lean();
     console.log(listPropertiesUser);
     if (listPropertiesUser.length === 0)
@@ -335,7 +337,7 @@ export async function getOwnersInfoOfCertificate(req, res, next) {
       .lean();
     let ownersInfo = [];
     if (certificate) {
-      const p1 = certificate.owners.map((publicAddress) =>
+      const p1 = certificate.owners.map(publicAddress =>
         User.findOne({ publicAddress })
       );
       ownersInfo = await Promise.all(p1);

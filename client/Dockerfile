@@ -8,13 +8,13 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install --silent
-RUN npm install react-scripts@0.9.5 -g --silent
-RUN npm install create-react-app --silent
 #using --silent => only print warn and err
-RUN npm install serve
+RUN npm install -g serve
 
 # add app
 COPY . ./
 
-# start app
+RUN npm run build
+
+# start app => build + start
 CMD ["npm", "run", "app"]
