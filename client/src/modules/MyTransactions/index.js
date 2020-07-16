@@ -1,13 +1,19 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
 
 import axios from "axios";
 import Cookie from "../../helper/cookie";
 import formatDate from "../../utils/formatDate";
+import { convertWeiToVND } from "../../utils/convertCurrency";
+import formatCurrency from "../../utils/formatCurrency";
+
+const state = {
+  DEPOSIT_REQUEST: "Đang đặt cọc",
+  DEPOSIT_CONFIRMED: "Đã đặt cọc",
+  PAYMENT_REQUEST: "Đang thanh toán",
+  PAYMENT_CONFIRMED: "Giao dich thành công",
+  CANCELED: "Đã hủy",
+};
 
 export default class MyTransactons extends Component {
   constructor(props) {
@@ -19,8 +25,8 @@ export default class MyTransactons extends Component {
           field: "title",
         },
         {
-          title: "Ngày bắt đầu",
-          field: "timeStart",
+          title: "Giá trị giao dịch",
+          field: "transferPrice",
         },
         {
           title: "Ngày Kết thúc",
@@ -29,16 +35,59 @@ export default class MyTransactons extends Component {
         {
           title: "Loại giao dịch",
           field: "transactionType",
+          render: (rowData) => (
+            <span
+              style={{
+                backgroundColor: `${
+                  rowData.transactionType === "Mua" ? "green" : "orange"
+                }`,
+                color: "white",
+                padding: "5px 10px",
+                width: "100px",
+                textAlign: "center",
+              }}
+            >
+              {rowData.transactionType}
+            </span>
+          ),
         },
         {
           title: "Trạng Thái",
           field: "state",
-          lookup: {
-            DEPOSIT_REQUEST: "Đang đặt cọc",
-            DEPOSIT_CONFIRMED: "Đã đặt cọc",
-            PAYMENT_REQUEST: "Đang thanh toán",
-            PAYMENT_CONFIRMED: "Giao dich thành công",
-            CANCELED: "Đã hủy",
+          render: (rowData) => {
+            switch (rowData.state) {
+              case "CANCELED":
+                return (
+                  <span
+                    style={{
+                      color: "red",
+                    }}
+                  >
+                    <i class="far fa-times-circle"></i> {state[rowData.state]}
+                  </span>
+                );
+              case "PAYMENT_CONFIRMED":
+                return (
+                  <span
+                    style={{
+                      color: "green",
+                    }}
+                  >
+                    <i class="fas fa-clipboard-check"></i>{" "}
+                    {state[rowData.state]}
+                  </span>
+                );
+              default:
+                return (
+                  <span
+                    style={{
+                      color: "orange",
+                    }}
+                  >
+                    <i class="fas fa-spinner"></i> {state[rowData.state]}
+                  </span>
+                );
+            }
           },
         },
       ],
@@ -72,7 +121,9 @@ export default class MyTransactons extends Component {
         title: properties.find(
           (item) => item.idInBlockchain == transaction.idPropertyInBlockchain
         ).properties.landLot.address,
-        timeStart: formatDate(transaction.timeStart),
+        transferPrice: `${formatCurrency(
+          convertWeiToVND(transaction.transferPrice)
+        )} VNĐ`,
         timeEnd: formatDate(transaction.timeEnd),
         transactionType: "Mua",
         state: transaction.state,
@@ -82,7 +133,9 @@ export default class MyTransactons extends Component {
         title: properties.find(
           (item) => item.idInBlockchain == transaction.idPropertyInBlockchain
         ).properties.landLot.address,
-        timeStart: formatDate(transaction.timeStart),
+        transferPrice: `${formatCurrency(
+          convertWeiToVND(transaction.transferPrice)
+        )} VNĐ`,
         timeEnd: formatDate(transaction.timeEnd),
         transactionType: "Bán",
         state: transaction.state,
