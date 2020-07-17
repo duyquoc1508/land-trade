@@ -33,7 +33,9 @@
   "scripts": {
     "start": "set PORT=8081 && react-scripts start",
     "app": "serve -s build -l 8081",
+    "build:prod": "set \"GENERATE_SOURCEMAP=false\" && npm run build",
     "build": "react-scripts build",
+    "postbuild": "rimraf build/**/*.map",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
