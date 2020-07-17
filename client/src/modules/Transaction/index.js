@@ -11,6 +11,7 @@ import SellerPayment from "./seller/payment";
 
 import CancelModal from "./cancelModal";
 import StepOne from "./seller/step1";
+import Canceled from "./canceled";
 
 import {
   fetchTransactionRequest,
@@ -331,6 +332,8 @@ const Transaction = (props) => {
                 (steps === 2 && <BuyerAcceptTransaction />) ||
                 (steps === 3 && <SellerPayment />) ||
                 (steps === 4 && <BuyerConfirmTransaction />)}
+
+            {props.transaction.state === "CANCELED" && <Canceled />}
           </div>
         </div>
       </div>

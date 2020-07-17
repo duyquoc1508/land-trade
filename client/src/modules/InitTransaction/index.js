@@ -7,6 +7,59 @@ import axios from "axios";
 import Cookie from "../../helper/cookie";
 import { Link } from "react-router-dom";
 import Steps from "./steps";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import MuiDialogContent from "@material-ui/core/DialogContent";
+import MuiDialogActions from "@material-ui/core/DialogActions";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          className={classes.closeButton}
+          onClick={onClose}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
+
+const DialogActions = withStyles((theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1),
+  },
+}))(MuiDialogActions);
 
 function Init(props) {
   const [depositPrice, setDepositPrice] = useState("");
@@ -15,6 +68,14 @@ function Init(props) {
   const [saleItem, setSaleItem] = useState(props.saleItem);
   const [buyers, setBuyers] = useState([]);
   const [sellers, setSellers] = useState([]);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     // listen event TransactionCreated from blockchain and emit event INIT_TRANSACTION_SUCCESS
@@ -265,32 +326,59 @@ function Init(props) {
               </ul>
             </div>
           </div>
-          {/* notice */}
-          <div style={{ color: "red", fontWeight: "bold" }}>
-            Khi bạn xác nhận tạo giao dịch này, tài khoản của bạn sẽ bị trừ đi{" "}
-            {convertVNDtoETH(depositPrice)}
-            ETH. Bạn có thể hủy giao dịch và nhận lại tiền bất cứ khi nào người
-            bán chưa chấp nhận giao dịch.
-          </div>
+
           <button
             disabled={props.loading}
             className="btn v3"
-            onClick={() => {
-              if (confirm("Bạn chắc chắn muốn tạo giao dịch?"))
-                props.initTransactionRequest({
-                  history: props.history,
-                  data: {
-                    buyer: buyers.map((item) => item.publicAddress),
-                    idPropertyInBlockchain: saleItem.idInBlockchain,
-                    depositPrice: depositPrice,
-                    transferPrice: transferPrice,
-                    depositTime: depositTime,
-                  },
-                });
-            }}
+            onClick={handleClickOpen}
           >
-            Tạo giao dịch
+            Khởi tạo giao dịch
           </button>
+
+          <Dialog
+            onClose={handleClose}
+            aria-labelledby="customized-dialog-title"
+            open={open}
+          >
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+              Xác nhận khởi tạo giao dịch
+            </DialogTitle>
+            <DialogContent dividers>
+              <div className="agent-details">
+                <h5>Lưu ý:</h5>
+
+                <div style={{ color: "red", fontWeight: "bold" }}>
+                  Khi bạn xác nhận tạo giao dịch này, tài khoản của bạn sẽ bị
+                  trừ đi {convertVNDtoETH(depositPrice)}
+                  ETH. Bạn có thể hủy giao dịch và nhận lại tiền bất cứ khi nào
+                  người bán chưa chấp nhận giao dịch.
+                </div>
+              </div>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={handleClose} color="primary">
+                Hủy
+              </Button>
+              <Button
+                onClick={() => {
+                  handleClose();
+                  props.initTransactionRequest({
+                    history: props.history,
+                    data: {
+                      buyer: buyers.map((item) => item.publicAddress),
+                      idPropertyInBlockchain: saleItem.idInBlockchain,
+                      depositPrice: depositPrice,
+                      transferPrice: transferPrice,
+                      depositTime: depositTime,
+                    },
+                  });
+                }}
+                color="primary"
+              >
+                Xác nhận
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </div>
     </div>
