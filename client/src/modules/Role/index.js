@@ -38,14 +38,14 @@ export default class Role extends Component {
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = RoleBasedAclContract.networks[networkId];
-      if (!deployedNetwork) {
-        alert(
-          `Switch Ether network to ${process.env.REACT_APP_BASE_URL_PROVIDER}`
-        );
-        throw new Error(
-          `Switch Ether network to ${process.env.REACT_APP_BASE_URL_PROVIDER}`
-        );
-      }
+      // if (!deployedNetwork) {
+      //   alert(
+      //     `Vui lòng chuyển sang mạng ${process.env.REACT_APP_WEB3_PROVIDER}`
+      //   );
+      //   throw new Error(
+      //     `Vui lòng chuyển sang mạng ${process.env.REACT_APP_WEB3_PROVIDER}`
+      //   );
+      // }
       const instance = new web3.eth.Contract(
         RoleBasedAclContract.abi,
         // roleContractAddress
@@ -94,7 +94,6 @@ export default class Role extends Component {
   // }
 
   fetchData = async () => {
-    console.log("index -> fetchData -> fetchData");
     const { contract } = this.state;
     try {
       const response = await contract.methods.getAllAddressAndRole().call();

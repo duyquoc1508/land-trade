@@ -13,6 +13,8 @@ import {
 } from "./action";
 import formatCurrency from "../../utils/formatCurrency";
 import Notifications from "./Notifications";
+import ErrorWeb3 from "../../components/Web3/ErrorWeb3";
+import WrongNetWork from "../../components/Web3/WrongNetwork";
 
 const menus = [
   {
@@ -72,6 +74,7 @@ class Menu extends Component {
       toggleAuthStatus: false,
       toggleNotification: false,
       messageNotification: "",
+      isWrongNetwork: false,
     };
   }
 
@@ -138,6 +141,12 @@ class Menu extends Component {
         }, 1000);
       });
     }
+
+    if (this.props.web3 && this.props.web3 != preProps.web3) {
+      const networkId = await this.props.web3.eth.net.getId();
+      networkId != process.env.REACT_APP_NETWORK_ID &&
+        this.setState({ isWrongNetwork: true });
+    }
   };
 
   changeToggleAuth = () => {
@@ -164,8 +173,11 @@ class Menu extends Component {
   };
 
   render() {
+    const web3 = window.web3;
     let { user } = this.props;
-    return (
+    return !web3 ? (
+      <ErrorWeb3 />
+    ) : (
       <header className="db-top-header">
         <div className="container-fluid">
           <div className="row align-items-center">
@@ -290,6 +302,7 @@ class Menu extends Component {
           <PopupNotification message={this.state.messageNotification} />
         )} */}
         <ToastContainer />
+        {this.state.isWrongNetwork && <WrongNetWork />}
       </header>
     );
   }
@@ -321,6 +334,7 @@ const mapStateToProps = (state) => {
     socket: state.header.socket,
     balance: state.shared.accountBalance,
     ethToVndPrice: state.shared.ethToVndPrice,
+    web3: state.shared.web3,
   };
 };
 

@@ -7,12 +7,16 @@ import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import routes from "./routes";
 import Header from "../../components/Header/Header";
 import FixedNotification from "../../components/FixedNotification";
+import ErrorWeb3 from "../../components/Web3/ErrorWeb3";
 
 const store = createStore();
 
 class Index extends Component {
   render() {
-    return (
+    const web3 = window.web3;
+    return !web3 ? (
+      <ErrorWeb3 /> // detect using a web3-capable browser
+    ) : (
       <Provider store={store}>
         <Router>
           {/*add <Header/> to Route for access history, location, match from <Header/> */}
