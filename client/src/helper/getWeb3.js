@@ -1,5 +1,6 @@
 import Web3 from "web3";
-const providerUrl = process.env.REACT_APP_BASE_URL_PROVIDER || "http://127.0.0.1:7545";
+const providerUrl =
+  process.env.REACT_APP_WEB3_PROVIDER || "http://127.0.0.1:7545";
 
 const getWeb3 = async () => {
   // Wait for loading completion to avoid race conditions with web3 injection timing.
@@ -18,14 +19,13 @@ const getWeb3 = async () => {
   else if (window.web3) {
     // Use Mist/MetaMask's provider.
     const web3 = window.web3;
-    console.log('Injected web3 detected.');
+    console.log("Injected web3 detected.");
     return web3;
   }
   // Fallback to localhost; use dev console port by default...
   else {
     const provider = new Web3.providers.HttpProvider(providerUrl);
     const web3 = new Web3(provider);
-    console.log('No web3 instance injected, using Local web3.');
     return web3;
   }
 };

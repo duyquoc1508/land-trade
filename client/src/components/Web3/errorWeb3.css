@@ -1,0 +1,53 @@
+.Web3Provider-container {
+  color: hsl(0, 0%, 50%);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background: #ffffff;
+}
+.Web3Provider-wrapper {
+  width: 400px;
+  border: 1px solid #457b9d;
+  border-radius: 20px;
+  text-align: center;
+  padding: 40px;
+  margin: 40px auto;
+}
+.Web3Provider-image {
+  max-height: 175px;
+}
+.Web3Provider-title {
+  margin-top: 50px;
+  color: #1d3557;
+}
+.Web3Provider-message {
+  line-height: 27px;
+  font-size: 18px;
+  color: #1d3557;
+}
+
+.meta-mask-img {
+  height: 100px;
+  max-height: 100%;
+  margin-bottom: 20px;
+}
+
+.ethereum-img {
+  height: 200px;
+  max-height: 100%;
+  display: block;
+  margin: auto;
+}
+
+.failed_color {
+  background-color: #ffe6e6;
+}
+
+.dark-blue-text {
+  color: #1d3557;
+}
+
+h5.dark-blue-text {
+  margin-bottom: 7px;
+}
