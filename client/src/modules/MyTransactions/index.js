@@ -152,13 +152,15 @@ export default class MyTransactons extends Component {
 
   previewDetail = (event, rowData) => {
     if (["PAYMENT_CONFIRMED", "CANCELED"].includes(rowData.state)) {
-      window.open(
-        `${process.env.REACT_APP_BASE_URL}/transaction-detail/${rowData.hash}`
-      );
+      // window.open(
+      //   `${process.env.REACT_APP_BASE_URL}/transaction-detail/${rowData.hash}`
+      // );
+      this.props.history.push(`/transaction-detail/${rowData.hash}`);
     } else {
-      window.open(
-        `${process.env.REACT_APP_BASE_URL}/transaction/${rowData.hash}`
-      );
+      // window.open(
+      //   `${process.env.REACT_APP_BASE_URL}/transaction/${rowData.hash}`
+      // );
+      this.props.history.push(`/transaction/${rowData.hash}`);
     }
   };
 

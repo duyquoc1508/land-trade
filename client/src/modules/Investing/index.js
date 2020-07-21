@@ -40,7 +40,7 @@ export default class Investing extends Component {
           field: "seller",
         },
         {
-          title: "Ngày mua",
+          title: "Người mua",
           field: "buyer",
         },
         {
@@ -150,9 +150,10 @@ export default class Investing extends Component {
     ) {
       this.setState({ openAction: true });
     } else {
-      window.open(
-        `${process.env.REACT_APP_BASE_URL}/transaction-detail/${rowData.hash}`
-      );
+      // window.open(
+      //   `${process.env.REACT_APP_BASE_URL}/transaction-detail/${rowData.hash}`
+      // );
+      this.props.history.push(`/transaction-detail/${rowData.hash}`);
     }
   };
 

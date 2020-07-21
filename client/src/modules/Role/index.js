@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import MaterialTable from "material-table";
 import getWeb3 from "../../helper/getWeb3";
 import RoleBasedAclContract from "../../contracts/RoleBasedAcl.json";
-import { roleContractAddress } from "../../../config/common-path";
 
 export default class Role extends Component {
   constructor(props) {
@@ -38,17 +37,16 @@ export default class Role extends Component {
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = RoleBasedAclContract.networks[networkId];
-      // if (!deployedNetwork) {
-      //   alert(
-      //     `Vui lòng chuyển sang mạng ${process.env.REACT_APP_WEB3_PROVIDER}`
-      //   );
-      //   throw new Error(
-      //     `Vui lòng chuyển sang mạng ${process.env.REACT_APP_WEB3_PROVIDER}`
-      //   );
-      // }
+      if (!deployedNetwork) {
+        alert(
+          `Sai mạng blockchain.\nVui lòng chuyển sang mạng ${process.env.REACT_APP_WEB3_PROVIDER}`
+        );
+        throw new Error(
+          `Switch blockchain network to ${process.env.REACT_APP_WEB3_PROVIDER}`
+        );
+      }
       const instance = new web3.eth.Contract(
         RoleBasedAclContract.abi,
-        // roleContractAddress
         deployedNetwork && deployedNetwork.address
       );
       // init event
@@ -88,10 +86,6 @@ export default class Role extends Component {
       console.error(error);
     }
   };
-
-  // fetchAllUser = async () => {
-  //   axios.get(`${process.env.REACT_APP_BASE_URL}/user`)
-  // }
 
   fetchData = async () => {
     const { contract } = this.state;
@@ -151,7 +145,12 @@ export default class Role extends Component {
 
   render() {
     if (!this.state.web3) {
-      return <div>Loading Web3, accounts, and contract...</div>;
+      return (
+        <div className="mt-75  text-center">
+          <p>Sai mạng blockchain</p> Vui lòng chuyển sang mạng{" "}
+          {process.env.REACT_APP_WEB3_PROVIDER}
+        </div>
+      );
     }
     return (
       <div className="mt-100 container ">

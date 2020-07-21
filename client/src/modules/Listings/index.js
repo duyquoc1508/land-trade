@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { loadScript } from "../../helper/utils";
 import { connect } from "react-redux";
-// import Filter from "./sections/filter";
+import Filter from "./sections/filter";
 import { requestFetch } from "./actions";
 import { Link } from "react-router-dom";
 import formatCurrency from "../../utils/formatCurrency";
@@ -80,7 +80,7 @@ class Listings extends Component {
                 <div className="trend-right float-right">
                   <div className="trend-open">
                     <button
-                      class="btn v4 ml-2"
+                      className="btn v4 ml-2"
                       style={{
                         background: "#6449e7",
                         border: "1px solid transparent",
@@ -91,11 +91,11 @@ class Listings extends Component {
                         )
                       }
                     >
-                      <i class="ion-android-add-circle"></i> Xem chi tiết
+                      <i className="ion-android-add-circle"></i> Xem chi tiết
                     </button>
                     {!item.owners.includes(this.props.user.publicAddress) && (
                       <button
-                        class="btn v4 ml-2"
+                        className="btn v4 ml-2"
                         style={{
                           background: "#6449e7",
                           border: "1px solid transparent",
@@ -106,7 +106,7 @@ class Listings extends Component {
                           )
                         }
                       >
-                        <i class="ion-android-add-circle"></i> Mua
+                        <i className="ion-android-add-circle"></i> Mua
                       </button>
                     )}
                   </div>
@@ -123,15 +123,28 @@ class Listings extends Component {
       <div>
         <div className="filter-wrapper section-padding">
           <div className="container">
-            {this.props.listingSale.filter((property) =>
-              property.properties.landLot.address.includes(this.getCity())
-            ).length === 0 ? (
-              <h3 className="post-title text-center">
-                Không có tài sản nào đang bán
-              </h3>
-            ) : (
-              <div className="row">{this.renderItem()}</div>
-            )}
+            <div className="row">
+              <Filter />
+              <div className="col-md-12">
+                <div className="item-wrapper pt-20">
+                  <div className="tab-content" id="myTabContent">
+                    {this.props.listingSale.filter((property) =>
+                      property.properties.landLot.address.includes(
+                        this.getCity()
+                      )
+                    ).length === 0 ? (
+                      <h3 className="post-title text-center">
+                        Không có tài sản nào đang bán
+                      </h3>
+                    ) : (
+                      <div className="tab-content">
+                        <div className="row">{this.renderItem()}</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

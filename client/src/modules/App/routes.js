@@ -27,7 +27,7 @@ const routes = [
   {
     path: "/",
     exact: true,
-    main: () => <HomePage />,
+    main: ({ match, history }) => <HomePage match={match} history={history} />,
   },
   {
     path: "/notification",

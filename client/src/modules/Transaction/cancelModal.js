@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -125,7 +125,7 @@ const CancelTransaction = (props) => {
   }, [props.transaction]);
 
   return (
-    <div>
+    <Fragment>
       {props.checkExpired && (
         <div>
           <div className="text-center">
@@ -251,7 +251,7 @@ const CancelTransaction = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Fragment>
   );
 };
 

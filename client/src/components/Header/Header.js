@@ -143,6 +143,7 @@ class Menu extends Component {
     }
 
     if (this.props.web3 && this.props.web3 != preProps.web3) {
+      // only check user logged
       const networkId = await this.props.web3.eth.net.getId();
       networkId != process.env.REACT_APP_NETWORK_ID &&
         this.setState({ isWrongNetwork: true });
@@ -185,7 +186,7 @@ class Menu extends Component {
               <div className="navbar-brand">
                 <Link to={"/"}>
                   <img
-                    src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
+                    src={"images/logo.jpg"}
                     alt="logo"
                     className="img-fluid"
                   />

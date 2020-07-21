@@ -8,14 +8,14 @@ import "dotenv/config";
 const isDev = process.env.NODE_ENV === "development";
 const isProd = process.env.NODE_ENV === "production";
 
-export default (app) => {
+export default app => {
   app.use(bodyParser.json({ limit: "500kb" }));
   app.use(bodyParser.urlencoded({ limit: "500kb", extended: true }));
   app.use(passport.initialize());
 
   // Enable CORS from client-side
-  app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:8081");
+  app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", process.env.REACT_APP_BASE_URL);
     res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE");
     res.header(
       "Access-Control-Allow-Headers",

@@ -13,7 +13,7 @@ const initialState = {
   realEstate: "",
   transaction: "",
   web3: "",
-  ethToVndPrice: 5230289, // price at 7/4/2020
+  ethToVndPrice: 5000000, //suppose: 1ETH => 5000000VND
   accountBalance: 0,
   error: "",
 };

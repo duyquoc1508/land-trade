@@ -70,7 +70,8 @@ function TransactionDetail(props) {
 
     const data = {
       DEPOSIT_REQUEST: {
-        title: `${buyers[0] && buyers[0].fullName} đặt cọc`,
+        // title: `${buyers[0] && buyers[0].fullName} đặt cọc`,
+        title: `Bên mua đặt cọc`,
         time: formatDate(transaction.createdAt),
         description: `${
           buyers[0] && buyers[0].fullName
@@ -79,14 +80,16 @@ function TransactionDetail(props) {
         )}VNĐ cho ${sellers[0] && sellers[0].fullName} để đặt cọc`,
       },
       DEPOSIT_CANCELED_BY_BUYER: {
-        title: `${buyers[0] && buyers[0].fullName} hủy đặt cọc`,
+        // title: `${buyers[0] && buyers[0].fullName} hủy đặt cọc`,
+        title: `Bên mua hủy đặt cọc`,
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
         description: `${buyers[0] && buyers[0].fullName} hủy đặt cọc`,
       },
       DEPOSIT_CANCELED_BY_SELLER: {
-        title: `${sellers[0] && sellers[0].fullName} từ chối giao dịch`,
+        // title: `${sellers[0] && sellers[0].fullName} từ chối giao dịch`,
+        title: `Bên bán từ chối giao dịch`,
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
@@ -97,9 +100,10 @@ function TransactionDetail(props) {
         )}VNĐ tiền đặt cọc `,
       },
       DEPOSIT_CONFIRMED: {
-        title: `${
-          sellers[0] && sellers[0].fullName
-        } chấp nhận giao dịch và nhận đặt cọc`,
+        // title: `${
+        //   sellers[0] && sellers[0].fullName
+        // } chấp nhận giao dịch và nhận đặt cọc`,
+        title: `Bên bán chấp nhận giao dịch và nhận đặt cọc`,
         time:
           transaction.depositConfirmed &&
           formatDate(transaction.depositConfirmed.time),
@@ -110,7 +114,8 @@ function TransactionDetail(props) {
         )}VNĐ từ ${sellers[0] && sellers[0].fullName}`,
       },
       DEPOSIT_BROKEN_BY_SELLER: {
-        title: `${sellers[0] && sellers[0].fullName} hủy giao dịch`,
+        // title: `${sellers[0] && sellers[0].fullName} hủy giao dịch`,
+        title: `Bên bán hủy giao dịch`,
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
@@ -119,7 +124,8 @@ function TransactionDetail(props) {
         } hủy giao dịch và mất tiền đặt cọc`,
       },
       DEPOSIT_BROKEN_BY_BUYER: {
-        title: `${buyers[0] && buyers[0].fullName} hủy giao dịch`,
+        // title: `${buyers[0] && buyers[0].fullName} hủy giao dịch`,
+        title: `Bên mua hủy giao dịch`,
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
@@ -130,7 +136,8 @@ function TransactionDetail(props) {
         )}VNĐ cho ${buyers[0] && buyers[0].fullName} `,
       },
       PAYMENT_REQUEST: {
-        title: `${buyers[0] && buyers[0].fullName} thanh toán số tiền còn lại`,
+        // title: `${buyers[0] && buyers[0].fullName} thanh toán số tiền còn lại`,
+        title: `Bên mua thanh toán số tiền còn lại`,
         time: transaction.payment && formatDate(transaction.payment.time),
         description: `${
           buyers[0] && buyers[0].fullName
@@ -141,7 +148,8 @@ function TransactionDetail(props) {
         )}VNĐ cho ${sellers[0] && sellers[0].fullName} `,
       },
       DEPOSIT_BROKEN_BY_BUYER: {
-        title: `${buyers[0] && buyers[0].fullName} hủy giao dịch`,
+        // title: `${buyers[0] && buyers[0].fullName} hủy giao dịch`,
+        title: `Bên mua hủy giao dịch`,
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
@@ -150,7 +158,8 @@ function TransactionDetail(props) {
         } hủy giao dịch và mất tiền đặt cọc`,
       },
       TRANSFER_CANCELED_BY_SELLER: {
-        title: `${sellers[0] && sellers[0].fullName} hủy giao dịch`,
+        // title: `${sellers[0] && sellers[0].fullName} hủy giao dịch`,
+        title: `Bên bán hủy giao dịch`,
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
@@ -163,7 +172,8 @@ function TransactionDetail(props) {
         }, và người mua nhận lại số tiền đã thanh toán`,
       },
       PAYMENT_CONFIRMED: {
-        title: `${sellers[0] && sellers[0].fullName} chấp nhận thanh toán`,
+        // title: `${sellers[0] && sellers[0].fullName} chấp nhận thanh toán`,
+        title: `Bên bán chấp nhận thanh toán`,
         time:
           transaction.paymentConfirmed &&
           formatDate(transaction.paymentConfirmed.time),
@@ -203,7 +213,7 @@ function TransactionDetail(props) {
               <div class="col">&nbsp;</div>
             </div>
             <h5 class="m-2">
-              <span class="badge badge-pill bg-success">&nbsp;</span>
+              <span class="badge badge-pill bg-success border">&nbsp;</span>
             </h5>
             <div class="row h-50">
               <div class="col border-right">&nbsp;</div>

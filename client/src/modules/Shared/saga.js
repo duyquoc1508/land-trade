@@ -97,7 +97,7 @@ function* checkInfoUserChange() {
 
 export default function* initContractWatcher() {
   yield all([
-    takeEvery(REFRESH_PAGE, getEthPriceFlow),
+    // takeEvery(REFRESH_PAGE, getEthPriceFlow),
     takeEvery(REFRESH_PAGE, initContractFlow),
     takeEvery(REFRESH_PAGE, checkInfoUserChange),
   ]);
