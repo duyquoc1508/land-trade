@@ -6,14 +6,17 @@ module.exports = {
   contracts_build_directory: path.join(__dirname, "client/src/contracts"),
   compilers: {
     solc: {
-      version: "0.5.3"
-    }
+      version: "0.5.3",
+    },
   },
   networks: {
-    development: {
+    production: {
       host: "167.179.75.85",
       port: 8545,
-      network_id: "*",
+      network_id: 2020,
+      from: "0x007ccffb7916f37f7aeef05e8096ecfbe55afc2f",
+      gasPrice: 0,
+      gas: 6721975,
     },
     ganache: {
       host: "127.0.0.1",

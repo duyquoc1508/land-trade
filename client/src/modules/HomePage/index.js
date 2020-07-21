@@ -16,8 +16,10 @@ class HomePage extends Component {
     console.log("load main");
     loadScript("js/main.js");
     axios
-      .get(`${process.env.REACT_APP_BASE_URL_API}/transaction/most-deals`)
-      .then((response) => this.setState({ mostDeals: response.data.data }));
+      .get(`${process.env.REACT_APP_BASE_URL_API}/certification/selling`)
+      .then((response) => {
+        this.setState({ mostDeals: response.data.data });
+      });
   }
   render() {
     return (
@@ -37,9 +39,9 @@ class HomePage extends Component {
                         <span>Chào mừng bạn đến với </span>
                         <h1>LandTrade</h1>
                         <p>
-                          Ứng dụng đăng ký, quản lý và giao dich BĐS đáng tin
-                          cậy. Thông tin chính xác, bảo mật cho người dùng dựa
-                          trên công nghệ blockchain
+                          Ứng dụng quản lý và giao dich bất động sản đáng tin
+                          cậy. Thông tin chính xác, minh bạch, bảo mật cho người
+                          dùng dựa trên công nghệ blockchain
                         </p>
                         {/* <div className="row">
                           <div className="col-sm-12">
@@ -117,7 +119,13 @@ class HomePage extends Component {
                             </div>
                             <div className="col-sm-12">
                               <div className="search_btn">
-                                <a href="grid-left-sidebar.html">Tìm kiếm</a>
+                                <a
+                                  onClick={() => {
+                                    this.props.history.push("/listings");
+                                  }}
+                                >
+                                  Tìm kiếm
+                                </a>
                               </div>
                             </div>
                           </div>
@@ -228,20 +236,21 @@ class HomePage extends Component {
             </div>
           </div>
         </div>
-        <div className="featured-property-section v2 bg-cb">
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-xl-3 col-lg-12">
-                <div className="section-title v2">
-                  <p>Giao dịch nhiều nhất</p>
-                  <h2>Một số BĐS nổi bật</h2>
+
+        {this.state.mostDeals.length > 0 && (
+          <div className="featured-property-section v2 bg-cb">
+            <div className="container-fluid">
+              <div className="row">
+                <div className="col-xl-3 col-lg-12">
+                  <div className="section-title v2">
+                    {/* <p>Giao dịch nhiều nhất</p> */}
+                    <h2>Bất động sản nổi bật</h2>
+                  </div>
                 </div>
-              </div>
-              <div className="col-xl-9 col-lg-12">
-                <div className="featured-property-wrap v2 swiper-container">
-                  <div className="swiper-wrapper">
-                    {this.state.mostDeals.length > 0 &&
-                      this.state.mostDeals.map((item, index) => (
+                <div className="col-xl-9 col-lg-12">
+                  <div className="featured-property-wrap v2 swiper-container">
+                    <div className="swiper-wrapper">
+                      {this.state.mostDeals.map((item, index) => (
                         <div
                           className="swiper-slide single-property-box"
                           key={index}
@@ -295,18 +304,19 @@ class HomePage extends Component {
                           </div>
                         </div>
                       ))}
-                  </div>
-                  <div className="slider-btn v2 featured_prev">
-                    <i className="lnr lnr-arrow-left"></i>
-                  </div>
-                  <div className="slider-btn v2 featured_next">
-                    <i className="lnr lnr-arrow-right"></i>
+                    </div>
+                    <div className="slider-btn v2 featured_prev">
+                      <i className="lnr lnr-arrow-left"></i>
+                    </div>
+                    <div className="slider-btn v2 featured_next">
+                      <i className="lnr lnr-arrow-right"></i>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
