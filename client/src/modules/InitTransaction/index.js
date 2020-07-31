@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { initTransactionRequest, initTransactionSuccess } from "./action";
 import { connect } from "react-redux";
 import formatCurrency from "../../utils/formatCurrency";
-import { convertVNDtoETH } from "../../utils/convertCurrency";
+import { convertWeiToVND } from "../../utils/convertCurrency";
 import axios from "axios";
 import Cookie from "../../helper/cookie";
 import { Link } from "react-router-dom";
@@ -332,7 +332,7 @@ function Init(props) {
             className="btn v3"
             onClick={handleClickOpen}
           >
-            Khởi tạo giao dịch
+            Gửi yêu cầu đặt cọc
           </button>
 
           <Dialog
@@ -341,19 +341,31 @@ function Init(props) {
             open={open}
           >
             <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-              Xác nhận khởi tạo giao dịch
+              Xác nhận gửi yêu cầu đặt cọc
             </DialogTitle>
             <DialogContent dividers>
-              <div className="agent-details">
-                <h5>Lưu ý:</h5>
-
-                <div style={{ color: "red", fontWeight: "bold" }}>
-                  Khi bạn xác nhận tạo giao dịch này, tài khoản của bạn sẽ bị
-                  trừ đi {convertVNDtoETH(depositPrice)}
-                  ETH. Bạn có thể hủy giao dịch và nhận lại tiền bất cứ khi nào
-                  người bán chưa chấp nhận giao dịch.
-                </div>
-              </div>
+              <ul className="address-list">
+                <li>
+                  <span>Giá trị giao dịch:</span>
+                  {transferPrice} VNĐ
+                </li>
+                <li>
+                  <span>Số tiền cần đặt cọc:</span>
+                  {depositPrice} VNĐ
+                </li>
+                <li>
+                  <span>Thời gian đặt cọc:</span>
+                  {depositTime} Ngày
+                </li>
+              </ul>
+              <h6>Lưu ý</h6>
+              <ul className="address-list">
+                <li>
+                  Khi bạn xác nhận đặt cọc giao dịch này, bạn có thể hủy giao
+                  dich và nhận lại tiền đặt cọc khi người bán chưa chấp nhận
+                  giao dịch!
+                </li>
+              </ul>
             </DialogContent>
             <DialogActions>
               <Button autoFocus onClick={handleClose} color="primary">
