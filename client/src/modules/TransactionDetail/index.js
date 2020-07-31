@@ -71,25 +71,31 @@ function TransactionDetail(props) {
     const data = {
       DEPOSIT_REQUEST: {
         // title: `${buyers[0] && buyers[0].fullName} đặt cọc`,
-        title: `Bên mua đặt cọc`,
+        title: `Yêu cầu đặt cọc`,
         time: formatDate(transaction.createdAt),
         description: `${
           buyers[0] && buyers[0].fullName
-        } chuyển ${formatCurrency(
-          convertWeiToVND(transaction.depositPrice)
-        )}VNĐ cho ${sellers[0] && sellers[0].fullName} để đặt cọc`,
+        } gửi yêu cầu đặt cọc tới ${
+          sellers[0] && sellers[0].fullName
+        } giá trị ${formatCurrency(convertWeiToVND(transaction.depositPrice))}`,
+        explorer: transaction.transactionHash,
       },
+
       DEPOSIT_CANCELED_BY_BUYER: {
         // title: `${buyers[0] && buyers[0].fullName} hủy đặt cọc`,
-        title: `Bên mua hủy đặt cọc`,
+        title: `Giao dịch thất bại`,
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
-        description: `${buyers[0] && buyers[0].fullName} hủy đặt cọc`,
+        description: `${buyers[0] && buyers[0].fullName} hủy yêu cầu đặt cọc`,
+        explorer:
+          transaction.transactionCanceled &&
+          transaction.transactionCanceled.txHash,
       },
+
       DEPOSIT_CANCELED_BY_SELLER: {
         // title: `${sellers[0] && sellers[0].fullName} từ chối giao dịch`,
-        title: `Bên bán từ chối giao dịch`,
+        title: `Giao dịch thất bại`,
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
@@ -98,46 +104,65 @@ function TransactionDetail(props) {
         } nhận lại ${formatCurrency(
           convertWeiToVND(transaction.depositPrice)
         )}VNĐ tiền đặt cọc `,
+        explorer:
+          transaction.transactionCanceled &&
+          transaction.transactionCanceled.txHash,
       },
+
       DEPOSIT_CONFIRMED: {
         // title: `${
         //   sellers[0] && sellers[0].fullName
         // } chấp nhận giao dịch và nhận đặt cọc`,
-        title: `Bên bán chấp nhận giao dịch và nhận đặt cọc`,
+        title: `Chấp nhận`,
         time:
           transaction.depositConfirmed &&
           formatDate(transaction.depositConfirmed.time),
         description: `${
           buyers[0] && buyers[0].fullName
-        } chấp nhận giao dịch và nhận sô ${formatCurrency(
+        } chấp nhận giao dịch với ${
+          sellers[0] && sellers[0].fullName
+        } và nhận ${formatCurrency(
           convertWeiToVND(transaction.depositPrice)
-        )}VNĐ từ ${sellers[0] && sellers[0].fullName}`,
+        )}VNĐ tiền đặt cọc`,
+        explorer:
+          transaction.depositConfirmed && transaction.depositConfirmed.txHash,
       },
+
       DEPOSIT_BROKEN_BY_SELLER: {
         // title: `${sellers[0] && sellers[0].fullName} hủy giao dịch`,
-        title: `Bên bán hủy giao dịch`,
+        title: `Giao dịch thất bại`,
+        time:
+          transaction.transactionCanceled &&
+          formatDate(transaction.transactionCanceled.time),
+        description: `${
+          sellers[0] && sellers[0].fullName
+        } hủy giao dịch và đền bù hợp đồng cho ${
+          buyers[0] && buyers[0].fullName
+        } giá trị ${formatCurrency(
+          convertWeiToVND(transaction.depositPrice * 2)
+        )}VNĐ`,
+        explorer:
+          transaction.transactionCanceled &&
+          transaction.transactionCanceled.txHash,
+      },
+
+      DEPOSIT_BROKEN_BY_BUYER: {
+        // title: `${buyers[0] && buyers[0].fullName} hủy giao dịch`,
+        title: `Giao dịch thất bại`,
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
         description: `${
           buyers[0] && buyers[0].fullName
         } hủy giao dịch và mất tiền đặt cọc`,
-      },
-      DEPOSIT_BROKEN_BY_BUYER: {
-        // title: `${buyers[0] && buyers[0].fullName} hủy giao dịch`,
-        title: `Bên mua hủy giao dịch`,
-        time:
+        explorer:
           transaction.transactionCanceled &&
-          formatDate(transaction.transactionCanceled.time),
-        description: `${
-          sellers[0] && sellers[0].fullName
-        } hủy giao dịch và đền bù hợp đồng ${formatCurrency(
-          convertWeiToVND(transaction.depositPrice * 2)
-        )}VNĐ cho ${buyers[0] && buyers[0].fullName} `,
+          transaction.transactionCanceled.txHash,
       },
+
       PAYMENT_REQUEST: {
         // title: `${buyers[0] && buyers[0].fullName} thanh toán số tiền còn lại`,
-        title: `Bên mua thanh toán số tiền còn lại`,
+        title: `Thanh toán`,
         time: transaction.payment && formatDate(transaction.payment.time),
         description: `${
           buyers[0] && buyers[0].fullName
@@ -146,20 +171,31 @@ function TransactionDetail(props) {
         )}VNĐ + thuế ${formatCurrency(
           convertWeiToVND(transaction.transferPrice * 0.005)
         )}VNĐ cho ${sellers[0] && sellers[0].fullName} `,
+        explorer: transaction.payment && transaction.payment.txHash,
       },
-      DEPOSIT_BROKEN_BY_BUYER: {
+
+      TRANSFER_CANCELED_BY_BUYER: {
         // title: `${buyers[0] && buyers[0].fullName} hủy giao dịch`,
-        title: `Bên mua hủy giao dịch`,
+        title: `Giao dịch thất bại`,
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
         description: `${
           buyers[0] && buyers[0].fullName
-        } hủy giao dịch và mất tiền đặt cọc`,
+        } hủy giao dịch nhận lại số tiền thanh toán còn lại ${formatCurrency(
+          convertWeiToVND(transaction.transferPrice - transaction.depositPrice)
+        )}VNĐ + thuế ${formatCurrency(
+          convertWeiToVND(transaction.transferPrice * 0.005)
+        )} và mất tiền đặt cọc`,
+        explorer:
+          transaction.transactionCanceled &&
+          transaction.transactionCanceled.txHash,
+
+        explorer: transaction.payment && transaction.payment.txHash,
       },
       TRANSFER_CANCELED_BY_SELLER: {
         // title: `${sellers[0] && sellers[0].fullName} hủy giao dịch`,
-        title: `Bên bán hủy giao dịch`,
+        title: `Giao dịch thất bại`,
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
@@ -167,13 +203,16 @@ function TransactionDetail(props) {
           sellers[0] && sellers[0].fullName
         } hủy giao dịch và đền bù hợp đồng ${formatCurrency(
           convertWeiToVND(transaction.depositPrice * 2)
-        )}VNĐ cho ${
+        )}VNĐ cho ${buyers[0] && buyers[0].fullName}.  ${
           buyers[0] && buyers[0].fullName
-        }, và người mua nhận lại số tiền đã thanh toán`,
+        } nhân lại số tiền đã thanh toán và tiền đền bù hợp đồng.`,
+        explorer:
+          transaction.transactionCanceled &&
+          transaction.transactionCanceled.txHash,
       },
       PAYMENT_CONFIRMED: {
         // title: `${sellers[0] && sellers[0].fullName} chấp nhận thanh toán`,
-        title: `Bên bán chấp nhận thanh toán`,
+        title: `Xác nhận`,
         time:
           transaction.paymentConfirmed &&
           formatDate(transaction.paymentConfirmed.time),
@@ -183,7 +222,9 @@ function TransactionDetail(props) {
           convertWeiToVND(transaction.transferPrice - transaction.depositPrice)
         )}VNĐ - thuế ${formatCurrency(
           convertWeiToVND(transaction.transferPrice * 0.002)
-        )}VNĐ, ${sellers[0] && sellers[0].fullName}  nhận quyền sỡ hữu tài sản`,
+        )}VNĐ. ${buyers[0] && buyers[0].fullName} nhận quyền sỡ hữu tài sản`,
+        explorer:
+          transaction.paymentConfirmed && transaction.paymentConfirmed.txHash,
       },
     };
 
@@ -226,6 +267,12 @@ function TransactionDetail(props) {
                 <div class="float-right text-success">{data[item].time}</div>
                 <h4 class="card-title text-success">{data[item].title}</h4>
                 <p class="card-text">{data[item].description}</p>
+                <a
+                  target="_blank"
+                  href={`${process.env.REACT_APP_EXPLORER}/${data[item].explorer}`}
+                >
+                  Kiểm tra giao dịch trên Blockchain
+                </a>
               </div>
             </div>
           </div>

@@ -51,6 +51,7 @@ class Property extends Component {
                       className="d-block w-100"
                       src={`${process.env.REACT_APP_BASE_URL_IMAGE}/images/${item}`}
                       alt="slide"
+                      style={{ maxHeight: "350px" }}
                     />
                   </div>
                 ))}

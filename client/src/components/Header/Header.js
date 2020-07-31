@@ -186,7 +186,7 @@ class Menu extends Component {
               <div className="navbar-brand">
                 <Link to={"/"}>
                   <img
-                    src={"images/logo.jpg"}
+                    src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
                     alt="logo"
                     className="img-fluid"
                   />
