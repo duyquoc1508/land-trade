@@ -47,6 +47,12 @@ const menus = [
     exact: false,
     role: "Notary",
   },
+  {
+    name: "Quản lý tài khoản",
+    to: "/role",
+    exact: false,
+    role: "Admin",
+  },
 ];
 
 const MenuLink = ({ label, to, activeOnlyWhenExact }) => {
@@ -310,6 +316,16 @@ class Menu extends Component {
 
   showMenus = (menus, user) => {
     var result = null;
+    if (user && user.role === "Admin") {
+      let menu = menus.find((item) => item.role === "Admin");
+      return (
+        <MenuLink
+          label={menu.name}
+          to={menu.to}
+          activeOnlyWhenExact={menu.exact}
+        />
+      );
+    }
     if (menus.length > 0) {
       result = menus.map((menu, index) => {
         if (menu.role == "all" || (user && menu.role == user.role)) {

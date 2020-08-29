@@ -28,6 +28,10 @@ export default class Role extends Component {
     this.role = ["Super Admin", "Notary"];
   }
   componentDidMount = async () => {
+    let user = JSON.parse(localStorage.getItem("user"));
+    if (!user || user.role !== "Admin") {
+      window.location.href = process.env.REACT_APP_BASE_URL;
+    }
     try {
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
