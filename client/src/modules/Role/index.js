@@ -29,7 +29,7 @@ export default class Role extends Component {
   }
   componentDidMount = async () => {
     let user = JSON.parse(localStorage.getItem("user"));
-    if (!user || user.role !== "Admin") {
+    if (!user || user.role !== "Government") {
       window.location.href = process.env.REACT_APP_BASE_URL;
     }
     try {
