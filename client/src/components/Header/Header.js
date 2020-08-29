@@ -51,7 +51,7 @@ const menus = [
     name: "Quản lý tài khoản",
     to: "/role",
     exact: false,
-    role: "Admin",
+    role: "Government",
   },
 ];
 
@@ -316,8 +316,8 @@ class Menu extends Component {
 
   showMenus = (menus, user) => {
     var result = null;
-    if (user && user.role === "Admin") {
-      let menu = menus.find((item) => item.role === "Admin");
+    if (user && user.role === "Government") {
+      let menu = menus.find((item) => item.role === "Government");
       return (
         <MenuLink
           label={menu.name}
