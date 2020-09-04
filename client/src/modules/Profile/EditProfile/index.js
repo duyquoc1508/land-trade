@@ -107,7 +107,7 @@ class EditProfile extends Component {
                               name="birthday"
                               type="text"
                               className="form-control filter-input"
-                              placeholder="Nhập số CMND căn cước"
+                              placeholder="Nhập ngày sinh"
                             />
                           </div>
                         </div>

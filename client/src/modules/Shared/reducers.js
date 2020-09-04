@@ -23,6 +23,7 @@ export default function sharedReducers(state = initialState, action) {
     case INIT_CONTRACT_SUCCESS:
       return {
         ...state,
+        roleBasedAcl: action.payload.roleBasedContract,
         realEstate: action.payload.realEstateContract,
         transaction: action.payload.transactionContract,
         web3: action.payload.web3,
