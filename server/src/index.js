@@ -38,7 +38,7 @@ app.use((req, res) => {
   res.status(404).send({ url: req.originalUrl + " not found." });
 });
 
-server.listen(constants.PORT, err => {
+server.listen(constants.PORT, "0.0.0.0", err => {
   if (err) {
     throw err;
   } else {
