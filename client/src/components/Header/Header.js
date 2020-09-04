@@ -15,6 +15,8 @@ import formatCurrency from "../../utils/formatCurrency";
 import Notifications from "./Notifications";
 import ErrorWeb3 from "../../components/Web3/ErrorWeb3";
 import WrongNetWork from "../../components/Web3/WrongNetwork";
+import { activateCertificateSuccess } from "../../modules/Property/ConfirmProperty/action";
+import { createSuccess } from "../../modules/Property/AddProperty/actions";
 
 const menus = [
   {
@@ -51,7 +53,7 @@ const menus = [
     name: "Quản lý tài khoản",
     to: "/role",
     exact: false,
-    role: "Government",
+    role: "Super Admin",
   },
 ];
 
@@ -88,7 +90,9 @@ class Menu extends Component {
   componentDidMount() {
     const accessToken = Cookie.getCookie("accessToken");
     if (accessToken) {
-      const socket = window.io(process.env.REACT_APP_BASE_URL_SOCKET);
+      const socket = window.io(process.env.REACT_APP_BASE_URL_SOCKET, {
+        transports: ["websocket"],
+      });
       socket.emit("user-connected", accessToken);
       this.props.initSocket(socket);
       this.props.refreshPage();
@@ -108,7 +112,9 @@ class Menu extends Component {
     if (!this.props.socket) {
       const accessToken = Cookie.getCookie("accessToken");
       if (accessToken) {
-        const socket = window.io(process.env.REACT_APP_BASE_URL_SOCKET);
+        const socket = window.io(process.env.REACT_APP_BASE_URL_SOCKET, {
+          transports: ["websocket"],
+        });
         socket.emit("user-connected", accessToken);
         this.props.initSocket(socket);
         this.props.refreshPage();
@@ -118,6 +124,8 @@ class Menu extends Component {
     if (this.props.socket && this.props.socket !== preProps.socket) {
       const { history } = this.props;
       const socketEventToAction = {
+        create_cert_success: "",
+        activate_cert: "",
         new_certification: "",
         new_transaction: "",
         deposit_confirmed: "ACCEPT_TRANSACTION_SUCCESS",
@@ -125,26 +133,42 @@ class Menu extends Component {
         payment_confirmed: "CONFIRM_TRANSACTION_SUCCESS",
         transaction_canceled: "CANCEL_TRANSACTION_SUCCESS",
       };
-
-      // listener socket event info
       Object.keys(socketEventToAction).map((eventName) => {
-        // emit event to
         this.props.socket.on(eventName, (data) => {
-          this.props.newNotification(); // fetch notification
-          toast.info(`${data.message}`, {
-            position: toast.POSITION.BOTTOM_RIGHT,
-            autoClose: false,
-            onClick: () => history.push(data.url),
-          });
+          //event activate cert success
+          if (eventName == "activate_cert") {
+            setTimeout(() => {
+              this.props.activateCertSuccess({
+                history: history,
+                txHash: data,
+              });
+            }, 500);
+          } else if (eventName == "create_cert_success") {
+            // event create new cert success
+            setTimeout(() => {
+              this.props.createCertSuccess({
+                history: history,
+                txHash: data,
+              });
+            }, 500);
+          } else {
+            // listener socket event info
+            this.props.newNotification(); // fetch notification
+            toast.info(`${data.message}`, {
+              position: toast.POSITION.BOTTOM_RIGHT,
+              autoClose: false,
+              onClick: () => history.push(data.url),
+            });
+          }
         });
       });
       this.props.socket.on("transaction_change_state", (data) => {
-        setTimeout(() => {
-          this.props.dispatchEventFromBlockchain(
-            socketEventToAction[data.event],
-            data.txHash
-          );
-        }, 1000);
+        // setTimeout(() => {
+        this.props.dispatchEventFromBlockchain(
+          socketEventToAction[data.event],
+          data.txHash
+        );
+        // }, 1000);
       });
     }
 
@@ -316,8 +340,8 @@ class Menu extends Component {
 
   showMenus = (menus, user) => {
     var result = null;
-    if (user && user.role === "Government") {
-      let menu = menus.find((item) => item.role === "Government");
+    if (user && user.role === "Super Admin") {
+      let menu = menus.find((item) => item.role === "Super Admin");
       return (
         <MenuLink
           label={menu.name}
@@ -362,6 +386,12 @@ const mapDispatchToProps = (dispatch) => {
     dispatchEventFromBlockchain: (eventName, txHash) =>
       dispatch(dispatchEventFromBlockchain(eventName, txHash)),
     newNotification: () => dispatch(newNotification()),
+    activateCertSuccess: (data) => {
+      dispatch(activateCertificateSuccess(data));
+    },
+    createCertSuccess: (data) => {
+      dispatch(createSuccess(data));
+    },
   };
 };
 

@@ -12,7 +12,9 @@ import {
 import getWeb3 from "../../helper/getWeb3";
 import RealEstateContract from "../../contracts/RealEstate.json";
 import TransactionContract from "../../contracts/Transaction.json";
+import RoleBasedContract from "../../contracts/RoleBasedAcl.json";
 import {
+  roleContractAddress,
   realEstateContractAddress,
   transactionContractAddress,
 } from "../../../config/common-path";
@@ -20,6 +22,10 @@ import axios from "axios";
 
 const initContract = async () => {
   const web3 = await getWeb3();
+  const roleBasedContract = new web3.eth.Contract(
+    RoleBasedContract.abi,
+    roleContractAddress
+  );
   const realEstateContract = new web3.eth.Contract(
     RealEstateContract.abi,
     realEstateContractAddress
@@ -28,7 +34,7 @@ const initContract = async () => {
     TransactionContract.abi,
     transactionContractAddress
   );
-  return { web3, realEstateContract, transactionContract };
+  return { web3, roleBasedContract, realEstateContract, transactionContract };
 };
 
 const getEthPrice = async () => {

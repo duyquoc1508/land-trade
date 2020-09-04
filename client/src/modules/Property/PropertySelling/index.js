@@ -36,8 +36,11 @@ function PropertySelling({ properties, cancelSale }) {
               </ul>
             </div>
             <div className="property-title-box">
-              <h4>
-                <Link to={`property/${property.transactionHash}`}>
+              <h4 style={{ marginTop: "0px" }}>
+                <Link
+                  to={`property/${property.transactionHash}`}
+                  style={{ lineHeight: "27px" }}
+                >
                   {property.moreInfo.title}
                 </Link>
               </h4>
@@ -87,16 +90,18 @@ function PropertySelling({ properties, cancelSale }) {
                     >
                       <i className="ion-edit"></i> Chi tiết
                     </button>
-                    <button
-                      className="btn v4 ml-2"
-                      style={{
-                        background: "#6449e7",
-                        border: "1px solid transparent",
-                      }}
-                      onClick={() => cancelSale(property._id)}
-                    >
-                      <i className="ion-android-delete"></i> Hủy bán
-                    </button>
+                    {property.state !== 3 && (
+                      <button
+                        className="btn v4 ml-2"
+                        style={{
+                          background: "#6449e7",
+                          border: "1px solid transparent",
+                        }}
+                        onClick={() => cancelSale(property._id)}
+                      >
+                        <i className="ion-android-delete"></i> Hủy bán
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -111,7 +116,7 @@ function PropertySelling({ properties, cancelSale }) {
 const mapStateToProps = (state) => {
   return {
     properties: state.myListing.properties.filter(
-      (property) => property.state === 2
+      (property) => property.state === 2 || property.state === 3
     ),
   };
 };

@@ -14,24 +14,28 @@ class Property extends Component {
     };
   }
   async componentDidMount() {
-    loadScript("js/plugin.js");
-    loadScript("js/main.js");
-    let propertyRP = await axios({
-      method: "get",
-      url: `${process.env.REACT_APP_BASE_URL_API}/certification/${this.props.match.params.hash}`,
-    });
-    let property = propertyRP.data.data;
-    let ownerRP = await axios({
-      method: "get",
-      url: `${process.env.REACT_APP_BASE_URL_API}/users/${property.owners[0]}`,
-    });
-    let owner = ownerRP.data.data;
-    this.setState({ property, owner });
+    loadScript("/js/plugin.js");
+    loadScript("/js/main.js");
+    try {
+      let propertyRP = await axios({
+        method: "get",
+        url: `${process.env.REACT_APP_BASE_URL_API}/certification/${this.props.match.params.hash}`,
+      });
+      let property = propertyRP.data.data;
+      let ownerRP = await axios({
+        method: "get",
+        url: `${process.env.REACT_APP_BASE_URL_API}/users/${property.owners[0]}`,
+      });
+      let owner = ownerRP.data.data;
+      this.setState({ property, owner });
+    } catch (error) {
+      this.props.history.push("/not-found.html");
+    }
   }
   render() {
     let { property, owner } = this.state;
     return !this.state.property ? (
-      <NotFound />
+      ""
     ) : (
       <div className="property-details-wrap bg-cb">
         <div className="single-property-header v3 pt-100 property-carousel">

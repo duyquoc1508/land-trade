@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import MaterialTable from "material-table";
 import getWeb3 from "../../helper/getWeb3";
 import RoleBasedAclContract from "../../contracts/RoleBasedAcl.json";
+import { addRoleRequest, removeRoleRequest, roleChanged } from "./action";
+import { connect } from "react-redux";
 
-export default class Role extends Component {
+class Role extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +31,7 @@ export default class Role extends Component {
   }
   componentDidMount = async () => {
     let user = JSON.parse(localStorage.getItem("user"));
-    if (!user || user.role !== "Government") {
+    if (!user || user.role !== "Super Admin") {
       window.location.href = process.env.REACT_APP_BASE_URL;
     }
     try {
@@ -37,7 +39,7 @@ export default class Role extends Component {
       const web3 = await getWeb3();
 
       // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
+      // const accounts = await web3.eth.getAccounts();
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = RoleBasedAclContract.networks[networkId];
@@ -53,23 +55,23 @@ export default class Role extends Component {
         RoleBasedAclContract.abi,
         deployedNetwork && deployedNetwork.address
       );
-      // init event
-      instance.events
-        .RoleAdded()
-        .on("data", (event) => {
-          const result = event.returnValues;
-          console.log("index -> componentDidMount -> result", result);
-          this.fetchData();
-        })
-        .on("error", console.error);
-      instance.events
-        .RoleRemoved()
-        .on("data", (event) => {
-          const result = event.returnValues;
-          console.log("index -> componentDidMount -> result", result);
-          this.fetchData();
-        })
-        .on("error", console.error);
+      // listen event direct from blockchain
+      // instance.events
+      //   .RoleAdded()
+      //   .on("data", (event) => {
+      //     const result = event.returnValues;
+      //     console.log("index -> componentDidMount -> result", result);
+      //     this.fetchData();
+      //   })
+      //   .on("error", console.error);
+      // instance.events
+      //   .RoleRemoved()
+      //   .on("data", (event) => {
+      //     const result = event.returnValues;
+      //     console.log("index -> componentDidMount -> result", result);
+      //     this.fetchData();
+      //   })
+      //   .on("error", console.error);
       // handle change account in metamask
       window.ethereum.on("accountsChanged", (accounts) => {
         this.setState({ accounts });
@@ -78,7 +80,7 @@ export default class Role extends Component {
       this.setState(
         {
           web3,
-          accounts,
+          // accounts,
           contract: instance,
         },
         this.fetchData
@@ -90,6 +92,20 @@ export default class Role extends Component {
       console.error(error);
     }
   };
+
+  componentDidUpdate(preProps, preState) {
+    if (this.props.socket && this.props.socket !== preProps.socket) {
+      this.props.socket.on("role_changed", (data) => {
+        this.props.roleChangedSuccess();
+        // setTimeout(() => { //dev
+        this.fetchData();
+        // }, 500);
+      });
+    }
+    if (this.props.loading != preState._isLoading) {
+      this.setState({ _isLoading: this.props.loading });
+    }
+  }
 
   fetchData = async () => {
     const { contract } = this.state;
@@ -112,40 +128,40 @@ export default class Role extends Component {
     }
   };
 
-  addRole = async (newData) => {
-    const { publicAddress, role } = newData;
-    const { contract, accounts } = this.state;
-    try {
-      this.setState({ _isLoading: true });
-      // add role for address
-      contract.methods
-        .addRole(publicAddress, role)
-        .send({ from: accounts[0] }, (error, _transactionHash) => {
-          if (error) {
-            this.setState({ _isLoading: false });
-          }
-        });
-    } catch (error) {
-      alert(error.message);
-    }
-  };
+  // addRole = async (newData) => {
+  //   const { publicAddress, role } = newData;
+  //   const { contract, accounts } = this.state;
+  //   try {
+  //     this.setState({ _isLoading: true });
+  //     // add role for address
+  //     contract.methods
+  //       .addRole(publicAddress, role)
+  //       .send({ from: accounts[0] }, (error, _transactionHash) => {
+  //         if (error) {
+  //           this.setState({ _isLoading: false });
+  //         }
+  //       });
+  //   } catch (error) {
+  //     alert(error.message);
+  //   }
+  // };
 
-  removeRole = async (oldData) => {
-    const { publicAddress, role } = oldData;
-    const { contract, accounts } = this.state;
-    try {
-      this.setState({ _isLoading: true });
-      contract.methods
-        .removeRole(publicAddress, role)
-        .send({ from: accounts[0] }, (error, _transactionHash) => {
-          if (error) {
-            this.setState({ _isLoading: false }); // Remove this line if not use loading effect
-          }
-        });
-    } catch (error) {
-      alert(error.message);
-    }
-  };
+  // removeRole = async (oldData) => {
+  //   const { publicAddress, role } = oldData;
+  //   const { contract, accounts } = this.state;
+  //   try {
+  //     this.setState({ _isLoading: true });
+  //     contract.methods
+  //       .removeRole(publicAddress, role)
+  //       .send({ from: accounts[0] }, (error, _transactionHash) => {
+  //         if (error) {
+  //           this.setState({ _isLoading: false }); // Remove this line if not use loading effect
+  //         }
+  //       });
+  //   } catch (error) {
+  //     alert(error.message);
+  //   }
+  // };
 
   render() {
     if (!this.state.web3) {
@@ -167,11 +183,44 @@ export default class Role extends Component {
           }}
           data={this.state.data}
           editable={{
-            onRowAdd: (newData) => this.addRole(newData),
-            onRowDelete: (oldData) => this.removeRole(oldData),
+            onRowAdd: (newData) =>
+              new Promise((resolve, reject) => {
+                // setTimeout(() => {
+                this.props.addRoleRequest(newData);
+                resolve();
+                // }, 0);
+              }),
+            onRowDelete: (oldData) =>
+              new Promise((resolve, reject) => {
+                // setTimeout(() => {
+                this.props.removeRoleRequest(oldData);
+                resolve();
+                // }, 0);
+              }),
           }}
         />
       </div>
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  loading: state.role.loading,
+  socket: state.header.socket,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addRoleRequest: (data) => {
+      dispatch(addRoleRequest(data));
+    },
+    removeRoleRequest: (data) => {
+      dispatch(removeRoleRequest(data));
+    },
+    roleChangedSuccess: () => {
+      dispatch(roleChanged());
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Role);

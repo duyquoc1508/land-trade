@@ -13,6 +13,7 @@ import propertyActivated from "../modules/Property/PropertyActivated/reducers";
 import initTransaction from "../modules/InitTransaction/reducers";
 import transaction from "../modules/Transaction/reducers";
 import header from "../components/Header/reducers";
+import role from "../modules/Role/reducers";
 import { reducer as formReducer } from "redux-form";
 
 const rootReducer = combineReducers({
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   initTransaction,
   transaction,
   header,
+  role,
   form: formReducer,
 });
 

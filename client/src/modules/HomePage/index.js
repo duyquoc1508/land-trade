@@ -12,9 +12,8 @@ class HomePage extends Component {
     };
   }
   componentDidMount() {
-    loadScript("js/plugin.js");
-    console.log("load main");
-    loadScript("js/main.js");
+    loadScript("/js/plugin.js");
+    loadScript("/js/main.js");
     axios
       .get(`${process.env.REACT_APP_BASE_URL_API}/certification/selling`)
       .then((response) => {
@@ -40,8 +39,12 @@ class HomePage extends Component {
                         <h1>LandTrade</h1>
                         <p>
                           Ứng dụng quản lý và giao dich bất động sản đáng tin
-                          cậy. Thông tin chính xác, minh bạch, bảo mật cho người
-                          dùng dựa trên công nghệ blockchain
+                          cậy.
+                        </p>
+                        <p>
+                          {" "}
+                          Thông tin chính xác, minh bạch, bảo mật cho người dùng
+                          dựa trên công nghệ Blockchain
                         </p>
                         {/* <div className="row">
                           <div className="col-sm-12">
@@ -153,7 +156,7 @@ class HomePage extends Component {
             <div className="container">
               <div className="row">
                 <div className="col-lg-6 col-md-6 col-sm-12 mb-30">
-                  <Link to="/listings?city=ho+chi+minh">
+                  <Link to="/listings?city=Ho+Chi+Minh">
                     <div className="single-place-wrap">
                       <div className="single-place-image">
                         <img src="images/places/place_10.jpg" alt="place" />
@@ -185,7 +188,7 @@ class HomePage extends Component {
                   </Link>
                 </div>
                 <div className="col-lg-4 col-md-6 col-sm-12 mb-30">
-                  <Link to="/listings?city=ha+noi">
+                  <Link to="/listings?city=Ha+Noi">
                     <div className="single-place-wrap">
                       <div className="single-place-image">
                         <img src="images/places/place_13.jpg" alt="place" />
@@ -217,7 +220,7 @@ class HomePage extends Component {
                   </Link>
                 </div>
                 <div className="col-lg-4 col-md-6 col-sm-12 mb-30">
-                  <Link to="/listings?city=vung+tau">
+                  <Link to="/listings?city=Vung+Tau">
                     <div className="single-place-wrap">
                       <div className="single-place-image">
                         <img src="images/places/place_15.jpg" alt="place" />
@@ -244,10 +247,10 @@ class HomePage extends Component {
                 <div className="col-xl-3 col-lg-12">
                   <div className="section-title v2">
                     {/* <p>Giao dịch nhiều nhất</p> */}
-                    <h2>Bất động sản nổi bật</h2>
+                    <h3>Bất động sản nổi bật</h3>
                   </div>
                 </div>
-                <div className="col-xl-9 col-lg-12">
+                <div className="col-xl-12 col-lg-12">
                   <div className="featured-property-wrap v2 swiper-container">
                     <div className="swiper-wrapper">
                       {this.state.mostDeals.map((item, index) => (
@@ -275,30 +278,35 @@ class HomePage extends Component {
                                 to={`/property/${item.transactionHash}`}
                                 className="property-author"
                               >
-                                <h4>{item.moreInfo.title}</h4>
+                                <h5 style={{ color: "#2a2a2a" }}>
+                                  {item.moreInfo.title}
+                                </h5>
                               </Link>
                               <ul className="property-feature">
                                 <li>
-                                  <span>
+                                  <span
+                                    style={{ color: "white", fortSize: "16px" }}
+                                  >
                                     {item.moreInfo.numOfBedrooms} phòng ngủ
                                   </span>
                                 </li>
                                 <li>
-                                  <span>
+                                  <span
+                                    style={{ color: "white", fortSize: "16px" }}
+                                  >
                                     {item.moreInfo.numOfBathrooms} phòng tắm
                                   </span>
                                 </li>
                                 <li>
-                                  <span>{item.moreInfo.areaFloor} m2</span>
+                                  <span
+                                    style={{ color: "white", fortSize: "16px" }}
+                                  >
+                                    {item.moreInfo.areaFloor} m2
+                                  </span>
                                 </li>
                               </ul>
-                              <div className="featured-price">
-                                <p>
-                                  <span className="per_sale">
-                                    Giá giao dịch
-                                  </span>
-                                  {formatCurrency(item.moreInfo.price)} VNĐ
-                                </p>
+                              <div className="featured-price mt-10">
+                                <p>{formatCurrency(item.moreInfo.price)} VNĐ</p>
                               </div>
                             </div>
                           </div>

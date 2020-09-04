@@ -77,7 +77,9 @@ function TransactionDetail(props) {
           buyers[0] && buyers[0].fullName
         } gửi yêu cầu đặt cọc tới ${
           sellers[0] && sellers[0].fullName
-        } giá trị ${formatCurrency(convertWeiToVND(transaction.depositPrice))}`,
+        } giá trị ${formatCurrency(
+          convertWeiToVND(transaction.depositPrice)
+        )} VNĐ`,
         explorer: transaction.transactionHash,
       },
 
@@ -99,11 +101,13 @@ function TransactionDetail(props) {
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
-        description: `${buyers[0] && buyers[0].fullName} từ chối giao dịch và ${
+        description: `${
           sellers[0] && sellers[0].fullName
+        } từ chối giao dịch và ${
+          buyers[0] && buyers[0].fullName
         } nhận lại ${formatCurrency(
           convertWeiToVND(transaction.depositPrice)
-        )}VNĐ tiền đặt cọc `,
+        )} VNĐ tiền đặt cọc `,
         explorer:
           transaction.transactionCanceled &&
           transaction.transactionCanceled.txHash,
@@ -113,17 +117,17 @@ function TransactionDetail(props) {
         // title: `${
         //   sellers[0] && sellers[0].fullName
         // } chấp nhận giao dịch và nhận đặt cọc`,
-        title: `Chấp nhận`,
+        title: `Chấp nhận giao dịch`,
         time:
           transaction.depositConfirmed &&
           formatDate(transaction.depositConfirmed.time),
         description: `${
-          buyers[0] && buyers[0].fullName
-        } chấp nhận giao dịch với ${
           sellers[0] && sellers[0].fullName
+        } chấp nhận giao dịch với ${
+          buyers[0] && buyers[0].fullName
         } và nhận ${formatCurrency(
           convertWeiToVND(transaction.depositPrice)
-        )}VNĐ tiền đặt cọc`,
+        )} VNĐ tiền đặt cọc`,
         explorer:
           transaction.depositConfirmed && transaction.depositConfirmed.txHash,
       },
@@ -140,7 +144,7 @@ function TransactionDetail(props) {
           buyers[0] && buyers[0].fullName
         } giá trị ${formatCurrency(
           convertWeiToVND(transaction.depositPrice * 2)
-        )}VNĐ`,
+        )} VNĐ`,
         explorer:
           transaction.transactionCanceled &&
           transaction.transactionCanceled.txHash,
@@ -168,9 +172,9 @@ function TransactionDetail(props) {
           buyers[0] && buyers[0].fullName
         } thanh toán số tiền còn lại: ${formatCurrency(
           convertWeiToVND(transaction.transferPrice - transaction.depositPrice)
-        )}VNĐ + thuế ${formatCurrency(
+        )} VNĐ + thuế ${formatCurrency(
           convertWeiToVND(transaction.transferPrice * 0.005)
-        )}VNĐ cho ${sellers[0] && sellers[0].fullName} `,
+        )} VNĐ cho ${sellers[0] && sellers[0].fullName} `,
         explorer: transaction.payment && transaction.payment.txHash,
       },
 
@@ -184,9 +188,9 @@ function TransactionDetail(props) {
           buyers[0] && buyers[0].fullName
         } hủy giao dịch nhận lại số tiền thanh toán còn lại ${formatCurrency(
           convertWeiToVND(transaction.transferPrice - transaction.depositPrice)
-        )}VNĐ + thuế ${formatCurrency(
+        )} VNĐ + thuế ${formatCurrency(
           convertWeiToVND(transaction.transferPrice * 0.005)
-        )} và mất tiền đặt cọc`,
+        )} VNĐ và mất tiền đặt cọc`,
         explorer:
           transaction.transactionCanceled &&
           transaction.transactionCanceled.txHash,
@@ -212,7 +216,7 @@ function TransactionDetail(props) {
       },
       PAYMENT_CONFIRMED: {
         // title: `${sellers[0] && sellers[0].fullName} chấp nhận thanh toán`,
-        title: `Xác nhận`,
+        title: `Xác nhận giao dịch`,
         time:
           transaction.paymentConfirmed &&
           formatDate(transaction.paymentConfirmed.time),

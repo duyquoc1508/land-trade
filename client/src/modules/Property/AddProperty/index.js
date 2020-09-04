@@ -20,25 +20,25 @@ class AddProperty extends Component {
     }
     loadScript("js/plugin.js");
     loadScript("js/main.js");
-    await this.listenEventFromBlockchain();
+    // await this.listenEventFromBlockchain();
   };
 
-  listenEventFromBlockchain = async () => {
-    this.props.realEstateContract &&
-      this.props.realEstateContract.events
-        .NewCertificate()
-        .on("data", (event) => {
-          setTimeout(() => {
-            this.props.createSuccess({
-              history: this.props.history,
-              txHash: event.transactionHash,
-            });
-          }, 1000);   // handle case SUCCESS before WAITING => toast could not be updated
+  // listenEventFromBlockchain = async () => {
+  //   this.props.realEstateContract &&
+  //     this.props.realEstateContract.events
+  //       .NewCertificate()
+  //       .on("data", (event) => {
+  //         setTimeout(() => {
+  //           this.props.createSuccess({
+  //             history: this.props.history,
+  //             txHash: event.transactionHash,
+  //           });
+  //         }, 500); // handle case SUCCESS before WAITING => toast could not be updated
 
-          // then push to screen this property
-        })
-        .on("error", console.error);
-  };
+  //         // then push to screen this property
+  //       })
+  //       .on("error", console.error);
+  // };
 
   handleClose() {
     this.setState({ open: false });
@@ -78,9 +78,9 @@ const mapDispatchToProps = (dispatch) => {
     createSubmit: (data) => {
       dispatch(actions.requestCreate(data));
     },
-    createSuccess: (txHash) => {
-      dispatch(actions.createSuccess(txHash));
-    },
+    // createSuccess: (txHash) => {
+    //   dispatch(actions.createSuccess(txHash));
+    // },
   };
 };
 
