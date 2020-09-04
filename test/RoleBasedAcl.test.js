@@ -1,10 +1,8 @@
 const RoleBasedAcl = artifacts.require("./RoleBasedAcl.sol");
 
-require("chai")
-  .use(require("chai-as-promised"))
-  .should();
+require("chai").use(require("chai-as-promised")).should();
 
-contract("RoleBasedAcl", async accounts => {
+contract("RoleBasedAcl", async (accounts) => {
   const [owner, account1, account2] = [...accounts];
 
   let instance;
@@ -29,6 +27,11 @@ contract("RoleBasedAcl", async accounts => {
       assert.equal(event.account, account1);
       assert.equal(event.role, 1);
     });
+    it("Should be emit event RoleAdded", async () => {
+      let event = result.logs[0].args;
+      assert.equal(result.logs[0].event, "RoleAdded");
+      assert.equal(event.account, account1);
+    });
     it("Should be rejected, user not permissions", async () => {
       {
         // FAILURE: An account should has only one role
@@ -41,7 +44,7 @@ contract("RoleBasedAcl", async accounts => {
 
   describe("Remove role", async () => {
     before(async () => {
-      await instance.addRole(account2, 1, { from: owner });
+      let result = await instance.addRole(account2, 1, { from: owner });
     });
     let result;
     it("Should remove role successfully", async () => {
@@ -52,11 +55,17 @@ contract("RoleBasedAcl", async accounts => {
       assert.equal(event.account, account2);
       assert.equal(event.role, 1);
     });
+    it("Should be emit event RoleRemoved", async () => {
+      let event = result.logs[0].args;
+      assert.equal(result.logs[0].event, "RoleRemoved");
+      assert.equal(event.account, account2);
+    });
     it("Should be rejected", async () => {
       // FAILURE: Remove role account doesn't have role
       await instance.removeRole(owner, 1, { from: owner }).should.be.rejected;
       // FAILURE: Method allowed only superadmin
-      await instance.removeRole(account1, 1, { from: account2 }).should.be.rejected;
+      await instance.removeRole(account1, 1, { from: account2 }).should.be
+        .rejected;
       // FAILURE: Unable remove role superadmin by itself
       await instance.removeRole(owner, 0, { from: owner }).should.be.rejected;
     });
