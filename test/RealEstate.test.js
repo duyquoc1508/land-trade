@@ -1,3 +1,5 @@
+// require run all describe one time. don't use "only"
+
 const RoleBasedAcl = artifacts.require("./RoleBasedAcl.sol");
 const RealEstate = artifacts.require("./RealEstate.sol");
 
@@ -16,14 +18,7 @@ contract("RealEstate", (accounts) => {
   });
 
   describe("Deployment", async () => {
-    it("deploys RoleBasedAcl successfully", async () => {
-      const address = await roleBasedAcl.address;
-      assert.notEqual(address, 0x0);
-      assert.notEqual(address, "");
-      assert.notEqual(address, null);
-      assert.notEqual(address, undefined);
-    });
-    it("deploys RealEstate successfully", async () => {
+    it("Deploys RealEstate successfully", async () => {
       const address = await realEstate.address;
       assert.notEqual(address, 0x0);
       assert.notEqual(address, "");
@@ -56,8 +51,10 @@ contract("RealEstate", (accounts) => {
         0,
         "State of certificate should be pendding"
       );
-      const event = result.logs[0].args;
-      assert.equal(event.idCertificate.toNumber(), idCertificate);
+    });
+    it("Should be emit event NewCertificate", async () => {
+      let event = result.logs[0].args;
+      assert.equal(event.idCertificate.toNumber(), 1);
     });
     it("Only allow notary", async () => {
       // FAILURE: Superadmin should be rejected
@@ -73,6 +70,7 @@ contract("RealEstate", (accounts) => {
     let tokenToState,
       tokenToOwners,
       idCertificate = 1;
+    let result;
     before(async () => {
       tokenToOwners = await realEstate.getOwnersOf(idCertificate);
       tokenToState = await realEstate.tokenToState(idCertificate);
@@ -81,16 +79,18 @@ contract("RealEstate", (accounts) => {
 
     it("Activate successfully", async () => {
       assert.equal(tokenToState.toNumber(), 0);
-      const tx1 = await realEstate.activate(idCertificate, { from: owner });
+      result = await realEstate.activate(idCertificate, { from: owner });
       tokenToState = await realEstate.tokenToState(idCertificate);
       assert.equal(
         tokenToState.toNumber(),
         1,
         "State of certificate should be 1"
       );
-      assert.equal(tx1.logs[0].args.owner, owner);
     });
-
+    it("Should be emit event Activate", async () => {
+      let event = result.logs[0].args;
+      assert.equal(event.owner, owner);
+    });
     it("Should be reject if not onwer", async () => {
       //FAILURE: Role superadmin
       await realEstate.activate(idCertificate, { from: superadmin }).should.be
@@ -98,55 +98,6 @@ contract("RealEstate", (accounts) => {
       //FAILUREl Role notary
       await realEstate.activate(idCertificate, { from: notary }).should.be
         .rejected;
-    });
-  });
-
-  describe("Transfer ownership of certificate", async () => {
-    let tokenToState,
-      tokenToOwners,
-      idCertificate = 1;
-    before(async () => {
-      tokenToOwners = await realEstate.getOwnersOf(idCertificate);
-      tokenToState = await realEstate.tokenToState(idCertificate);
-      tokenToApprove = await realEstate.getOwnerApproved(idCertificate);
-    });
-
-    it("Transfer ownership successfully", async () => {
-      assert.equal(
-        tokenToState.toNumber(),
-        1,
-        "State of certificate should be 1"
-      );
-      const tx1 = await realEstate.transferOwnership(idCertificate, [buyer], {
-        from: owner,
-      });
-      assert.equal(
-        tokenToState.toNumber(),
-        1,
-        "State of certificate should be 1"
-      );
-      assert.equal(
-        tx1.logs[0].args.oldOwner[0],
-        owner,
-        "representation of seller should be owner"
-      );
-      assert.equal(
-        tx1.logs[0].args.newOwner[0],
-        buyer,
-        "representation of buyer should be buyer"
-      );
-      assert.equal(tx1.logs[0].args.idCertificate, 1);
-    });
-
-    it("Should be reject if not onwer", async () => {
-      //FAILURE: nomal user: buyer
-      await realEstate.transferOwnership(idCertificate, [buyer], {
-        from: superadmin,
-      }).should.be.rejected;
-      //FAILUREl Role notary
-      await realEstate.transferOwnership(idCertificate, [buyer], {
-        from: notary,
-      }).should.be.rejected;
     });
   });
 });
