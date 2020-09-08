@@ -5,7 +5,7 @@ import { fetchSinglePropertyRequest } from "./actions";
 import axios from "axios";
 
 function PropertyStandard({ match, history, data, fetchSingleProperty }) {
-  console.log("PropertyStandard -> history", history);
+  // console.log("PropertyStandard -> history", history);
   const idProperty = match.params.hash;
   const [owners, setOwners] = useState([]);
 

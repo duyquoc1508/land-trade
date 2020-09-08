@@ -18,7 +18,7 @@ export async function updateCertStatus(event) {
 
 // create notification for all owners of certificate
 export async function createNotification(event) {
-  const owners = event.returnValues.owners;
+  const { notary, owners } = event.returnValues;
   const data = {
     url: `/my-properties`,
     message: "Bạn có 1 tài sản mới đang chờ xác nhận."
@@ -31,11 +31,21 @@ export async function createNotification(event) {
   owners.forEach(owner =>
     socketService.emitEventToIndividualClient("new_certification", owner, data)
   );
+  socketService.emitEventToIndividualClient(
+    "create_cert_success",
+    notary,
+    event.transactionHash
+  );
   return promises;
 }
 
 // handle event activate certificate on blockchain and update database mongodb
 export async function handleActivateCertificate(event) {
+  socketService.emitEventToIndividualClient(
+    "activate_cert",
+    event.returnValues.owner,
+    event.transactionHash
+  );
   const query = { idInBlockchain: event.returnValues.idCertificate };
   const update = {
     state: event.returnValues.state,

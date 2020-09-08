@@ -2,6 +2,7 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 import passport from "passport";
 import "dotenv/config";
+import winston from "./winston";
 // import compression from 'compression';
 // import helmet from 'helmet';
 
@@ -15,7 +16,16 @@ export default app => {
 
   // Enable CORS from client-side
   app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", process.env.REACT_APP_BASE_URL);
+    const allowedOrigins = [
+      `${process.env.REACT_APP_BASE_URL}`,
+      `${process.env.REACT_APP_BASE_URL}:${process.env.FRONT_END_PORT}`,
+      `${process.env.FRONT_END_DOMAIN}`
+    ];
+    var origin = req.headers.origin;
+    if (allowedOrigins.indexOf(origin) > -1) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+    }
+    // res.header("Access-Control-Allow-Origin", process.env.REACT_APP_BASE_URL);
     res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE");
     res.header(
       "Access-Control-Allow-Headers",
@@ -29,6 +39,8 @@ export default app => {
   if (isProd) {
     // app.use(compression());
     // app.use(helmet());
+    // using combined instead tiny
+    app.use(morgan("tiny", { stream: winston.stream }));
   }
   if (isDev) {
     // logger middlewares

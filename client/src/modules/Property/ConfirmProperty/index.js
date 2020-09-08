@@ -1,26 +1,23 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import PropertyStandard from "../PropertyStandard";
-import {
-  activateCertificateRequest,
-  activateCertificateSuccess,
-} from "./action";
-import NotFound from "../../NotFound/index";
+import { activateCertificateRequest } from "./action";
 
 const ConfirmProperty = (props) => {
-  useEffect(() => {
-    props.realEstateContract &&
-      props.realEstateContract.events
-        .Activate()
-        .on("data", (event) => {
-          props.history.push(`/property-standard/${props.match.params.hash}`);
-          props.activateCertSuccess({
-            history: props.history,
-            txHash: event.transactionHash,
-          });
-        })
-        .on("error", console.error);
-  }, [props.realEstateContract]);
+  // listen event direct from blockchain
+  // useEffect(() => {
+  //   props.realEstateContract &&
+  //     props.realEstateContract.events
+  //       .Activate()
+  //       .on("data", (event) => {
+  //         props.history.push(`/property-standard/${props.match.params.hash}`);
+  //         props.activateCertSuccess({
+  //           history: props.history,
+  //           txHash: event.transactionHash,
+  //         });
+  //       })
+  //       .on("error", console.error);
+  // }, [props.realEstateContract]);
 
   return (
     <div className="mt-85 container">
@@ -59,9 +56,9 @@ const mapDispatchToProps = (dispatch) => {
     activateCert: (idInBlockchain) => {
       dispatch(activateCertificateRequest(idInBlockchain));
     },
-    activateCertSuccess: (data) => {
-      dispatch(activateCertificateSuccess(data));
-    },
+    // activateCertSuccess: (data) => {
+    //   dispatch(activateCertificateSuccess(data));
+    // },
   };
 };
 

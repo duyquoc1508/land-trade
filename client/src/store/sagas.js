@@ -11,6 +11,7 @@ import propertySelling from "../modules/Property/PropertySelling/saga";
 import propertyActivated from "../modules/Property/PropertyActivated/saga";
 import initTransaction from "../modules/InitTransaction/saga";
 import transaction from "../modules/Transaction/saga";
+import role from "../modules/Role/saga";
 
 function* rootSaga() {
   // yield loginSaga();
@@ -27,6 +28,7 @@ function* rootSaga() {
     propertyActivated(),
     initTransaction(),
     transaction(),
+    role(),
   ]);
 }
 

@@ -5,12 +5,12 @@ const certificationSchema = new Schema(
   {
     owners: [
       {
-        type: String, // multiple publicAddress of user
-      },
+        type: String // multiple publicAddress of user
+      }
     ],
     notary: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "User"
     },
     // II. Land lot, house and other properties attaching with land
     properties: {
@@ -22,7 +22,7 @@ const certificationSchema = new Schema(
         address: String,
         purposeOfUse: String,
         timeOfUse: String,
-        originOfUse: String,
+        originOfUse: String
       },
       house: {
         houseType: String,
@@ -32,43 +32,44 @@ const certificationSchema = new Schema(
         level: String,
         numberOfFloor: String,
         formOfOwn: String,
-        timeOfOwn: String,
+        timeOfOwn: String
       },
       otherConstruction: String,
       //production forest is an artificial forest
       prodForestIsArtificial: String,
       perennialTree: String,
-      notice: String,
+      notice: String
     },
     state: {
       type: Number,
-      default: 0, //0: Not activated, 1: Activated, 2: Selling, 3: In transaction
+      default: 0 //0: Not activated, 1: Activated, 2: Selling, 3: In transaction
     },
     ownersActivated: [
       {
-        type: String,
-      },
+        type: String
+      }
     ],
     ownersAllowedSale: [
       {
-        type: String,
-      },
+        type: String
+      }
     ],
     images: [
       {
-        type: String,
-      },
+        type: String
+      }
     ],
     // updated when transaction is confirmed
     transactionHash: {
       type: String,
+      index: { unique: true }
     },
     isConfirmed: {
       type: Boolean,
-      default: false,
+      default: false
     },
     idInBlockchain: {
-      type: Number,
+      type: Number
     },
     moreInfo: {
       title: String,
@@ -78,8 +79,8 @@ const certificationSchema = new Schema(
       areaFloor: Number,
       price: Number,
       galleries: [{ type: String }],
-      utilities: [{ type: String }],
-    },
+      utilities: [{ type: String }]
+    }
   },
   { timestamps: true }
 );

@@ -55,16 +55,18 @@ function PropertyActivated({ properties, activateSale }) {
                     >
                       <i className="ion-android-add-circle"></i> Thêm thông tin
                     </button>
-                    <button
-                      className="btn v4 ml-2"
-                      style={{
-                        background: "#6449e7",
-                        border: "1px solid transparent",
-                      }}
-                      onClick={() => activateSale(property._id)}
-                    >
-                      <i className="ion-android-add-circle"></i> Bán
-                    </button>
+                    {property.state === 1 && (
+                      <button
+                        className="btn v4 ml-2"
+                        style={{
+                          background: "#6449e7",
+                          border: "1px solid transparent",
+                        }}
+                        onClick={() => activateSale(property._id)}
+                      >
+                        <i className="ion-android-add-circle"></i> Bán
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

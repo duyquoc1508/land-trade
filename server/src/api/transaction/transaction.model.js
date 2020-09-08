@@ -6,7 +6,7 @@ const transactionState = [
   "DEPOSIT_CONFIRMED",
   "PAYMENT_REQUEST",
   "PAYMENT_CONFIRMED",
-  "CANCELED",
+  "CANCELED"
 ];
 
 const cancellationStatus = [
@@ -14,7 +14,7 @@ const cancellationStatus = [
   "DEPOSIT_CANCELED_BY_SELLER",
   "DEPOSIT_BROKEN_BY_SELLER",
   "DEPOSIT_BROKEN_BY_BUYER",
-  "TRANSFER_CANCELED_BY_SELLER",
+  "TRANSFER_CANCELED_BY_SELLER"
 ];
 
 const transactionSchema = new Schema(
@@ -35,15 +35,17 @@ const transactionSchema = new Schema(
     transactionCanceled: {
       txHash: String,
       time: Date,
-      reason: { type: String, enum: cancellationStatus },
+      reason: { type: String, enum: cancellationStatus }
     },
     state: {
       type: String,
       enum: transactionState,
-      default: transactionState[0], // DEPOSIT_REQUEST
-    },
+      default: transactionState[0] // DEPOSIT_REQUEST
+    }
   },
   { timestamps: true }
 );
+
+transactionSchema.index({ transactionHash: 1 }, { unique: true });
 
 export default mongoose.model("Transaction", transactionSchema);

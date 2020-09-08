@@ -12,7 +12,7 @@ class index extends Component {
     return this.props.history.location.pathname ===
       "/verify-account" ? null : user &&
       user.isVerified == 0 &&
-      user.role != "Notary" ? (
+      user.role == "owner" ? (
       <div
         style={{
           position: "fixed",
@@ -28,7 +28,7 @@ class index extends Component {
       >
         Vui lòng xác thực tài khoản <a href="/verify-account">tại đây</a>
       </div>
-    ) : user.isVerified == 1 && user.role != "Notary" ? (
+    ) : user.isVerified == 1 && user.role == "owner" ? (
       <div
         style={{
           position: "fixed",

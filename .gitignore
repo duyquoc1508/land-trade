@@ -9,6 +9,9 @@ node_modules
 # production
 build
 
+# logs
+logs
+
 # misc
 .DS_Store
 .vscode
