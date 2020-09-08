@@ -48,6 +48,12 @@ const menus = [
     role: "Notary",
   },
   {
+    name: "Danh sách tài sản",
+    to: "/certification",
+    exact: false,
+    role: "Notary",
+  },
+  {
     name: "Quản lý tài khoản",
     to: "/role",
     exact: false,
