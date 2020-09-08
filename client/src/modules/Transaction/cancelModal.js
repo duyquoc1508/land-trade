@@ -222,7 +222,7 @@ const CancelTransaction = (props) => {
               </li>
             </ul>
           </div>
-          <div className="agent-details">
+          {/* <div className="agent-details">
             <h5>Lưu ý:</h5>
             <ul className="address-list">
               <li>
@@ -231,7 +231,7 @@ const CancelTransaction = (props) => {
                 dịch.
               </li>
             </ul>
-          </div>
+          </div> */}
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
