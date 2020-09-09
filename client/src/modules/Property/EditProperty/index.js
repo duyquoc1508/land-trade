@@ -77,7 +77,7 @@ export class EditProperty extends Component {
   }
   handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(this.state.price.toString().replace(/\./g, ""));
+    // console.log(this.state.price.toString().replace(/\./g, ""));
     let response = await axios({
       method: "put",
       url: `${process.env.REACT_APP_BASE_URL_API}/certification/edit/${this.props.match.params.hash}`,
@@ -91,12 +91,15 @@ export class EditProperty extends Component {
     });
     if (response.status === 200) {
       toast(<ToastSuccess message={"Cập nhật thành công!"} />, {
+        autoClose: 2000,
         type: toast.TYPE.SUCCESS,
         position: toast.POSITION.BOTTOM_RIGHT,
         onClick: () => {
           this.props.history.push(`/property/${this.props.match.params.hash}`);
         },
       });
+      this.props.history.push("/my-property");
+      // this.props.history.push(`/property/${this.props.match.params.hash}`);
     } else {
       toast.error("Cập nhật thất bại. Vui lòng thử lại!", {
         position: toast.POSITION.BOTTOM_RIGHT,
@@ -160,6 +163,7 @@ export class EditProperty extends Component {
       toast.update(toastId, {
         render: <ToastSuccess message={"Tải lên ảnh thành công"} />,
         type: toast.TYPE.SUCCESS,
+        autoClose: 1500,
       });
       console.log(toastId);
     } catch (error) {
