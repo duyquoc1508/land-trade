@@ -2,16 +2,21 @@ import { takeEvery, call, put } from "redux-saga/effects";
 import {
   FETCH_LISTINGS_SALE,
   FETCH_LISTINGS_SALE_SUCCESS,
-  FETCH_LISTINGS_SALE_ERROR
+  FETCH_LISTINGS_SALE_ERROR,
 } from "./constants";
 import axios from "axios";
 // import Cookie from "../../helper/cookie";
 
 const handleClick = async () => {
-  // console.log(typeof property);
+  const urlParams = new URLSearchParams(window.location.search);
+  const pageNumber = urlParams.get("page");
   let response = await axios({
     method: "get",
-    url: `${process.env.REACT_APP_BASE_URL_API}/certification/selling`
+    url: `${process.env.REACT_APP_BASE_URL_API}/certification/selling`,
+    params: {
+      page: pageNumber,
+      limit: 9,
+    },
   });
   return response.data.data;
 };
