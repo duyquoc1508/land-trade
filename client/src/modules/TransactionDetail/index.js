@@ -89,7 +89,9 @@ function TransactionDetail(props) {
         time:
           transaction.transactionCanceled &&
           formatDate(transaction.transactionCanceled.time),
-        description: `${buyers[0] && buyers[0].fullName} hủy yêu cầu đặt cọc`,
+        description: `${
+          buyers[0] && buyers[0].fullName
+        } hủy yêu cầu đặt cọc và nhận lại tiền đặt cọc`,
         explorer:
           transaction.transactionCanceled &&
           transaction.transactionCanceled.txHash,
@@ -172,9 +174,11 @@ function TransactionDetail(props) {
           buyers[0] && buyers[0].fullName
         } thanh toán số tiền còn lại: ${formatCurrency(
           convertWeiToVND(transaction.transferPrice - transaction.depositPrice)
-        )} VNĐ + thuế ${formatCurrency(
+        )}VNĐ cho ${
+          sellers[0] && sellers[0].fullName
+        } và + thuế ${formatCurrency(
           convertWeiToVND(transaction.transferPrice * 0.005)
-        )} VNĐ cho ${sellers[0] && sellers[0].fullName} `,
+        )}VNĐ cho nhà nước`,
         explorer: transaction.payment && transaction.payment.txHash,
       },
 

@@ -90,6 +90,12 @@ routes.get("/selling", certificationController.getAllPropertiesOnSale);
  */
 routes.get("/user", authJwt, certificationController.getAllPropertiesOfUser);
 
+/**
+ * GET all certificate
+ * GET api/v1/certification/
+ */
+routes.get("/all-status", certificationController.getAllCertificates);
+
 // /**
 //  * Get certification information
 //  * GET api/v1/certification/{{idCertification}}

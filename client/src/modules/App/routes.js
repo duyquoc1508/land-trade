@@ -22,6 +22,7 @@ import MyTransactions from "../MyTransactions";
 import TransactionProperty from "../Property/TransactionProperty";
 import TransactionDetail from "../TransactionDetail";
 import Investing from "../Investing";
+import ManagementCertificate from "../ManagementCertificate";
 
 const routes = [
   {
@@ -147,6 +148,12 @@ const routes = [
     path: "/management-user",
     exact: false,
     main: () => <ManagementUser />,
+  },
+
+  {
+    path: "/certification",
+    exact: false,
+    main: () => <ManagementCertificate />,
   },
   {
     path: "/verify-account",

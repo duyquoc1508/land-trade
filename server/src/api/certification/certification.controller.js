@@ -352,3 +352,18 @@ export async function getOwnersInfoOfCertificate(req, res, next) {
     return res.status(500).json({ statusCode: 500, message: error.message });
   }
 }
+
+// get all certificate
+export async function getAllCertificates(req, res, next) {
+  try {
+    const certificates = await Certification.find({})
+      .sort({ updatedAt: -1 })
+      .lean();
+    if (!certificates) {
+      return ErrorHandler(404, "Certificates not found!");
+    }
+    return res.status(200).json({ statusCode: 200, data: certificates });
+  } catch (error) {
+    return res.status(500).json({ statusCode: 500, message: error.message });
+  }
+}
