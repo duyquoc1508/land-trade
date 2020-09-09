@@ -303,11 +303,15 @@ export async function getAllActivatedCertificates(_req, res, next) {
 }
 
 // Get all properties currently on sale
-export async function getAllPropertiesOnSale(_req, res, next) {
+export async function getAllPropertiesOnSale(req, res, next) {
+  const pageSize = req.query.limit;
+  const begin = (req.query.page - 1) * pageSize;
   try {
     const listPropertiesSelling = await Certification.find({ state: 2 })
+      .lean()
       .sort({ _id: -1 })
-      .lean();
+      .limit(pageSize)
+      .skip(begin);
     if (listPropertiesSelling.length === 0)
       throw new ErrorHandler(404, "There are no properties on sale");
     return res.status(200).json({ status: 200, data: listPropertiesSelling });

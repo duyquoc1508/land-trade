@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authJwt } from "../../service/passport.service";
 import * as certificationController from "./certification.controller";
 import permit from "../../service/permission.service";
+import pagination from "../../helper/pagination";
 
 const routes = Router();
 
@@ -82,7 +83,11 @@ routes.get("/", certificationController.getAllActivatedCertificates);
  * Get all properties currently on sale
  * GET api/v1/certification/selling
  */
-routes.get("/selling", certificationController.getAllPropertiesOnSale);
+routes.get(
+  "/selling",
+  pagination,
+  certificationController.getAllPropertiesOnSale
+);
 
 /**
  * Get all properties currently of user
