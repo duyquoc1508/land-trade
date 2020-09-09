@@ -76,6 +76,7 @@ export default class TransactionProperty extends Component {
         },
       ],
       data: [],
+      property: {},
       rowSelected: {},
       _isLoading: false,
       openAction: false,
@@ -87,20 +88,22 @@ export default class TransactionProperty extends Component {
 
   fetchData = async () => {
     try {
-      const responseT = axios.get(
-        `${process.env.REACT_APP_BASE_URL_API}/transaction/property/${this.props.match.params.idPropertyInBlockchain}`
-      );
       const responseP = axios.get(
         `${process.env.REACT_APP_BASE_URL_API}/certification/${this.props.match.params.hash}`
       );
-      const [transactionR, propertyR] = await Promise.all([
-        responseT,
+      const responseT = axios.get(
+        `${process.env.REACT_APP_BASE_URL_API}/transaction/property/${this.props.match.params.idPropertyInBlockchain}`
+      );
+
+      const [propertyR, transactionR] = await Promise.all([
         responseP,
+        responseT,
       ]);
-      let [transaction, property] = [
-        transactionR.data.data,
+      let [property, transaction] = [
         propertyR.data.data,
+        transactionR.data.data,
       ];
+      this.setState({ property });
       let data = transaction.map((transaction) => ({
         hash: transaction.transactionHash,
         title: property.properties.landLot.address,
@@ -143,8 +146,15 @@ export default class TransactionProperty extends Component {
       <div className="mt-100 container" style={{ maxWidth: "" }}>
         <MaterialTable
           isLoading={this.state._isLoading}
+          // title={`Lịch sử giao dịch của tài sản tại ${
+          //   this.state.data[0] && this.state.data[0].title
+          // }`}
+
           title={`Lịch sử giao dịch của tài sản tại ${
-            this.state.data[0] && this.state.data[0].title
+            (this.state.property.properties &&
+              this.state.property.properties.landLot &&
+              this.state.property.properties.landLot.address) ||
+            ""
           }`}
           columns={this.state.columns}
           options={{

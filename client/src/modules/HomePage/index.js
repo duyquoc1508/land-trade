@@ -44,7 +44,7 @@ class HomePage extends Component {
                         <p>
                           {" "}
                           Thông tin chính xác, minh bạch, bảo mật cho người dùng
-                          dựa trên công nghệ Blockchain
+                          dựa trên công nghệ Blockchain.
                         </p>
                         {/* <div className="row">
                           <div className="col-sm-12">

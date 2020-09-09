@@ -137,7 +137,10 @@ class Property extends Component {
                         >
                           Xem bản đồ<i className="fa fa-map-marker-alt"></i>
                         </a>
-                        <ul className="listing-address">
+                        <ul
+                          className="listing-address"
+                          className={{ columns: 1 }}
+                        >
                           <li>
                             <span>{property.properties.landLot.address}</span>
                           </li>
@@ -151,7 +154,8 @@ class Property extends Component {
                         <ul className="property-info">
                           <li>
                             Diện tích mặt sàn:{" "}
-                            <span>{property.moreInfo.areaFloor}</span>
+                            <span>{property.moreInfo.areaFloor}</span> m
+                            <sup>2</sup>
                           </li>
                           <li>
                             Số phòng ngủ:{" "}

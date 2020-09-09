@@ -21,11 +21,10 @@ export function realEstateListener() {
 }
 
 async function handleEvent(event) {
-  console.log(event);
   switch (event.event) {
     case RealEstateEvent.NEW_CERTIFICATE:
-      helper.updateCertStatus(event);
       helper.createNotification(event);
+      helper.updateCertStatus(event);
       return;
     // Promise.all([p1, ...p2]);
     case RealEstateEvent.ACTIVATE:

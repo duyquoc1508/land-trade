@@ -16,7 +16,10 @@ export async function getCertificationWithTxHash(req, res, next) {
   try {
     const certification = await Certification.findOne({
       transactionHash: req.params.txHash
-    }).lean();
+    })
+      // .populate({ path: "owners", select: "fullName" })
+      .populate({ path: "notary", select: ["fullName", "idNumber"] })
+      .lean();
     if (!certification) {
       throw new ErrorHandler(404, "Certification not found");
     }
@@ -302,7 +305,9 @@ export async function getAllActivatedCertificates(_req, res, next) {
 // Get all properties currently on sale
 export async function getAllPropertiesOnSale(_req, res, next) {
   try {
-    const listPropertiesSelling = await Certification.find({ state: 2 }).lean();
+    const listPropertiesSelling = await Certification.find({ state: 2 })
+      .sort({ _id: -1 })
+      .lean();
     if (listPropertiesSelling.length === 0)
       throw new ErrorHandler(404, "There are no properties on sale");
     return res.status(200).json({ status: 200, data: listPropertiesSelling });

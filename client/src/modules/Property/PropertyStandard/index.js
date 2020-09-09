@@ -10,20 +10,21 @@ function PropertyStandard({ match, history, data, fetchSingleProperty }) {
   const [owners, setOwners] = useState([]);
 
   useEffect(() => {
+    fetchSingleProperty(idProperty);
     (async () => {
       const response = await axios.get(
         `${process.env.REACT_APP_BASE_URL_API}/certification/owners/${idProperty}`
       );
-      console.log(response.data.data);
+      // console.log(response.data.data);
       setOwners(response.data.data);
     })();
-    fetchSingleProperty(idProperty);
   }, []);
 
   if (!data) {
     return "";
   } else {
     const { properties, images } = data;
+    const notarizationDate = new Date(data.createdAt);
     return (
       <div className="mt-85 container">
         <div className="row">
@@ -36,7 +37,10 @@ function PropertyStandard({ match, history, data, fetchSingleProperty }) {
                   {owners.map((owner, index) => (
                     <li className="ow-li-lv2" key={index}>
                       <span>Ông (Bà): </span>
-                      <span className="ml-0"> {owner.fullName} </span>
+                      {/* <span className="ml-0">  */}
+                      {owner.fullName}
+                      {/* </span> */}
+                      <span>Số CMND:</span> {owner.idNumber}
                     </li>
                   ))}
                 </ol>
@@ -46,28 +50,30 @@ function PropertyStandard({ match, history, data, fetchSingleProperty }) {
                 <ol type="a">
                   <li className="ow-li-lv2">
                     <span>a) Thửa đất số:</span> {properties.landLot.landLotNo}
-                    <span>Tờ bản đồ số:</span> {properties.landLot.mapSheetNo}
+                    <span>Tờ bản đồ số:</span>{" "}
+                    {properties.landLot.mapSheetNo || "-/-"}
                   </li>
                   <li className="ow-li-lv2">
-                    <span>b) Địa chỉ:</span> {properties.landLot.address}
+                    <span>b) Địa chỉ:</span>{" "}
+                    {properties.landLot.address || "-/-"}
                   </li>
                   <li className="ow-li-lv2">
                     <span>c) Diện tích chung:</span>{" "}
-                    {properties.landLot.commonUseArea} m<sup>2</sup>
+                    {properties.landLot.commonUseArea || 0} m<sup>2</sup>
                     <span>Diện tích riêng:</span>{" "}
-                    {properties.landLot.privateUseArea} m<sup>2</sup>
+                    {properties.landLot.privateUseArea || 0} m<sup>2</sup>
                   </li>
                   <li className="ow-li-lv2">
                     <span>d) Mục đích sử dụng:</span>{" "}
-                    {properties.landLot.purposeOfUse}
+                    {properties.landLot.purposeOfUse || "-/-"}
                   </li>
                   <li className="ow-li-lv2">
                     <span>e) Thời hạn sử dụng:</span>{" "}
-                    {properties.landLot.timeOfUse}
+                    {properties.landLot.timeOfUse || "-/-"}
                   </li>
                   <li className="ow-li-lv2">
                     <span>f) Nguồn gốc sử dụng:</span>{" "}
-                    {properties.landLot.originOfUse}
+                    {properties.landLot.originOfUse || "-/-"}
                   </li>
                 </ol>
               </li>
@@ -149,6 +155,27 @@ function PropertyStandard({ match, history, data, fetchSingleProperty }) {
                 ))}
               </div>
             </div>
+          </div>
+          <div className="col-sm-6 mt-10">
+            <h5>Thông tin công chứng</h5>
+            <ol>
+              <li className="ow-li-lv1">
+                1. Công chứng viên:
+                <ol type="a">
+                  <li className="ow-li-lv2">
+                    <span>Ông (Bà): </span>
+                    {data.notary && data.notary.fullName}
+                    <span>Số CMND:</span> {data.notary && data.notary.idNumber}
+                  </li>
+                </ol>
+              </li>
+              <li className="ow-li-lv1">
+                2. Ngày công chứng:{" "}
+                <p>
+                  {` Ngày ${notarizationDate.getDate()} tháng ${notarizationDate.getMonth()} năm ${notarizationDate.getFullYear()}`}
+                </p>
+              </li>
+            </ol>
           </div>
         </div>
       </div>

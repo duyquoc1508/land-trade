@@ -115,11 +115,11 @@ export async function getAllTransactionsOfProperty(req, res, next) {
       idPropertyInBlockchain,
       state: { $in: stateOfTransactionEnded }
     })
-      .sort({ updatedAt: 1 }) // old to new
+      .sort({ updatedAt: -1 }) // new to old
       .lean();
-    if (transaction.length === 0) {
-      throw new ErrorHandler(404, "Not found transaction");
-    }
+    // if (transaction.length === 0) {
+    //   throw new ErrorHandler(404, "Not found transaction");
+    // }
     return res.status(200).json({ statusCode: 200, data: transaction });
   } catch (error) {
     next(error);
