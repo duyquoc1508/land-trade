@@ -12,6 +12,7 @@ class Listings extends Component {
     super(props);
     this.state = {
       listingSaleFilter: [],
+      page: new URLSearchParams(location.search).get("page") || 1,
     };
   }
 
@@ -37,6 +38,17 @@ class Listings extends Component {
       this.state.listingSaleFilter.length !== this.props.listingSale.length &&
         this.setState({ listingSaleFilter: this.props.listingSale });
     }
+  }
+
+  switchPage(event, page) {
+    let pageNumber = page;
+    if (page == -1) {
+      pageNumber = this.state.page + 1;
+    }
+    this.setState({ page: pageNumber }, () => {
+      this.props.history.push({ search: `?page=${this.state.page}` });
+      this.props.handleClick();
+    });
   }
 
   renderItem() {
@@ -148,6 +160,73 @@ class Listings extends Component {
                     ) : (
                       <div className="tab-content">
                         <div className="row">{this.renderItem()}</div>
+                        {/* <!--pagination starts--> */}
+                        <div className="post-nav nav-res pt-50  ">
+                          <div className="row">
+                            <div className="col-md-8 offset-md-2  col-xs-12 ">
+                              <div className="page-num text-center">
+                                <ul>
+                                  <li
+                                    className={
+                                      this.state.page != 1 ? "" : "active"
+                                    }
+                                  >
+                                    <button
+                                      onClick={(e) => this.switchPage(e, 1)}
+                                    >
+                                      1
+                                    </button>
+                                  </li>
+                                  <li
+                                    className={
+                                      this.state.page != 2 ? "" : "active"
+                                    }
+                                  >
+                                    <button
+                                      onClick={(e) => this.switchPage(e, 2)}
+                                    >
+                                      2
+                                    </button>
+                                  </li>
+                                  <li
+                                    className={
+                                      this.state.page != 3 ? "" : "active"
+                                    }
+                                  >
+                                    <button
+                                      onClick={(e) => this.switchPage(e, 3)}
+                                    >
+                                      3
+                                    </button>
+                                  </li>
+                                  {/* <li
+                                    className={
+                                      this.state.page != 4 ? "" : "active"
+                                    }
+                                  >
+                                    <button
+                                      onClick={(e) => this.switchPage(e, 4)}
+                                    >
+                                      4
+                                    </button>
+                                  </li> */}
+                                  <li
+                                    className={
+                                      this.state.page > 3 ? "active" : ""
+                                    }
+                                  >
+                                    <button
+                                      onClick={(e) => this.switchPage(e, -1)}
+                                    >
+                                      <i className="lnr lnr-chevron-right"></i>
+                                    </button>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {/* <!--pagination ends--> */}
                       </div>
                     )}
                   </div>

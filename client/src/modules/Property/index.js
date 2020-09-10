@@ -154,21 +154,25 @@ class Property extends Component {
                         <ul className="property-info">
                           <li>
                             Diện tích mặt sàn:{" "}
-                            <span>{property.moreInfo.areaFloor}</span> m
-                            <sup>2</sup>
+                            <span>{property.moreInfo.areaFloor || "-/-"}</span>{" "}
+                            m<sup>2</sup>
                           </li>
                           <li>
                             Số phòng ngủ:{" "}
-                            <span>{property.moreInfo.numOfBedrooms}</span>
+                            <span>
+                              {property.moreInfo.numOfBedrooms || "-/-"}
+                            </span>
                           </li>
                           <li>
                             Số phòng tắm:{" "}
-                            <span>{property.moreInfo.numOfBathrooms}</span>
+                            <span>
+                              {property.moreInfo.numOfBathrooms || "-/-"}
+                            </span>
                           </li>
                           <li>
                             Giá tiền:{" "}
                             <span>
-                              {formatCurrency(property.moreInfo.price)}
+                              {formatCurrency(property.moreInfo.price) || 0}
                             </span>
                             {" VND"}
                           </li>
@@ -221,17 +225,19 @@ class Property extends Component {
                       <ul className="address-list" style={{ margin: 0 }}>
                         <li>
                           <span>Số tiền :</span>
-                          {formatCurrency(property.moreInfo.price)}
+                          {formatCurrency(property.moreInfo.price) || "-/-"}
                           {" VNĐ"}
                         </li>
                         <li>
                           <span>Thuế:</span>
-                          {formatCurrency(property.moreInfo.price * 0.005)}
+                          {formatCurrency(property.moreInfo.price * 0.005) ||
+                            "-/-"}
                           {" VNĐ"}
                         </li>
                         <li>
                           <span>Tổng số tiền:</span>
-                          {formatCurrency(property.moreInfo.price * 1.05)}
+                          {formatCurrency(property.moreInfo.price * 1.05) ||
+                            "-/-"}
                           {" VNĐ"}
                         </li>
 
@@ -261,6 +267,22 @@ class Property extends Component {
                   </div>
                   <div className="widget mortgage-widget">
                     <div className="agent-details">
+                      {/* <h3>Giao dịch</h3> */}
+                      <ul className="address-list" style={{ margin: 0 }}>
+                        <div className="mortgage-btn">
+                          <button
+                            onClick={() =>
+                              this.props.history.push(
+                                `/property-standard/${property.transactionHash}`
+                              )
+                            }
+                          >
+                            Xem thông tin tài sản
+                          </button>
+                        </div>
+                      </ul>
+                    </div>
+                    <div className="agent-details mt-15">
                       {/* <h3>Giao dịch</h3> */}
                       <ul className="address-list" style={{ margin: 0 }}>
                         <div className="mortgage-btn">

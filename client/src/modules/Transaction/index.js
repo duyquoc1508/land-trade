@@ -39,10 +39,10 @@ const Transaction = (props) => {
   const [currentSteps, setCurrentSteps] = useState(1); // = last step success
   const [steps, setSteps] = useState(2);
   const stepsToName = {
-    "1": "Yêu cầu đặt cọc",
-    "2": "Chấp nhận",
-    "3": "Thanh toán",
-    "4": "Xác nhận",
+    1: "Yêu cầu đặt cọc",
+    2: "Chấp nhận",
+    3: "Thanh toán",
+    4: "Xác nhận",
   };
 
   const styleLeftDot = {
@@ -91,7 +91,8 @@ const Transaction = (props) => {
   }, [props.transaction, props.user]);
 
   return !props.transaction ? (
-    <NotFound />
+    // <NotFound />
+    ""
   ) : (
     <div className="ml-4 mr-4 mt-75">
       <div className="row">

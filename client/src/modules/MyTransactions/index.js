@@ -29,8 +29,8 @@ export default class MyTransactons extends Component {
           field: "transferPrice",
         },
         {
-          title: "Ngày Kết thúc",
-          field: "timeEnd",
+          title: "Ngày bắt đầu",
+          field: "timeStart",
         },
         {
           title: "Loại giao dịch",
@@ -136,7 +136,7 @@ export default class MyTransactons extends Component {
         transferPrice: `${formatCurrency(
           convertWeiToVND(transaction.transferPrice)
         )} VNĐ`,
-        timeEnd: formatDate(transaction.timeEnd),
+        timeStart: formatDate(transaction.timeStart),
         transactionType: "Mua",
         state: transaction.state,
       }));
@@ -148,7 +148,7 @@ export default class MyTransactons extends Component {
         transferPrice: `${formatCurrency(
           convertWeiToVND(transaction.transferPrice)
         )} VNĐ`,
-        timeEnd: formatDate(transaction.timeEnd),
+        timeStart: formatDate(transaction.timeStart),
         transactionType: "Bán",
         state: transaction.state,
       }));

@@ -119,7 +119,7 @@ class EditProfile extends Component {
                               name="homeLand"
                               type="text"
                               className="form-control filter-input"
-                              placeholder="Nhập số CMND căn cước"
+                              placeholder="Nhập nguyên quán"
                             />
                           </div>
                         </div>

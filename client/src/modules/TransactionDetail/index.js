@@ -91,7 +91,9 @@ function TransactionDetail(props) {
           formatDate(transaction.transactionCanceled.time),
         description: `${
           buyers[0] && buyers[0].fullName
-        } hủy yêu cầu đặt cọc và nhận lại tiền đặt cọc`,
+        } hủy yêu cầu đặt cọc và nhận lại tiền đặt cọc ${formatCurrency(
+          convertWeiToVND(transaction.depositPrice)
+        )} VNĐ`,
         explorer:
           transaction.transactionCanceled &&
           transaction.transactionCanceled.txHash,
