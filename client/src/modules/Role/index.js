@@ -97,9 +97,10 @@ class Role extends Component {
     if (this.props.socket && this.props.socket !== preProps.socket) {
       this.props.socket.on("role_changed", (data) => {
         this.props.roleChangedSuccess();
-        // setTimeout(() => { //dev
-        this.fetchData();
-        // }, 500);
+        //setTimeout for dev
+        setTimeout(() => {
+          this.fetchData();
+        }, 500);
       });
     }
     if (this.props.loading != preState._isLoading) {

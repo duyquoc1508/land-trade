@@ -8,8 +8,8 @@ export function initTransactionRequest({ history, data }) {
   return { type: INIT_TRANSACTION_REQUEST, payload: { history, data } };
 }
 
-export function initTransactionSuccess({ history, txHash }) {
-  return { type: INIT_TRANSACTION_SUCCESS, payload: { history, txHash } };
+export function initTransactionSuccess(data) {
+  return { type: INIT_TRANSACTION_SUCCESS, payload: data };
 }
 
 export function waitBlockchainConfirm(txHash) {

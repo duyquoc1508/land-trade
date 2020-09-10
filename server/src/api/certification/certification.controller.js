@@ -309,7 +309,7 @@ export async function getAllPropertiesOnSale(req, res, next) {
   try {
     const listPropertiesSelling = await Certification.find({ state: 2 })
       .lean()
-      .sort({ _id: -1 })
+      .sort({ updatedAt: -1 })
       .limit(pageSize)
       .skip(begin);
     if (listPropertiesSelling.length === 0)

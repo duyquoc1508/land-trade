@@ -60,10 +60,14 @@ export async function getMyTransactions(req, res, next) {
   try {
     let transactionP1 = Transaction.find({
       buyers: req.user.publicAddress
-    }).lean();
+    })
+      .sort({ _id: -1 })
+      .lean();
     let transactionP2 = Transaction.find({
       sellers: req.user.publicAddress
-    }).lean();
+    })
+      .sort({ _id: -1 })
+      .lean();
 
     let [transactionBuy, transactionSale] = await Promise.all([
       transactionP1,

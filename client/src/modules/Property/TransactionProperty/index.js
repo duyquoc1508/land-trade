@@ -32,8 +32,8 @@ export default class TransactionProperty extends Component {
           field: "transferPrice",
         },
         {
-          title: "Ngày Kết thúc",
-          field: "timeEnd",
+          title: "Ngày bắt đầu",
+          field: "timeStart",
         },
         {
           title: "Trạng Thái",
@@ -110,7 +110,7 @@ export default class TransactionProperty extends Component {
         transferPrice: `${formatCurrency(
           convertWeiToVND(transaction.transferPrice)
         )} VNĐ`,
-        timeEnd: formatDate(transaction.timeEnd),
+        timeStart: formatDate(transaction.timeStart),
         state: transaction.state,
       }));
 

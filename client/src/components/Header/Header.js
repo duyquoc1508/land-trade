@@ -17,6 +17,7 @@ import ErrorWeb3 from "../../components/Web3/ErrorWeb3";
 import WrongNetWork from "../../components/Web3/WrongNetwork";
 import { activateCertificateSuccess } from "../../modules/Property/ConfirmProperty/action";
 import { createSuccess } from "../../modules/Property/AddProperty/actions";
+import { initTransactionSuccess } from "../../modules/InitTransaction/action";
 
 const menus = [
   {
@@ -153,6 +154,14 @@ class Menu extends Component {
             // event create new cert success
             setTimeout(() => {
               this.props.createCertSuccess({
+                history: history,
+                txHash: data,
+              });
+            }, 500);
+          } else if (eventName == "new_transaction") {
+            // event create new cert success
+            setTimeout(() => {
+              this.props.createTransactionSuccess({
                 history: history,
                 txHash: data,
               });
@@ -397,6 +406,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     createCertSuccess: (data) => {
       dispatch(createSuccess(data));
+    },
+    createTransactionSuccess: (data) => {
+      dispatch(initTransactionSuccess(data));
     },
   };
 };

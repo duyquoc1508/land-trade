@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { initTransactionRequest, initTransactionSuccess } from "./action";
+import { initTransactionRequest } from "./action";
 import { connect } from "react-redux";
 import formatCurrency from "../../utils/formatCurrency";
-import { convertWeiToVND } from "../../utils/convertCurrency";
 import axios from "axios";
 import Cookie from "../../helper/cookie";
 import { Link } from "react-router-dom";
@@ -77,19 +76,19 @@ function Init(props) {
     setOpen(false);
   };
 
-  useEffect(() => {
-    // listen event TransactionCreated from blockchain and emit event INIT_TRANSACTION_SUCCESS
-    props.transactionContract &&
-      props.transactionContract.events
-        .TransactionCreated()
-        .on("data", (event) => {
-          props.initTransactionSuccess({
-            history: props.history,
-            txHash: event.transactionHash,
-          });
-        })
-        .on("error", console.error);
-  }, [props.transactionContract]);
+  // useEffect(() => {
+  //   // listen event TransactionCreated from blockchain and emit event INIT_TRANSACTION_SUCCESS
+  //   props.transactionContract &&
+  //     props.transactionContract.events
+  //       .TransactionCreated()
+  //       .on("data", (event) => {
+  //         props.initTransactionSuccess({
+  //           history: props.history,
+  //           txHash: event.transactionHash,
+  //         });
+  //       })
+  //       .on("error", console.error);
+  // }, [props.transactionContract]);
 
   const fetchPropertyTrading = async (transactionHash) => {
     const response = await axios({
@@ -415,9 +414,9 @@ const mapDispatchToProps = (dispatch) => {
     initTransactionRequest: (data) => {
       dispatch(initTransactionRequest(data));
     },
-    initTransactionSuccess: (data) => {
-      dispatch(initTransactionSuccess(data));
-    },
+    // initTransactionSuccess: (data) => {
+    //   dispatch(initTransactionSuccess(data));
+    // },
   };
 };
 

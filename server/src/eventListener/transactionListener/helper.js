@@ -48,7 +48,7 @@ export async function handleTransactionCreated(event) {
       message: "Bạn nhận được một lời đề nghị mua nhà"
     };
     // notification
-    const { sellers } = event.returnValues;
+    const { sellers, buyers } = event.returnValues;
     sellers.map(seller => {
       data.userAddress = seller;
       return Notification.create(data);
@@ -61,6 +61,12 @@ export async function handleTransactionCreated(event) {
         data
       );
     });
+    //emiit event create transaction success to buyer
+    socketService.emitEventToIndividualClient(
+      "new_transaction",
+      buyers[0],
+      event.transactionHash
+    );
     // send email for seller
     const sellerInfo = await User.findOne({ publicAddress: sellers[0] });
     sellerInfo.email &&
