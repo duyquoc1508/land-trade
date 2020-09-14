@@ -135,6 +135,7 @@ class Menu extends Component {
         activate_cert: "",
         new_certification: "",
         new_transaction: "",
+        create_transaction_success: "",
         deposit_confirmed: "ACCEPT_TRANSACTION_SUCCESS",
         payment_request: "PAYMENT_SUCCESS",
         payment_confirmed: "CONFIRM_TRANSACTION_SUCCESS",
@@ -158,7 +159,7 @@ class Menu extends Component {
                 txHash: data,
               });
             }, 500);
-          } else if (eventName == "new_transaction") {
+          } else if (eventName == "create_transaction_success") {
             // event create new cert success
             setTimeout(() => {
               this.props.createTransactionSuccess({

@@ -63,7 +63,7 @@ export async function handleTransactionCreated(event) {
     });
     //emiit event create transaction success to buyer
     socketService.emitEventToIndividualClient(
-      "new_transaction",
+      "create_transaction_success",
       buyers[0],
       event.transactionHash
     );

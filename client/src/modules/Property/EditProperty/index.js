@@ -98,7 +98,7 @@ export class EditProperty extends Component {
           this.props.history.push(`/property/${this.props.match.params.hash}`);
         },
       });
-      this.props.history.push("/my-property");
+      this.props.history.push("/my-properties");
       // this.props.history.push(`/property/${this.props.match.params.hash}`);
     } else {
       toast.error("Cập nhật thất bại. Vui lòng thử lại!", {

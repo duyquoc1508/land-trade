@@ -143,18 +143,18 @@ export default class Investing extends Component {
   };
 
   previewDetail = (event, rowData) => {
-    if (
-      ["DEPOSIT_REQUEST", "DEPOSIT_CONFIRMED", "PAYMENT_REQUEST"].includes(
-        rowData.state
-      )
-    ) {
-      this.setState({ openAction: true });
-    } else {
-      // window.open(
-      //   `${process.env.REACT_APP_BASE_URL}/transaction-detail/${rowData.hash}`
-      // );
-      this.props.history.push(`/transaction-detail/${rowData.hash}`);
-    }
+    // if (
+    //   ["DEPOSIT_REQUEST", "DEPOSIT_CONFIRMED", "PAYMENT_REQUEST"].includes(
+    //     rowData.state
+    //   )
+    // ) {
+    //   this.setState({ openAction: true });
+    // } else {
+    window.open(
+      `${process.env.REACT_APP_BASE_URL}/transaction-detail/${rowData.hash}`
+    );
+    // this.props.history.push(`/transaction-detail/${rowData.hash}`);
+    // }
   };
 
   closePreview = () => {

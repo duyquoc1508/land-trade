@@ -16,16 +16,16 @@ export default app => {
 
   // Enable CORS from client-side
   app.use(function(req, res, next) {
-    const allowedOrigins = [
-      `${process.env.REACT_APP_BASE_URL}`,
-      `${process.env.REACT_APP_BASE_URL}:${process.env.FRONT_END_PORT}`,
-      `${process.env.FRONT_END_DOMAIN}`
-    ];
-    var origin = req.headers.origin;
-    if (allowedOrigins.indexOf(origin) > -1) {
-      res.setHeader("Access-Control-Allow-Origin", origin);
-    }
-    // res.header("Access-Control-Allow-Origin", process.env.REACT_APP_BASE_URL);
+    // const allowedOrigins = [
+    //   `${process.env.REACT_APP_BASE_URL}`,
+    //   `${process.env.REACT_APP_BASE_URL}:${process.env.FRONT_END_PORT}`,
+    //   `${process.env.FRONT_END_DOMAIN}`
+    // ];
+    // var origin = req.headers.origin;
+    // if (allowedOrigins.indexOf(origin) > -1) {
+    //   res.setHeader("Access-Control-Allow-Origin", origin);
+    // }
+    res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE");
     res.header(
       "Access-Control-Allow-Headers",
