@@ -96,7 +96,7 @@ export default class MyTransactons extends Component {
           render: (rowData) => (
             <a
               target="_blank"
-              href={`${process.env.REACT_APP_EXPLORER}/${rowData.hash}`}
+              href={`${process.env.REACT_APP_EXPLORER}/tx/${rowData.hash}`}
             >
               {"Xem"}
             </a>

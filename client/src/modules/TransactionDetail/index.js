@@ -279,7 +279,7 @@ function TransactionDetail(props) {
                 <p class="card-text">{data[item].description}</p>
                 <a
                   target="_blank"
-                  href={`${process.env.REACT_APP_EXPLORER}/${data[item].explorer}`}
+                  href={`${process.env.REACT_APP_EXPLORER}/tx/${data[item].explorer}`}
                 >
                   Kiểm tra giao dịch trên Blockchain
                 </a>
