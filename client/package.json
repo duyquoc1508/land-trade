@@ -28,7 +28,7 @@
     "web3": "1.2.2"
   },
   "devDependencies": {
-    "terser": "^3.14.1"
+    "terser": "^4.8.1"
   },
   "scripts": {
     "start": "set PORT=8081 && react-scripts start",
