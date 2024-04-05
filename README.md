@@ -44,7 +44,7 @@ The transaction process takes place through 4 steps as follows:
 3. <b>Payment</b>: <i>Buyer</i> payment the remaining amount + tax (registration tax) and send it to smart contract.
 4. <b>Confirm transaction</b>: <i>Seller</i> confirm transaction, receive the remaining amount - tax (personal income tax) from smart contract. At the same time, real estate be transferred to buyer.
 
-In addition, between steps 1-2, 2-3, 3-4. <i>Buyer</i> or <i>seller</i> can <b>Cancel transaction</b>.
+In addition, between steps 1-2, 2-3, 3-4. <i>Buyer</i> or <i>Seller</i> can <b>Cancel transaction</b>.
 
 ### Deploy smart contracts
 
